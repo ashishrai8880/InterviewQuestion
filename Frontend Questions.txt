@@ -1,0 +1,73 @@
+1. What is prerendering ?
+Ans - This means that Next.js generates HTML for each page in advance, instead of having it all done by client-side JavaScript. Pre-rendering can result in better performance and SEO. Each generated HTML is associated with minimal JavaScript code necessary for that page. 
+There are two types of prerendering . First is Server side rendering and Second is static site generation which is explained below .
+
+2. Difference between SSR and SSG ?
+Ans - SSR Server side rendering : In Next.js, the Server-side rendering (SSR) is the process of rendering a a fully frontend application on the server, rather than in the browser. The rendered HTML is then sent to the client, where it can be displayed by the web browser.
+
+This is one of the old feature, alive in any MPA (Multi Page Application) frameworks, like PHP, Java with Servlets, etc.
+
+One advantage of SSR is that it allows you to generate fully-rendered HTML pages on the server, which can improve the performance and SEO of your application.
+
+SSG : Static site generation (SSG) is a process of creating a website as a set of static HTML files, rather than a dynamic web application. This can be useful for websites that do not require frequent updates or user interactions, and can benefit from the performance and scalability of static hosting.
+
+3. What is eslint ?
+ESLint is a static code analysis tool for identifying problematic patterns found in JavaScript code.
+
+==============================================================
+==============================================================
+
+4. Implement Debounce in plain javascript
+
+<input onChange = 'BetterFunction()'> </input>
+
+let counter = 0 ;
+function getData (){
+  console.log('function called : ', counter++);
+}
+
+const myDebouce = (callback , delay)=>{
+  let timer ;
+  
+  return function (...args){
+    if(timer){
+      clearTimeout(timer) ;
+    }
+    setTimeout(()=>{
+      callback();
+    }, delay);
+  }
+}
+
+const BetterFunction = myDebouce(getData , 1000) ;
+
+************in REact**********
+
+React.useEffect(() => {
+    const getData = setTimeout(() => {
+      axios
+      .get(`https://api.postalpincode.in/pincode/${pinCode}`)
+      .then((response) => {
+        console.log(response.data[0]);
+      });
+    }, 2000)
+
+    return () => clearTimeout(getData)
+  }, [pinCode])
+
+<input
+      placeholder="Search Input.."
+      onChange={(event) => setPinCode(event.target.value)}
+ />
+
+
+In the useEffect hook, when you return a function, it serves as a cleanup mechanism for any side effects that your effect may have caused. This cleanup function is executed under certain conditions:
+
+When the component unmounts: If you return a function from useEffect, it will be invoked when the component unmounts from the DOM. This is useful for cleaning up any resources (such as event listeners or subscriptions) that were created during the component's lifecycle to prevent memory leaks.
+
+Before the next effect runs: If the dependencies array provided as the second argument to useEffect changes between renders and the component rerenders, the cleanup function from the previous effect is called before the new effect runs. This ensures that the previous effect's cleanup is performed before any potential side effects from the new effect occur.
+
+To answer your second question, the cleanup function returned from useEffect is received and executed internally by the React framework. You don't explicitly call or handle its execution in your code. React manages the execution of cleanup functions automatically based on the component's lifecycle and the dependencies array provided to useEffect.
+
+===============================================================
+===============================================================

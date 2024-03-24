@@ -1,0 +1,154 @@
+1. Why authenticate with jwt instead of password 
+Ans . In authenticating with password , we require atleast one hit in database .
+	. JWT authentication is stateless , do not require to store session on server . Highly scalable . support CORS . Expiration is there.
+
+2. REST API Versioning 
+Ans . a. Change in URL path .    b. By Query Parameter . abc.com/api?v1=1
+	c. Change in header (accept : version-1) d. Custom Header . x-accept-version
+
+3. Types of Webservices 
+Ans . REST , SOAP , GraphQL .
+
+4. How to handle exception in express
+Ans . We can pass error in next() to handle  . Use try catch , promise.catch , async await .
+
+5. Why use PUT instead of POST ?
+In POST method , id of record change each time , while PUT method ID will not change .
+Ans. The main difference is POST does not guarantee idempotent, and PUT must guarantee it.
+
+Here Idempotent means , if request is POST then new record will be created if it is not exist , while in PUT request it will only create new record if it does not exist .
+
+Meaning, suppose you update a record to increment it, then you cannot use POST. Because each time a user makes that update the record will be different, and so the user cannot just go on trying again and again and expect the same result. With PUT update, the user is allowed to keep trying the request many times and is guaranteed that the final record and response will always be the same no matter how many times the user makes the update request.
+
+Mostly people don’t want to give this kind of guarantee so they just use POST, which is not idempotent. But say you're not incrementing anything just putting the same file, user can expect exact same fileId and response even if he repeatedly calls, you can use PUT.
+
+For idempotent things, you’re also allowed to do insert with PUT. So both POST/PUT can be used for insert/update (both submit data). It’s up to the dev how they want to use - some like to map CRUD to the methods - others just POST or PUT for everything depending on idempotence.
+
+6. Why use POST to create record instead of POST ?
+Ans . First Security reason , sending data in url will be unsecure because of logs  . Second there is limitation of url size . Also we can not send media , video in GET request url .
+
+7. What is ACID property in MongoDB ?
+==>Atomicity - All transaction would be taken as single unit , either entire transaction take place or none of them .
+==>Consistency - After transaction of data , there should be data store within constraints . Means data before transaction and after transaction would be same .
+==>Isolation - If there is more than one transactioin occuring , then all transaction should be taken as independent . T1 should be independent of T2 .
+==>Durability - After transaction , data should be stored as permanent . 
+
+8. What is foreign key ?
+==> Foreign keys are a set of constraints in DBMS that establish relationships between tables and also ensure consistency and integrity of data. A foreign key is applied to a column of one table which references the primary key of a column in another table.
+It maintains Referential Integrity .
+
+9. What is constraints .
+==> Constraints are set of rules that are applied to a table.
+
+10. Primary Key => it cannot be left blank . neither it takes duplicate value .
+
+11. Unique Key => it cannot takes duplicate value . but it can be left as blank .
+
+12 . Not Null Key => Not Null constraints states that a field or attribute or column cannot be left blank .
+
+******** Primary Key = Unique Key + Not Null **************** 
+
+13. Default Constraints - It means column may be given as default value when no value in inserted .
+
+14.Check Constraints - It states that field/column can be check before entering into the table .(Eg : Salary should be greater than 10,000).
+
+15. Can we achieve Primary key and foreign key in nosql database .
+Ans . In MongoDB, which is a NoSQL database, the concepts of primary keys and foreign keys are not as explicit as in traditional relational databases. MongoDB uses a flexible and schema-less document model, and relationships between documents are typically handled differently.
+
+16 . Why Nodejs is single threaded ?
+Ans . NodeJs works on the single threaded model to support the asynchronous processing which provides high performance and efficiency to its applications under high amount of load .
+
+17. What is event loop ? ***important
+Ans . The event loop is responsible for managing the execution of code, handling events, and maintaining the flow of control.
+
+
+19. What is Event Driven Architecture in Nodejs ?
+Ans . When user request for some API , it will store in Event Queue . Event Queue store API request in FIFO way . Now each request will be taken by Event Loop one by one . Now there is two cases . Request can be blocking and Unblocking .
+
+-> If request is non blocking or asynchrounous , it will executes and give response to the client .
+-> If request is blocking , then event loop takes on thread from thread pool . Thread pool is a place where multiple thread(worker) are present . Now that blockiing task will be assigned to particular thread from thread pool . Thread pool have by default 4 thread . Number of Thread is depend on number of cores available in server . Now when thread pool executes task it will give response to user .
+
+1. Blocking Operation 
+
+console.log(1) ;
+const result = fs.readFileSync('file.txt' , 'utf-8');
+console.log(result);
+console.log(2) ; 
+
+###OUTPUT### 
+1
+result
+2
+
+2. Non Blocking Operation
+
+console.log(1) ;
+fs.readFile('file.txt' , 'utf-8' , (err , result)=>{
+	console.log(result);
+});
+
+console.log(2) ;
+
+
+###OUTPUT### 
+1
+2
+result 
+
+Conclusion => We should always write non blocking code in NOdejs . Because there is only limited thread available in Thread Pool .
+
+18. How do Event loops work?  ***important
+Call Stack:
+JavaScript uses a call stack to keep track of the currently executing function (where the program is in its execution).
+Callback Queue:
+Asynchronous operations, such as I/O operations or timers, are handled by the browser or Node.js runtime. When these operations are complete, corresponding functions (callbacks) are placed in the callback queue.
+Event Loop:
+The event loop continuously checks the call stack and the callback queue. If the call stack is empty, it takes the first function from the callback queue and pushes it onto the call stack for execution.
+Execution:
+The function on top of the call stack is executed. If this function contains asynchronous code, it might initiate further asynchronous operations.
+Callback Execution:
+When an asynchronous operation is complete, its callback is placed in the callback queue.
+Repeat:
+The event loop continues this process, ensuring that the call stack is always empty before taking the next function from the callback queue.
+
+19.  What are node.js buffers?
+In general, buffers is a temporary memory that is mainly used by stream to hold on to some data until consumed. Buffers are introduced with additional use cases than JavaScript’s Unit8Array and are mainly used to represent a fixed-length sequence of bytes. This also supports legacy encodings like ASCII, utf-8, etc. It is a fixed(non-resizable) allocated memory outside the v8.
+
+20 .  What is middleware?
+Middleware comes in between your request and business logic. It is mainly used to capture logs and enable rate limit, routing, authentication, basically whatever that is not a part of business logic. There are third-party middleware also such as body-parser and you can write your own middleware for a specific use case
+
+21. 2. Enhancing Node.js performance through clustering.
+Node.js applications run on a single processor, which means that by default they don’t take advantage of a multiple-core system. Cluster mode is used to start up multiple node.js processes thereby having multiple instances of the event loop. When we start using cluster in a nodejs app behind the scene multiple node.js processes are created but there is also a parent process called the cluster manager which is responsible for monitoring the health of the individual instances of our application.
+
+import cluster from "cluster";
+import os from "os";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const cpuCount = os.cpus().length;
+
+console.log(`The total number of CPUs is ${cpuCount}`);
+console.log(`Primary pid=${process.pid}`);
+cluster.setupPrimary({
+  exec: __dirname + "/index.js",
+});
+
+for (let i = 0; i < cpuCount; i++) {
+  cluster.fork();
+}
+cluster.on("exit", (worker, code, signal) => {
+  console.log(`worker ${worker.process.pid} has been killed`);
+  console.log("Starting another worker");
+  cluster.fork();
+});
+
+
+22. What is serverless architecture ?
+Ans . AWS Lambda is serverless architecture , where we do not need to take worry of server architecture . we just write code and run . Here we select Nodejs or veresion , then write code and it automatically handles everything . In EC2 which is server architecture , we need to define its RAM , storage , OS and autoscalling everything . but it is not in serverless architecture .
+Serverless is also very cheaper than EC2 architecture .
+
+One disadvantage is , whenever request comes or invocations happens ,  it start fucntion from scratch and run . Matlab har baar ye lambda function run hota hai har request pe . Isse slow ho sakta hai server ka response . Agar har baar mongodb atlas se connectioiin banayega to time lagega or mongo ka bill bhi badh sakta hai . 
+
+Serverless or lambda me per request k hisab se bill banta hai . jabki ec2 me per hour k hisab se . Or Lambda me function hamesha sleep mode pe rehta hai , jab user aata hai to hi ye function execute hota hai from scratch .

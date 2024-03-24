@@ -1,0 +1,85 @@
+1.	Closure  
+
+closure is created when a child function keep the environment of the parent scope even after the parent function has already executed 
+
+function foo() {
+	let b = 1;
+	function inner() {
+		return b;
+	}
+	return inner;
+}
+let get_func_inner = foo();
+
+console.log(get_func_inner()); //1
+console.log(get_func_inner()); //1
+console.log(get_func_inner());  //1
+
+
+2.	Call , Apply and Bind() method In JS
+
+let userDetails = {
+    name : 'Ashish Rai',
+    age : 22 ,
+    printDetails :function (){
+        console.log(this.name);
+    }
+}
+
+userDetails.printDetails();
+
+let userDetails2 = {
+    name : 'Baniya',
+    age : 23 ,
+}
+
+userDetails.printDetails.call(userDetails2);
+userDetails.printDetails.apply(userDetails2 ,[ ‘New Name’ , ‘Another name’]);
+
+const store = userDetails.printDetails.bind(userDetails2);\
+store();
+
+3.	Hoisting : 
+	In JavaScript, Hoisting is the default behavior of moving all the declarations at the top of the scope before code execution. Basically, it gives us an advantage that no matter where functions and variables are declared, they are moved to the top of their scope regardless of whether their scope is global or local. 
+	It allows us to call functions before even writing them in our code. 
+Note: JavaScript only hoists declarations, not initializations.
+
+fun();  //calling before declaration
+function fun() {
+  
+  let name = 'Mukul Latiyan';
+  console.log(name);
+}
+
+Isme variable and function declration top me ho jaata hai lekin initialization nhi hota . Or ye bas var k sath hota hai , let const k sath nhi hota .
+
+4. What is first class function ?
+Ans .  A programming language is said to have First-class functions if functions in that language are treated like other variables. So the functions can be assigned to any other variable or passed as an argument or can be returned by another function. JavaScript treats function as a first-class citizen.
+
+const Geek = (a, b) => {
+    return (a + " " + b);
+}
+
+5. What is Nodejs 
+Ans . Node.js is a virtual machine that uses JavaScript as its scripting language and runs Chrome’s V8 JavaScript engine. Basically, Node.js is based on an event-driven architecture where I/O runs asynchronously making it lightweight and efficient .
+
+6. What is Promise ?
+Ans . In JavaScript, a Promise is an object that will produce a single value some time in the future. If the promise is successful, it will produce a resolved value, but if something goes wrong then it will produce a reason why the promise failed. The possible outcomes here are similar to that of promises in real life.
+
+JavaScript promises can be in one of three possible states. These states indicate the progress of the promise. They are:
+
+pending: This is the default state of a defined promise
+fulfilled:  This is the state of a successful promise
+rejected: This is the state of a failed promise
+
+Example : const promise = new Promise((resolve, reject) => {
+  const num = Math.random();
+  if (num >= 0.5) {
+    resolve("Promise is fulfilled!");
+  } else {
+    reject("Promise failed!");
+  }
+});
+
+7. What is fork in node JS?
+Ans : A fork in general is used to spawn child processes. In node it is used to create a new instance of v8 engine to run multiple workers to execute the code
