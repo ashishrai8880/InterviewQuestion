@@ -71,3 +71,57 @@ To answer your second question, the cleanup function returned from useEffect is 
 
 ===============================================================
 ===============================================================
+
+5. Currying in javasript
+
+function sum(a) {
+    return (b) => {
+        return (c) => {
+            return a + b + c
+        }
+    }
+}
+console.log(sum(1)(2)(3)) // 6
+
+By utilizing currying, we can reduce code duplication and create more maintainable components
+Currying helps you avoid passing the same variable again and again.
+It helps to create a higher order function.
+
+=============================================================
+============================================================
+
+6. Implement currying with placeholder
+
+function curry(fn, arity = fn.length) {
+  return (function nextCurried(prevArgs) {
+    return function curried(...nextArgs) {
+      const allArgs = [...prevArgs, ...nextArgs];
+      
+      // If all arguments are provided or placeholder is encountered,
+      // execute the original function.
+      if (allArgs.length >= arity || nextArgs.includes(curried.placeholder)) {
+        return fn(...allArgs);
+      } else {
+        // Otherwise, recursively call curried function with updated arguments.
+        return nextCurried(allArgs);
+      }
+    };
+  })([]);
+}
+
+// Placeholder symbol
+curry.placeholder = Symbol('curry.placeholder');
+
+// Example function to demonstrate currying
+function add(a, b, c) {
+  return a + b + c;
+}
+
+const curriedAdd = curry(add);
+
+console.log(curriedAdd(1)(2)(3)); // Output: 6
+console.log(curriedAdd(1, 2)(3)); // Output: 6
+console.log(curriedAdd(1)(2, 3)); // Output: 6
+console.log(curriedAdd(1, 2, 3)); // Output: 6
+console.log(curriedAdd(curry.placeholder)(2)(3)(1)); // Output: 6
+console.log(curriedAdd(1)(curry.placeholder, 3)(2)); // Output: 6

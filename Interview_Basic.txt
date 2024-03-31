@@ -1,0 +1,11 @@
+1. Describe project which you have worked on ?
+
+Ans ==>  I have worked on 4 project till now . Starting from 1st project . First project was Node Bridge System . 
+
+First Project is Node Bridge System => Initially API is built is PHP YII framework . In this for a particular movie/asset detail , the data came from different table and then we structured it's response and then send response to client . Because of this , one API required a lot of db hits . That's why we created Node API bridge . In this , we have already stored the response of assets/movie in seperate database . This project runs every 10 minutes as a CRON services . 
+
+Second Project Node API 2.0 => Second project is all about API services and related to first project . Now whenever a request comes for any movies/assets , the response comes directly from previos saved response in database . We have also used redis caching , where we stored response of first time request in redis . and second time if request comes for same assets we directly serve response from redis . which makes response time even more faster . 
+
+Third Project Digivive CMS => Content Management System where we provide facility for client to upload their content to their own OTT platform . In this project , I have worked mostly on frontend side . Where I have implemented permission system in entire application using CASL library . There are basically 4 level of user . Second I have created dynamic form which provide flexibility to client to add/remove field in content .
+
+Fourth Project ONRG => In this project , we provide researcher to upload whitepaper , and then Get insights from that whitepaper using some AI tools . We have made CRON jobs which runs in every minute to process whitepaper from AI tools , and then get insights like its relevancy from challenge , author detail , author other work area , author area of interest from whitepaper . 
