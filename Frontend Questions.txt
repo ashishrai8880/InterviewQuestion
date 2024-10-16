@@ -125,3 +125,29 @@ console.log(curriedAdd(1)(2, 3)); // Output: 6
 console.log(curriedAdd(1, 2, 3)); // Output: 6
 console.log(curriedAdd(curry.placeholder)(2)(3)(1)); // Output: 6
 console.log(curriedAdd(1)(curry.placeholder, 3)(2)); // Output: 6
+
+7. What is event bubbling in javascript ?
+
+Answer : Event bubbling is a way that events (like clicks or key presses) move through the elements in an HTML document. When an event happens in a specific element (like a button), it first affects that element and then moves up to its parent elements, triggering any event listeners attached to those parents. This process is called “bubbling” because it starts at the bottom (the innermost element) and bubbles up to the top (the outer elements).
+Event Capturing just opposite to this .
+
+<div id="parent">
+        <button>
+            <h2>Parent</h2>
+        </button>
+        <button id="child">
+
+            <p>Child</p>
+
+        </button>
+    </div>
+
+document.getElementById(
+            "child").addEventListener("click", function () {
+                alert("You clicked the Child element!");
+            });
+
+        document.getElementById(
+            "parent").addEventListener("click", function () {
+                alert("You clicked the parent element!");
+            });
