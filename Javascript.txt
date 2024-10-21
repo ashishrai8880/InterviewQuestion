@@ -18,6 +18,11 @@ console.log(get_func_inner());  //1
 
 2.	Call , Apply and Bind() method In JS
 
+Ans.  JavaScript provides three methods for manipulating the this keyword in functions: call(), apply(), and bind(). These methods allow you to change the context of the this keyword, which can be useful for controlling the behaviour of functions. 
+
+	1. call(); (Call Method)
+The call() method allows you to call a function with a specified this value and arguments provided individually. The first argument to call() sets the this value for the function being called, and the remaining arguments are passed to the function as arguments.
+
 let userDetails = {
     name : 'Ashish Rai',
     age : 22 ,
