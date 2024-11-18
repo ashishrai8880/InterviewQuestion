@@ -152,3 +152,69 @@ Serverless is also very cheaper than EC2 architecture .
 One disadvantage is , whenever request comes or invocations happens ,  it start fucntion from scratch and run . Matlab har baar ye lambda function run hota hai har request pe . Isse slow ho sakta hai server ka response . Agar har baar mongodb atlas se connectioiin banayega to time lagega or mongo ka bill bhi badh sakta hai . 
 
 Serverless or lambda me per request k hisab se bill banta hai . jabki ec2 me per hour k hisab se . Or Lambda me function hamesha sleep mode pe rehta hai , jab user aata hai to hi ye function execute hota hai from scratch .
+
+23. What is Microtask queue and Macrotask queue in NodeJs ?
+Ans. The microtask queue and macrotask queue are two separate queues that manage different types of tasks to be executed asynchronously, but with different priorities .
+1. Macrotask Queue
+The macrotask queue (also known as the task queue) is used to hold tasks that are generally associated with higher-level events.The macrotask queue contains tasks that need to be executed after the current execution context has completed. Each iteration of the event loop processes one macrotask at a time. These tasks typically include:
+
+I/O events (like reading from a file or network request)
+Timers (setTimeout, setInterval)
+Events like setImmediate
+User interaction events (e.g., UI events in the browser)
+requestAnimationFrame (in the browser context)
+
+2. Microtask Queue
+The microtask queue (also called the job queue) holds tasks that have higher priority and are typically associated with promises and mutation observers.
+Microtasks are executed before the next macrotask, even if the macrotask is already scheduled and ready to run . It includes : 
+
+Promise handlers (.then(), .catch(), .finally())
+process.nextTick() in Node.js
+MutationObserver (in browsers)
+
+console.log('start');
+
+setTimeout(() => {
+  console.log('macrotask 1');
+}, 0);
+
+Promise.resolve().then(() => {
+  console.log('microtask 1');
+});
+
+setTimeout(() => {
+  console.log('macrotask 2');
+}, 0);
+
+Promise.resolve().then(() => {
+  console.log('microtask 2');
+});
+
+console.log('end');
+
+### OUTPUT
+start
+end
+microtask 1
+microtask 2
+macrotask 1
+macrotask 2
+
+24. How many types of queues in NodeJs ?
+Ans : 
+Each queue has its own priority in the event loop and is processed at different stages of the event loop iteration. Understanding this helps optimize asynchronous tasks in Node.js, manage performance, and avoid potential issues like starvation, where tasks may be delayed due to the priority of other operations in the event loop.
+a. NextTick Queue:
+	Tasks scheduled with process.nextTick().
+	Executed before any other queues.
+
+b. Microtask Queue (Job Queue):
+	Promise handlers, MutationObserver, etc.
+	Executed after the current operation and before macrotasks.
+
+c.Macrotask Queues:
+	Timers Queue: Callbacks from setTimeout and setInterval.
+	I/O Queue: Callbacks from I/O events (e.g., file system, network).
+	Check Queue: Callbacks from setImmediate.
+
+
+
