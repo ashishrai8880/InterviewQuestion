@@ -88,3 +88,8 @@ Example : const promise = new Promise((resolve, reject) => {
 
 7. What is fork in node JS?
 Ans : A fork in general is used to spawn child processes. In node it is used to create a new instance of v8 engine to run multiple workers to execute the code
+
+8. What is callback in NodeJs ?
+Ans : Node. js callbacks are a special type of function passed as an argument to another function. They're called when the function that contains
+the callback as an argument completes its execution, and allows the code in the callback to run in the meantime. Callbacks help us make 
+asynchronous calls
