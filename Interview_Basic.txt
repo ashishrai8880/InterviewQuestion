@@ -1,9 +1,16 @@
 1. Tell me something about yourself ?
-Ans . I am Ashish . I have 2.5 year of experience working across backend and frontend technologies as well . I am proficient in javascript and framework built around javascript environment . My expertise include Nodejs , NestJs , SQL and NOSQL databases  . I am also good at DSA . I have solved more than 250 question of dsa on gfg and 140+ question on leetcode and secured 5 star and gold level badge on hackerrank . 
+Ans . I am Ashish . I have 2.5 year of experience working across backend and frontend technologies as well . I am proficient in javascript
+and framework built around javascript environment . My expertise include Nodejs , NestJs , SQL and NOSQL databases  . I am also good at DSA .
+I have solved more than 250 question of dsa on gfg and 140+ question on leetcode and secured 5 star and gold level badge on hackerrank . 
 
-In my current role , I have been focusing more on backend development for a project in tour and travel industry . My strength is , I am good in logics and problem solving skills . I like to solve DSA . My weakeness is , I feels uncomfortable until I complete my task . Also , ocassionaly take on multiple tasks simultaneously , which makes me stressed . To address this , I have been improving my priritization and timing management skills to ensure I focus on the most important tasks . 
+In my current role , I have been focusing more on backend development for a project in tour and travel industry . 
+My strength is , I am good in logics and problem solving skills . I like to solve DSA . My weakeness is , I feels uncomfortable until I complete my task . 
+Also , ocassionaly take on multiple tasks simultaneously , which makes me stressed . To address this , I have been improving my
+priritization and timing management skills to ensure I focus on the most important tasks . 
 
-I worked on a platform for a tour and travel industry . It provides tour package to customer and connects it with third party travel companies offering tour package . We basically have 3 platform , customer facing , admin crm and agent portal . My primary focus is on backend developement using Nodejs . I have worked in invoice module and implemented OAuth 2.0 .
+I worked on a platform for a tour and travel industry . It provides tour package to customer and connects it with third party travel
+companies offering tour package . We basically have 3 platform , customer facing , admin crm and agent portal . My primary focus is on backend
+developement using Nodejs . I have worked in invoice module and implemented OAuth 2.0 .
 
 2. Describe project which you have worked on ?
 
