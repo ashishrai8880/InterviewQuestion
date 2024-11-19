@@ -1,4 +1,11 @@
-1. Describe project which you have worked on ?
+1. Tell me something about yourself ?
+Ans . I am Ashish . I have 2.5 year of experience working across backend and frontend technologies as well . I am proficient in javascript and framework built around javascript environment . My expertise include Nodejs , NestJs , SQL and NOSQL databases  . I am also good at DSA . I have solved more than 250 question of dsa on gfg and 140+ question on leetcode and secured 5 star and gold level badge on hackerrank . 
+
+In my current role , I have been focusing more on backend development for a project in tour and travel industry . My strength is , I am good in logics and problem solving skills . I like to solve DSA . My weakeness is , I feels uncomfortable until I complete my task . Also , ocassionaly take on multiple tasks simultaneously , which makes me stressed . To address this , I have been improving my priritization and timing management skills to ensure I focus on the most important tasks . 
+
+I worked on a platform for a tour and travel industry . It provides tour package to customer and connects it with third party travel companies offering tour package . We basically have 3 platform , customer facing , admin crm and agent portal . My primary focus is on backend developement using Nodejs . I have worked in invoice module and implemented OAuth 2.0 .
+
+2. Describe project which you have worked on ?
 
 Ans ==>  I have worked on 4 project till now . Starting from 1st project . First project was Node Bridge System . 
 
@@ -9,3 +16,9 @@ Second Project Node API 2.0 => Second project is all about API services and rela
 Third Project Digivive CMS => Content Management System where we provide facility for client to upload their content to their own OTT platform . In this project , I have worked mostly on frontend side . Where I have implemented permission system in entire application using CASL library . There are basically 4 level of user . Second I have created dynamic form which provide flexibility to client to add/remove field in content .
 
 Fourth Project ONRG => In this project , we provide researcher to upload whitepaper , and then Get insights from that whitepaper using some AI tools . We have made CRON jobs which runs in every minute to process whitepaper from AI tools , and then get insights like its relevancy from challenge , author detail , author other work area , author area of interest from whitepaper . 
+
+3. Do you have any question to ask ?
+Ans . Which technology are company using in backend of this project . 
+
+4. What challenge you faced while working on this project ?
+Ans . The main challenge I faced was the optimisatioin of API . Earlier we were using aggregation query and in aggregation query , Joining of collection takes more number of line of code . Later on , we realised that we should use traditional find() method with populate query , which reduce no. of lines of code 10 times and response times . 
