@@ -237,3 +237,6 @@ Types of Indexing :
 1. Single Field Index    2. Compound Field Index    3. Text Search Index   4. Multi Key Index (array of string)  5. Geospatial Index
 
 In Text Search , it can also make search based on full string . // To be continued
+
+27. What is maximum size of document in mongo db ?
+Ans : 16 MB .
