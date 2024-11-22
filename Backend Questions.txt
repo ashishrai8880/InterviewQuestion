@@ -240,3 +240,31 @@ In Text Search , it can also make search based on full string . // To be continu
 
 27. What is maximum size of document in mongo db ?
 Ans : 16 MB .
+
+28. How can you optmized your server to handle millions of user ?
+Ans : 1. Load Balancing : Load balancing is distributing incoming traffic across multiple servers . we can use NGINX for this .
+	2. Horizontal Scaling  :  Horizontal scaling means increasing the number of servers or instances running your application ,  as opposed to vertical scaling, which increases resources (CPU, RAM) on a single server.
+	3.  Stateless Servers (Avoid Session Handling on Servers) : Keep the server stateless by not storing session data locally on the server. Instead, store session data in a central, shared database or cache.
+	4. Database Scaling : Sharding: Split the database into smaller, manageable pieces. Each shard stores a subset of the data, which can be queried independently.
+			Caching: Use Redis, Memcached, or similar caching solutions to cache database queries that are frequently requested and reduce load on the database.
+	5. Efficient Application Design : Use Asynchronous I/O: Node.js is non-blocking, so you should make sure all database queries, file system operations, and external API calls are asynchronous. 
+			Cluster Module: The Node.js Cluster module allows you to create multiple processes to handle incoming requests concurrently. This takes advantage of multi-core CPUs and 
+			can help scale your application on a single server.
+	6.  Asynchronous Message Queue (for Handling Background Tasks) : Use RabbitMQ, Apache Kafka, or AWS SQS for queuing background tasks.
+			Tasks like sending emails, processing large files, or updating analytics can be queued and processed by background workers asynchronously, without blocking user requests.
+	7. Rate Limiting and Throttling : What it is: Prevent malicious or excessive requests from overwhelming the system by implementing rate limiting. 
+			Use tools like API Gateway (e.g., AWS API Gateway, Kong) or middleware like express-rate-limit in Node.js to limit the number of requests a user can make in a given time window.
+
+	Conclusion:
+By combining load balancing, horizontal scaling, stateless design, database optimization, CDNs, asynchronous task processing, and real-time monitoring, you can design a system that handles millions of users efficiently without crashing. Auto-scaling, rate limiting, and caching will further improve your system's performance and reliability.
+
+29. How nodejs cluster mode works ?
+Ans : By runnig application in cluster mode , it creates multiple instance of application , each running on seperate core  .  Each worker is a separate process, and Node.js itself does not provide 
+multi-threading directly, but rather multi-process parallelism. 
+ There is one master worker . It does not itself handle any request , it handles all child process and workers . Then there is child worker , spawn 4 worker processes, and each process runs a 
+copy of the application code. Each of these worker processes can handle incoming requests concurrently. 
+
+There is Load Balancing done automatically by master process or worker among child worker . 
+Each core (worker) handles its own thread of execution. A CPU core executes one process at a time, but since there are multiple cores, multiple workers can be executing in parallel. Each worker gets its own slice of CPU time from the operating system, which is then used to execute the JavaScript code within that worker.
+
+Since workers are separate processes, they do not block one another. Each worker can independently handle requests, and Node.js will not block one worker's execution because of the other workers.
