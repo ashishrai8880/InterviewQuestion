@@ -268,3 +268,6 @@ There is Load Balancing done automatically by master process or worker among chi
 Each core (worker) handles its own thread of execution. A CPU core executes one process at a time, but since there are multiple cores, multiple workers can be executing in parallel. Each worker gets its own slice of CPU time from the operating system, which is then used to execute the JavaScript code within that worker.
 
 Since workers are separate processes, they do not block one another. Each worker can independently handle requests, and Node.js will not block one worker's execution because of the other workers.
+
+30. What is Aggregation in MongoDB ?
+Ans : Aggregation in MongoDB is a process used to perform operations on data, like filtering, grouping, sorting, and calculating values, to get meaningful results
