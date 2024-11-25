@@ -39,6 +39,23 @@ let userDetails2 = {
 }
 
 userDetails.printDetails.call(userDetails2);
+
+#Real Life Example
+const fs = require('fs');
+
+function logData() {
+  console.log(this.filename);
+}
+
+const file = { filename: 'data.txt' };
+
+// Using call to set 'this' context for logData function
+fs.readFile('data.txt', 'utf8', function (err, data) {
+  if (err) throw err;
+  logData.call(file);  // Output: data.txt
+});
+
+
 userDetails.printDetails.apply(userDetails2 ,[ ‘New Name’ , ‘Another name’]);
 
 const store = userDetails.printDetails.bind(userDetails2);\
