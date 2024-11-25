@@ -270,4 +270,28 @@ Each core (worker) handles its own thread of execution. A CPU core executes one 
 Since workers are separate processes, they do not block one another. Each worker can independently handle requests, and Node.js will not block one worker's execution because of the other workers.
 
 30. What is Aggregation in MongoDB ?
-Ans : Aggregation in MongoDB is a process used to perform operations on data, like filtering, grouping, sorting, and calculating values, to get meaningful results
+Ans : Aggregation in MongoDB is a process used to perform operations on data, like filtering, grouping, sorting, and calculating values, to get meaningful results.
+
+31. What is difference between sql and nosql databases ?
+Ans : The difference between SQL (Structured Query Language) and NoSQL (Not Only SQL) databases comes down to how they store and manage data .
+1. Data Structure:
+SQL: These databases are relational. They store data in tables with rows and columns, like a spreadsheet. Each row represents a record, and each column represents a field in that record. SQL databases use a predefined schema (structure) for the data, meaning you must define the types and structure of your data upfront.
+
+Example: MySQL, PostgreSQL, Oracle
+NoSQL: These databases are non-relational and are more flexible in how they store data. They can store data in various formats like documents, key-value pairs, graphs, or wide-columns. There is no strict schema, which allows you to store unstructured or semi-structured data and change the structure over time.
+
+Example: MongoDB (document-based), Redis (key-value), Neo4j (graph), Cassandra (wide-column) .
+2. Flexibility:
+SQL: Less flexible because the structure (schema) is defined in advance and changing it later can be complicated.
+NoSQL: More flexible because you don’t need a predefined structure. You can easily add new fields or change the structure of the data as your application evolves.
+3. Scalability:
+SQL: Typically scales vertically. This means to handle more data or traffic, you would usually need to get a bigger, more powerful server (upgrading the hardware).
+NoSQL: Scales horizontally. This means you can handle more data or traffic by adding more servers to distribute the load, which makes it easier to scale out in large applications.
+
+4. Data Integrity:
+SQL: SQL databases focus on ACID properties (Atomicity, Consistency, Isolation, Durability), ensuring that data is always consistent, reliable, and accurately stored.
+NoSQL: NoSQL databases generally focus on eventual consistency rather than strict ACID properties, allowing for faster performance and scalability at the cost of sometimes allowing data to temporarily be inconsistent.
+
+5. Use Cases:
+SQL: Best for applications with structured data that require complex queries, transactions, and relationships between data (e.g., banking systems, customer relationship management).
+NoSQL: Best for applications with unstructured data or where high scalability and flexibility are needed (e.g., social media apps, big data analytics, content management).
