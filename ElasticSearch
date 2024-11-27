@@ -1,1 +1,38 @@
 
+1. What is elastic search and how does it work ?
+
+Ans : Elastic Search is open source full text search engine that works on both structured and unstructured data as well . At its core, Elasticsearch is used to perform fast 
+searches on large datasets and to analyze complex data, providing quick responses to queries.
+
+Key Features of Elasticsearch:
+Full-text Search: Elasticsearch excels at full-text searching, making it ideal for scenarios like searching documents, logs, and other text-heavy data.
+Scalability: It can scale horizontally by adding more nodes (servers) to a cluster, allowing it to handle growing amounts of data efficiently.
+Real-time Indexing: Data can be indexed and made searchable almost immediately, making it suitable for real-time applications.
+Distributed System: Elasticsearch is designed to be distributed, so it can spread data across multiple machines for redundancy and speed.
+Restful API: It uses RESTful APIs and JSON, making it easy to integrate with applications and services over HTTP.
+Powerful Querying: Elasticsearch provides a powerful querying language, allowing users to perform complex searches like filtering, aggregation, and full-text searches.
+
+When anyone make any request on elastic search for any product , it will give score to every related product and according to that it fetches result . 
+
+Elasticsearch: It is purpose-built for full-text search, and includes a wide range of specialized features like full-text search with scoring, ranking of results by relevance, 
+tokenization, stemming, synonyms handling, and fuzzy search. This makes it much more powerful for tasks like searching product descriptions, customer reviews, and other text-heavy data.
+
+
+**************Important point which is difference between db search and elastic search .***********************
+1. Advanced Full-Text Search
+In an e-commerce context, users search for products by typing keywords into a search box. These search terms may not exactly match product titles or descriptions, but Elasticsearch
+can handle fuzzy search, synonyms, stemming (e.g., "running shoes" vs. "run shoe"), and misspelled words (e.g., "sneekers" vs. "sneakers").
+Example: Imagine a user searching for "blue running shoes". In a traditional NoSQL database, the query might only return products with an exact match for those words.
+In Elasticsearch, it would return relevant products even if the user typed "blues running shoes" or "sneakers" instead of "shoes".
+
+2. Relevance Scoring and Ranking
+Elasticsearch uses sophisticated relevance scoring to rank results, based on factors such as text matches, keyword frequency, product ratings, and popularity. 
+This ensures that the most relevant products show up first.
+In MongoDB, ranking products by relevance would require custom logic and would likely be slower, especially as the dataset grows.
+
+There are 5 things in Elastic Stack . Elastic is company name . 
+1. Elastic Search : open source full text search
+2. Kibana : Dashboard UI
+3. Log Stash : It takes data from source and store /patak in elastic search
+
+There are 2 ways to find data first one is through API request and second one is through terminal . 
