@@ -33,6 +33,10 @@ In Summary:
 Sharding = Splitting across different databases/servers.
 Partitioning = Splitting within the same database/server.
 
+
+***********************************************************************************************************************************************************
+***********************************************************************************************************************************************************
+
 2. What is CAP Theorem ?
 Ans :  LINK ->  https://drive.google.com/drive/folders/1i80S1YymUX8pWId6tAnh10rS2FeO-Mbb
 
@@ -76,3 +80,104 @@ Consistency (latest data for everyone),
 Availability (always responds),
 Partition tolerance (works even if parts of the system are disconnected).
 Instead, you can only choose two to prioritize depending on the system's needs.
+
+
+***********************************************************************************************************************************************************
+***********************************************************************************************************************************************************
+
+3. What are caching and what are different cache update strategies ?
+Caching is a mechanism used to store frequently accessed data temporarily in a fast storage layer (like memory) to improve performance and reduce the time taken to retrieve data from a slower storage layer (like a database or external API). The goal is to serve requests faster by reducing the load on the primary data source.
+
+Cache Update Strategies
+Several strategies are used to manage and update cached data to ensure it remains relevant and useful. Here are the most common ones:
+
+1. Write-Through Cache
+Description:
+Every time data is written to the database, it is simultaneously written to the cache. This ensures that the cache and the database are always in sync.
+
+Example:
+
+Suppose you're managing a user profile system.
+When a user updates their profile, the system writes the updated data to the database and immediately updates the cache.
+Advantages:
+
+Data consistency between the cache and database.
+Read requests can always fetch fresh data from the cache.
+Disadvantage:
+
+Slower writes because it involves updating both the database and cache.
+2. Write-Around Cache
+Description:
+Data is written directly to the database, and the cache is updated only when the data is read the next time (cache miss).
+
+Example:
+
+A blog application writes a new blog post directly to the database.
+The blog post will not appear in the cache until someone reads it for the first time.
+Advantages:
+
+Faster writes since the cache is not updated.
+Useful when the data is rarely read.
+Disadvantages:
+
+May result in initial cache misses for newly written data.
+3. Write-Back Cache
+Description:
+Data is written only to the cache initially. The database is updated asynchronously in the background. This can improve performance but requires a mechanism to ensure eventual consistency.
+
+Example:
+
+A shopping cart system updates the cache when a user adds items to their cart. The database is updated in bulk periodically.
+Advantages:
+
+Very fast writes since only the cache is updated.
+Reduces database write load.
+Disadvantages:
+
+Risk of data loss if the cache crashes before the database is updated.
+Complex implementation to ensure consistency.
+4. Cache-Aside (Lazy Loading)
+Description:
+The application checks the cache first. If the data is not found (cache miss), it fetches the data from the database and then populates the cache for future requests.
+
+Example:
+
+An e-commerce site stores product details in the cache.
+When a user views a product for the first time, it fetches the details from the database, stores them in the cache, and serves the response.
+Advantages:
+
+Cache only contains frequently accessed data, optimizing memory usage.
+Simpler implementation.
+Disadvantages:
+
+Cache misses can result in slower initial response times.
+Stale data if not properly managed.
+5. Refresh-Ahead
+Description:
+The cache predicts when data will be accessed and refreshes it proactively before it is requested, ensuring fresh data is always available.
+
+Example:
+
+A news application knows that the "Top Stories" page is frequently accessed.
+It refreshes the cache every 10 minutes to pre-load the latest stories.
+Advantages:
+
+Reduces cache misses.
+Ensures fresh data is always served.
+Disadvantages:
+
+May refresh data unnecessarily, leading to higher costs.
+Complex to predict user access patterns accurately.
+Choosing the Right Strategy
+The choice depends on the specific requirements of your application:
+
+Write-heavy applications: Use Write-Back or Write-Around.
+Read-heavy applications: Use Write-Through or Cache-Aside.
+Real-time applications: Consider Refresh-Ahead.
+Example Scenario
+Imagine an online food delivery system:
+
+User views restaurant menu: Cache-Aside is used. If the menu is not in the cache, fetch it from the database and store it in the cache.
+User places an order: Write-Through ensures the order details are updated in both the cache and the database simultaneously.
+Frequent updates for popular restaurants: Refresh-Ahead preloads the menu periodically to avoid delays during peak times.
+By choosing the right strategy, you can balance performance, consistency, and system complexity.
