@@ -1,1 +1,78 @@
+1. What is difference between Sharding and Partitioning ?
+Sharding me db ko seperate krte hai for different region of users . Means us , uk , japan wale users k liye unka db hoga jo ki us region k close hoga . 
+Partioning me jabki , same database ko split krte hai , means agar product table me 1 million of product hai to usko 4 small db me save kr sakte hai 255k data in 
+each small db . 
+Sharding me koi route setup krna padta hai , jisse pta chale request kon se region se hai .
 
+In simple terms, both sharding and partitioning are ways of dividing a database into smaller, more manageable pieces, but they differ in how and why they do this.
+
+1. Sharding:
+Sharding involves splitting a database into multiple independent databases or "shards," each of which holds a subset of the data. These shards are usually distributed across different servers (or machines), often in different physical locations.
+
+Example: Imagine you have a large e-commerce database with customer data. If the database is getting too large and slow, you can shard the data by splitting it into different shards based on regions.
+Shard 1: Customers from the U.S.
+Shard 2: Customers from Europe
+Shard 3: Customers from Asia Each shard can be stored on a different server, making the database faster and more efficient.
+Key Point: Sharding is often used when a database grows so large that a single server can't handle the load, and you need to spread the data across multiple machines.
+
+2. Partitioning:
+Partitioning is the process of dividing a single database into smaller pieces called partitions. Each partition holds a part of the data, but all partitions still exist in the same database and typically on the same server.
+
+Example: Imagine you have a database of sales transactions. You can partition the data by year:
+Partition 1: Sales data from 2020
+Partition 2: Sales data from 2021
+Partition 3: Sales data from 2022 All the data is still in the same database, but each year’s data is in its own partition, making queries faster by limiting how much data is processed at once.
+Key Point: Partitioning is often done to make large tables easier to manage or query, but all the partitions typically stay on the same server.
+
+Key Differences:
+Sharding: Splits the data into separate databases on different servers.
+Used for scalability when a single server can't handle the load.
+Partitioning: Splits the data into smaller pieces (partitions), but all pieces stay in the same database (usually on the same server).
+Used to organize large datasets for better management or performance within a single database.
+In Summary:
+Sharding = Splitting across different databases/servers.
+Partitioning = Splitting within the same database/server.
+
+2. What is CAP Theorem ?
+Ans :  LINK ->  https://drive.google.com/drive/folders/1i80S1YymUX8pWId6tAnh10rS2FeO-Mbb
+
+CAP theorem means consistency , availabiliy and partioning tolerance me se koi 2 achieve kr sakte hai in distributed system .
+The CAP Theorem is a concept from computer science that applies to distributed systems (systems where data is spread across multiple machines or locations). It states that in any distributed system, you can only guarantee two out of three of the following properties at the same time:
+
+Consistency (C)
+Availability (A)
+Partition tolerance (P)
+Let’s break it down:
+
+1. Consistency (C):
+Every request to the database will return the latest data, meaning that after an update, all nodes (servers) in the system will have the same data at the same time. No matter which server you ask, you’ll get the same result.
+
+Example: If you're checking your bank balance from two different devices, Consistency means that both devices should show the exact same balance at the same time.
+2. Availability (A):
+Every request will receive a response, either with data or an error message. The system remains available, even if some of the nodes (servers) are down or unreachable.
+
+Example: If you're trying to access a website, Availability means that the system will always respond, even if some of its parts (servers) are temporarily unavailable.
+3. Partition Tolerance (P):
+The system will continue to operate, even if there is a network failure that prevents some parts of the system from communicating with each other. This means the system can still work even if some servers can’t reach others due to network issues.
+
+Example: Imagine you are in a video call, and due to network issues, some participants can’t hear each other. Partition tolerance ensures that the call can continue for those who are still connected, even if some users are temporarily cut off.
+The CAP Theorem’s Core Idea:
+A distributed system cannot guarantee all three of these properties (Consistency, Availability, and Partition Tolerance) at the same time.
+Instead, it can guarantee at most two of them, and the system must choose which two to prioritize based on the specific needs.
+The Three Possible Choices:
+Consistency + Availability (CA): You get the most up-to-date data, and the system is always available, but if there’s a network partition, some parts of the system might not be reachable.
+
+Example: A system where you can always access your data (availability), and you’ll always see the latest data (consistency), but it struggles if there’s a network failure between servers.
+Consistency + Partition Tolerance (CP): The system ensures that all nodes have the same data (consistency) and will keep working even if there's a network partition. However, it may not always be available because it might stop answering requests if there's an inconsistency.
+
+Example: A database where you might experience downtime (no response) during network failures, but when it does respond, you'll always get the most up-to-date data.
+Availability + Partition Tolerance (AP): The system remains available (always responds), and will continue to work through network partitions, but may not always give the most up-to-date data (some nodes might have old data).
+
+Example: A system where, during network issues, you can still access data, but it might be out-of-sync across different servers.
+In Summary:
+The CAP Theorem tells us that in a distributed system, you can't have all three of the following at the same time:
+
+Consistency (latest data for everyone),
+Availability (always responds),
+Partition tolerance (works even if parts of the system are disconnected).
+Instead, you can only choose two to prioritize depending on the system's needs.
