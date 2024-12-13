@@ -181,3 +181,14 @@ User views restaurant menu: Cache-Aside is used. If the menu is not in the cache
 User places an order: Write-Through ensures the order details are updated in both the cache and the database simultaneously.
 Frequent updates for popular restaurants: Refresh-Ahead preloads the menu periodically to avoid delays during peak times.
 By choosing the right strategy, you can balance performance, consistency, and system complexity.
+
+
+***********************************************************************************************************************************************************
+***********************************************************************************************************************************************************
+
+4. When someone hit any domain like facebook.com , then what will happer ?
+
+Ans: 1. First it checks in local browswer cache .
+ If in cache it is not present , to uske baad ye "root server " k pass jata hai . root server like .com .in .edu etc . humesha right to left url parse hota hai
+ . root server k baad ye llike .com k niche "Authorative server" k pass jata hai , or waha pe isko us domain name ka ip milta hai and then fir resolver us ip 
+ko leke us ip address k server se data request krta hai . 
