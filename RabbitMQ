@@ -50,6 +50,9 @@ A special argument named “x-match”, added in the binding between exchange an
 ==================================================================================PRactical======================================================================================================
 ==================================================================================PRactical======================================================================================================
 
+SINGLE MEDIUM URL Contains entire implementation  : https://sharmilas.medium.com/get-started-with-rabbitmq-in-node-js-1adb18d019d0
+For Github Repo : for reciever https://github.com/5minslearn/rabbit-receiver       for consumer :    https://github.com/5minslearn/rabbit-sender
+
 docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.9-management
 
 PRODUCER
