@@ -1,0 +1,188 @@
+1. What is RabbitMQ ?
+
+It is open source message broker tools . It stores data in byte format . need to convert every data to byte and then store it in rmq . There is exchange , producer first send data to exchange and then
+exchange send it to corresponding Queue . and data will be stored in Queue and it can be received from consumeer . 
+
+Now mainly there are 4 exchange type . RabbitMQ has four different types of exchanges; Direct, Topic, Fanout, Headers. Each exchange type routes the message differently using different parameters and
+bindings setups. Clients can either create own exchanges or use the predefined default exchanges. Exchange can have bound queues or exchanges.
+
+The simple cycle of RabbitMQ message is as follows:
+
+The producer publishes a message to exchange.
+After receiving the message, the exchange is responsible for forwarding it. The exchange routes the message to the queues, exchanges bound to it.
+Queue receives the message and keeps it until the consumer consumes it.
+Lastly, the consumer handles the message.
+
+Only Direct Exchange and Fanout exchange mostly used in industry .
+
+1. Direct Exchange
+
+Direct Exchange message flow
+The routing in direct exchange is simple — a message goes to the queues whose binding key exactly matches the routing key of the message.
+
+The direct exchange type is useful to distinguish messages published to the same exchange using a simple string identifier.
+
+2. Topic Exchange
+
+Topic Exchange message flow
+Topic exchange is similar to direct exchange, but the routing is done according to the routing pattern. Instead of using fixed routing key,
+it uses wildcards. Messages are routed to one or many queues based on a matching between a message routing key and pattern. The routing key must consist of list of words delimited by a period “.”.
+
+3. Fanout Exchange
+
+Fanout Exchange message flow
+A fanout exchange copies and routes a received message to all queues that are bound to it regardless of routing keys or patterns. The keys provided will simply be ignored.
+
+Fanout exchanges can be useful when the same message needs to be sent to one or more queues with consumers who may process the same message in different ways.
+
+For example, when an order is created, the warehouse needs to be notified so it can prepare the order, also the cargo company needs to be notified, a consumer wishing
+to keep logs of orders also needs to be notified.
+
+4. Headers Exchange
+
+Headers Exchange message flow
+A headers exchange routes messages based on arguments containing headers and optional values. It uses the message header attributes for routing.
+
+A special argument named “x-match”, added in the binding between exchange and queue, specifies if all headers must match or just one. The “x-match” property can have two different values:
+“any” or “all”,where “all” is the default value. A value of “all” means all header pairs (key, value) must match, while value of “any” means at least one of the header pairs must match.
+
+
+==================================================================================PRactical======================================================================================================
+==================================================================================PRactical======================================================================================================
+
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.9-management
+
+PRODUCER
+
+1. Start with a simple Node app
+Let's create a simple node application and make it listen to port 4001 .
+
+Create a new project folder and initialise npm in it.
+$ mkdir provider-app
+$ cd provider-app
+$ npm init
+
+Install the required modules:
+$ npm i express amqplib
+express -> to create a node.js application.
+amqplib -> to create a message broker.
+
+Create index.js file and add the following,
+const express = require("express");
+const app = express();
+const PORT = process.env.PORT || 4001;
+app.use(express.json());
+app.get("/send-msg", (req, res) => {
+    res.send("Hello world")
+});
+app.listen(PORT, () => console.log("Server running at port " + PORT));
+Notice that we define a route /send-msg here, which we will be using later to send a message to the queue upon an API request.
+
+2. Connection to the queue
+Import amqplib module in the index.js file.
+const amqp = require("amqplib");
+Let’s wrap our connection code in an async function since we need to work with promises in the code.
+(If you are unfamiliar with async/await and other js concepts, click here to get a quick overview of some of the must-know javascript concepts)
+
+var channel, connection;  //global variables
+async function connectQueue() {   
+    try {
+        connection = await amqp.connect("amqp://localhost:5672");
+        channel    = await connection.createChannel()
+        
+        await channel.assertQueue("test-queue")
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+Let’s take a look at the code that connects to the RabbitMQ server.
+
+connection = await amqp.connect(“amqp://localhost:5672”)
+channel = await connection.createChannel()
+
+Using the connect() method, we make a connection to the server which is running at port 5672.
+We create a channel from the connection using which we can access the queues. (To understand more about connections and channels, visit this link.)
+await channel.assertQueue(“test-queue”)
+
+In the above line, we check for a queue named ‘test-queue’. If that queue does not exist, a new queue is created with the provided name (here, ‘test-queue’).
+Then, call the connectQueue function to initiate a connection when our app starts.
+
+connectQueue()
+Let’s define another async function, which can be used to send a message to the queue.
+async function sendData (data) {
+    // send data to queue
+    await channel.sendToQueue("test-queue", Buffer.from(JSON.stringify(data)));
+        
+    // close the channel and connection
+    await channel.close();
+    await connection.close(); 
+}
+We pass the message to this sendData function using function parameters.
+The channel.sendToQueue() method is used to send the message to the specified queue. It takes two parameters, the name of the queue and the message to be sent.
+3. Define an API for sending a message to the queue (for testing).
+Let’s modify the route ‘/send-msg’ to send a message to the queue when it is called. We use the function sendData() (which we defined earlier) to pass the message.
+app.get("/send-msg", (req, res) => {
+    
+    // data to be sent
+    const data = {
+        title  : "Six of Crows",
+        author : "Leigh Burdugo"
+    }
+    sendData(data);  // pass the data to the function we defined
+    console.log("A message is sent to queue")
+    res.send("Message Sent"); //response to the API request
+    
+})
+
+
+
+
+****************************CONSUMER************
+
+Creating Node app 2 (Client)
+Now, we create another node.js app that connects to the queue and acknowledges the message from the queue.
+
+Firstly, a simple express app
+$ mkdir client-app
+$ cd client-app
+$ npm init
+Create index.js file and add the following,
+
+const express = require("express");
+const app = express();
+const PORT = process.env.PORT || 4002;
+app.use(express.json());
+app.listen(PORT, () => console.log("Server running at port " + PORT));
+The client-app runs on port 4002.
+
+Connection to the ‘test-queue’
+We make a connection to the test-queue in the same way as we did in the ‘provider-app’. Then, we consume the data from the queue and acknowledge it.
+
+const amqp = require("amqplib");
+var channel, connection;
+connectQueue()  // call the connect function
+ 
+async function connectQueue() {
+    try {
+        connection = await amqp.connect("amqp://localhost:5672");
+        channel    = await connection.createChannel()
+        
+        await channel.assertQueue("test-queue")
+        
+        channel.consume("test-queue", data => {
+            console.log(`${Buffer.from(data.content)}`);
+            channel.ack(data);
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+The message from the queue is read using the consume() method. It takes the name of the queue ( here, ‘test-queue’ ) as a parameter and returns the message from the queue as a callback.
+
+channel.consume(“test-queue”, data => {
+console.log(`${Buffer.from(data.content)}`);
+channel.ack(data);
+})
+
+The channel.ack() function is used to acknowledge that the particular message has been received by the ‘client-app’.
