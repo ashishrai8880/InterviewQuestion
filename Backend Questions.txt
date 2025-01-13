@@ -33,6 +33,20 @@ Ans . First Security reason , sending data in url will be unsecure because of lo
 ==>Isolation - If there is more than one transactioin occuring , then all transaction should be taken as independent . T1 should be independent of T2 .
 ==>Durability - After transaction , data should be stored as permanent . 
 
+8. What is BASE property in NoSQL ?
+Ans : BASE stands for Basically Available , Soft State , Eventually Consistent .
+
+=> Basically Available : It means , suppose database is partioned into 4 parts , and some request comes for data available
+in 3rd part . And suppose 3rd part database is down for some reason . To handle such situation , all parts data is replicated
+to each part , so that data is always avaialble or highly available  .
+
+=> Eventually Consistent : It means , if there is some change in one part of data , then that change will eventually 
+happens in every part . Although it will take some time for updating in all parts . That's why it is called eventually
+consistent . It will not immediately available but eventually available same data in all parts .
+
+=> Soft State : It means , there is very less restriction . We can store data even it is not defined in schema . 
+
+
 8. What is foreign key ?
 ==> Foreign keys are a set of constraints in DBMS that establish relationships between tables and also ensure consistency and integrity of data. A foreign key is applied to a column of one table which references the primary key of a column in another table.
 It maintains Referential Integrity .
