@@ -154,9 +154,12 @@ One disadvantage is , whenever request comes or invocations happens ,  it start 
 Serverless or lambda me per request k hisab se bill banta hai . jabki ec2 me per hour k hisab se . Or Lambda me function hamesha sleep mode pe rehta hai , jab user aata hai to hi ye function execute hota hai from scratch .
 
 23. What is Microtask queue and Macrotask queue in NodeJs ?
-Ans. The microtask queue and macrotask queue are two separate queues that manage different types of tasks to be executed asynchronously, but with different priorities .
+Ans. The microtask queue and macrotask queue are two separate queues that manage different types of tasks to be
+executed asynchronously, but with different priorities .
 1. Macrotask Queue
-The macrotask queue (also known as the task queue) is used to hold tasks that are generally associated with higher-level events.The macrotask queue contains tasks that need to be executed after the current execution context has completed. Each iteration of the event loop processes one macrotask at a time. These tasks typically include:
+The macrotask queue (also known as the task queue) is used to hold tasks that are generally associated with
+higher-level events.The macrotask queue contains tasks that need to be executed after the current execution context has completed.
+Each iteration of the event loop processes one macrotask at a time. These tasks typically include:
 
 I/O events (like reading from a file or network request)
 Timers (setTimeout, setInterval)
@@ -165,8 +168,10 @@ User interaction events (e.g., UI events in the browser)
 requestAnimationFrame (in the browser context)
 
 2. Microtask Queue
-The microtask queue (also called the job queue) holds tasks that have higher priority and are typically associated with promises and mutation observers.
-Microtasks are executed before the next macrotask, even if the macrotask is already scheduled and ready to run . It includes : 
+The microtask queue (also called the job queue) holds tasks that have higher priority and are typically associated
+with promises and mutation observers.
+Microtasks are executed before the next macrotask, even if the macrotask is already scheduled and ready to run .
+It includes : 
 
 Promise handlers (.then(), .catch(), .finally())
 process.nextTick() in Node.js
@@ -202,7 +207,9 @@ macrotask 2
 
 24. How many types of queues in NodeJs ?
 Ans : 
-Each queue has its own priority in the event loop and is processed at different stages of the event loop iteration. Understanding this helps optimize asynchronous tasks in Node.js, manage performance, and avoid potential issues like starvation, where tasks may be delayed due to the priority of other operations in the event loop.
+Each queue has its own priority in the event loop and is processed at different stages of the event loop iteration.
+Understanding this helps optimize asynchronous tasks in Node.js, manage performance, and avoid potential issues like
+starvation, where tasks may be delayed due to the priority of other operations in the event loop.
 a. NextTick Queue:
 	Tasks scheduled with process.nextTick().
 	Executed before any other queues.
@@ -217,12 +224,15 @@ c.Macrotask Queues:
 	Check Queue: Callbacks from setImmediate.
 
 25. What is CORS in NodeJs ?
-Ans : Cross-origin resource sharing (CORS) is a security feature in Node.js that allows a server to specify which origins can access its resources
+Ans : Cross-origin resource sharing (CORS) is a security feature in Node.js that allows a server to specify which 
+origins can access its resources
 
 26. What is indexing in MongoDB ?
-Ans. Indexing is a efficient way to store data that  improves the speed of data retrieval operations on a database. It stores a small portion of the data set in sorted order in an easily searchable form. 
+Ans. Indexing is a efficient way to store data that  improves the speed of data retrieval operations on a database.
+It stores a small portion of the data set in sorted order in an easily searchable form. 
 
-Before Indexing , any query will perform Collection Scan which is entire document scan , but after indexing on some field , It will perform Index Scan . 
+Before Indexing , any query will perform Collection Scan which is entire document scan , but after indexing on some 
+field , It will perform Index Scan . 
 Suppose we have users collection and it has field name "email" then it will store all "email" in sorted order with its corresponding document location . Now when any one apply find query based on email , it will first go to the index , and apply binary search , after getting required email , it will go to its location and find its document with its location . 
 
 When there is frequent writing in collection , then use less indexing , because for every insertion , there will be balanced tree manage for indexing . Indexing 
