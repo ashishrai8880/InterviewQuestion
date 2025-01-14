@@ -1,1 +1,21 @@
+1. What is difference between WHERE clause and HAVING clause ?
+Ans : In SQL, the WHERE and HAVING clauses are essential for filtering data and refining query results. While both 
+serve the purpose of applying conditions, they are used at different stages of query execution and for distinct purposes.
 
+-> WHERE : WHERE Clause is used to filter the records from the table or used while joining more than one table. Only those
+records will be extracted who are satisfying the specified condition in the WHERE clause. It can be used with SELECT, UPDATE, 
+and DELETE statements. It is applied before any grouping or aggregation occurs in a query .
+
+SELECT S_Name, Age 
+FROM Student 
+WHERE Age >=18
+
+-> HAVING : HAVING Clause is used to filter the records from the groups based on the given condition in the HAVING Clause.
+Those groups who will satisfy the given condition will appear in the final result. It is applied after the grouping and
+aggregation of data.
+
+SELECT Age, COUNT(Roll_No) AS No_of_Students 
+FROM Student GROUP BY Age
+HAVING COUNT(Roll_No) > 1 
+
+ The WHERE clause filters rows before any grouping or aggregation occurs. The HAVING clause filters grouped data after aggregation.
