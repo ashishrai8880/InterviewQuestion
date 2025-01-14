@@ -1,1 +1,128 @@
+1. What is TypeInference?
+When you don't specify an explicit type for a variable, TypeScript can infer it. Type inference is the term for this.
+This is normally done during the declaration when the variables or parameters are initialized.
 
+TypeScript recognizes that the variable koo is a string, even if you don't mention string as a type.
+
+let koo = "Hello world";
+console.log(typeof koo);  // "string"
+
+2. Explain Tuples in Typescript With Example ?
+Tuples are a collection of values that are diverse. It allows for the storage of many fields of various sorts. Tuples 
+can also be used as function parameters.
+There are instances when it is necessary to save a collection of values of various types. Arrays will not suffice
+in this situation. TypeScript provides a data type called tuple that aids in this endeavor.
+
+Syntax:
+
+var tuple_name = [value c,value b,value c,…value n]
+For Example:
+var yourtuple = [12,"Hi"];
+
+3. What are Decorators?
+The Decorator is a type of declaration that is used to decorate a class declaration, method, accessor, property, or
+argument. Decorators take the form @expression, where expression must evaluate to a function that will be called with
+information about the decorated declaration when it is called at runtime.
+
+Example : @Controller
+          class TestController {}
+
+4. What is Type Assertion? Explain its types ?
+You can find yourself in a scenario where you know a type for an entity that is more specific than its present type.
+
+A type assertion is similar to a type cast in other languages, but it does not do any additional data verification or 
+restructuring. It has no effect on runtime and is only used by the compiler. TypeScript expects that you, the programmer, 
+have completed any necessary specific checks.
+
+There are two types of type assertions.
+
+One is the as-syntax:
+
+let someValue: unknown = "this is a string";
+
+let strLength: number = (someValue as string).length;
+
+The other version is the “angle-bracket” syntax:
+
+let someValue: unknown = "this is a string";
+
+let strLength: number = (<string>someValue).length;
+
+Both samples are identical. selecting one over the other is basically a matter of preference; however, 
+only as-style assertions are allowed when combining TypeScript with JSX. 
+
+
+5. Explain the purpose of the never type in TypeScript.
+As the name suggests, the never type represents the type of values that never occur. For example, a function that
+never returns a value or that always throws an exception can mark its return type as never.
+
+function error(message: string): never {
+throw new Error(message);
+}
+
+You might wonder why we need a ‘never’ type when we already have ‘void’. Though both types look similar, they represent
+two very different concepts.
+A function that doesn't return a value implicitly returns the value undefined in JavaScript. Hence, even though
+we are saying it’s not returning anything, it’s returning ‘undefined’. We usually ignore the return value in these 
+cases. Such a function is inferred to have a void return type in TypeScript.
+
+// This function returns undefined
+function greet(name: string) {
+console.log(`Hello, ${name}`);
+}
+
+let greeting = greet("David");
+console.log(greeting);  // undefined
+
+In contrast, a function that has a never return type never returns. It doesn't return undefined, either.
+
+
+6. Does TypeScript support static classes? If not, why?
+TypeScript doesn’t support static classes, unlike the popular object-oriented programming languages like C# and Java.
+
+These languages need static classes because all code, i.e., data and functions, need to be inside a class and cannot
+exist independently. Static classes provide a way to allow these functions without associating them with any objects.
+
+In TypeScript, you can create any data and functions as simple objects without creating a containing class. Hence
+TypeScript doesn’t need static classes. A singleton class is just a simple object in TypeScript. 
+
+7. What are type aliases? How do you create one?
+Type aliases give a new, meaningful name for a type. They don’t create new types but create new names that refer to
+that type.
+For example, you can alias a union type to avoid typing all the types everywhere that value is being used.
+
+type alphanumeric = string | number;
+let value: alphanumeric = "";
+value = 10;
+
+
+8. What are intersection types?
+Intersection types let you combine the members of two or more types by using the ‘&’ operator. This allows you to
+combine existing types to get a single type with all the features you need.
+
+The following example creates a new type Supervisor that has the members of types Employee and Manager.
+
+interface Employee {
+work: () => string;
+}
+
+interface Manager {
+manage: () => string;
+}
+
+type Supervisor = Employee & Manager;
+
+// john can both work and manage
+let john: Supervisor
+
+
+9. What are union types in TypeScript?
+A union type is a special construct in TypeScript that indicates that a value can be one of several types.
+A vertical bar (|) separates these types.
+
+Consider the following example where the variable value belongs to a union type consisting of strings and numbers.
+The value is initialized to string “Foo”. Because it can only be a string or a number, we can change it to a number 
+later, and the TypeScript compiler doesn’t complain. 
+
+let value: string | number = "Foo";
+value = 10;  // Okay
