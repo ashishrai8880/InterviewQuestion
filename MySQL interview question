@@ -40,3 +40,17 @@ Example : https://www.geeksforgeeks.org/second-normal-form-2nf/
 
 
 
+
+
+=================================================================================================================
+=================================================================================================================
+
+3. What is Cascade?
+In SQL, the term CASCADE refers to an action triggered automatically when a change occurs in a parent table,
+propagating the update or deletion to the related child table(s). By using ON DELETE CASCADE or ON UPDATE CASCADE,
+we can ensure referential integrity, maintain consistent relationships, and reduce the complexity of manual database
+management tasks.
+
+
+
+
