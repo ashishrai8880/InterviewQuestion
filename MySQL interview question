@@ -19,3 +19,24 @@ FROM Student GROUP BY Age
 HAVING COUNT(Roll_No) > 1 
 
  The WHERE clause filters rows before any grouping or aggregation occurs. The HAVING clause filters grouped data after aggregation.
+
+========================================================================================================================
+========================================================================================================================
+
+2. What is normalization and what are different types of normalisation ?
+Ans : Normalisation is a process for organizing data in a database in order to reduce redundancy and duplicacy in database .
+
+a. First Normal Form : It states that one column can contain single value . If it is containing more than 1 value , 
+then it violates first normal form . 
+ Rollno.     Language
+ 1.           c , c++ , java             // it is wrong , it should contain only 1 value for each row in column
+
+b. Second Normal Form : There should not be any partial dependency , there should be full dependency .  For a table
+to be in 2NF, it must first meet the requirements of First Normal Form (1NF), meaning all columns should contain single,
+indivisible values without any repeating groups. Additionally, the table should not have partial dependencies
+
+Example : https://www.geeksforgeeks.org/second-normal-form-2nf/ 
+
+
+
+
