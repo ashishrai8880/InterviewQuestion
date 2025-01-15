@@ -110,3 +110,30 @@ Ans : A fork in general is used to spawn child processes. In node it is used to 
 Ans : Node. js callbacks are a special type of function passed as an argument to another function. They're called when the function that contains
 the callback as an argument completes its execution, and allows the code in the callback to run in the meantime. Callbacks help us make 
 asynchronous calls
+
+
+9. What is deep copy and shallow copy ?
+Ans : A shallow copy occurs when you copy the reference of an object to a new variable. In this process, only the
+top-level properties are copied, while nested objects or arrays still reference the original memory location. This 
+means that if you change the nested properties in one object, those changes will reflect in the other because they 
+share the same memory reference.
+
+let employee = {
+    eid: "E102",
+    ename: "Jack",
+    eaddress: "New York",
+    salary: 50000
+}
+
+console.log("Employee=> ", employee);
+let newEmployee = employee;    // Shallow copy
+console.log("New Employee=> ", newEmployee);
+
+console.log("---------After modification----------");
+newEmployee.ename = "Beck";
+console.log("Employee=> ", employee);
+console.log("New Employee=> ", newEmployee);
+
+
+Deep Copy
+A deep copy, on the other hand, creates a completely independent copy of the object, including all nested objects or arrays. This ensures that changes made to one object do not affect the other. Each object is stored in a separate memory location, making them entirely independent.
