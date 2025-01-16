@@ -90,3 +90,14 @@ combines every row from the first table with every row from the second table.
 
 It does not require any matching condition.
 The result is the cartesian product of the two tables, meaning if the first table has 3 rows and the second table has 4 rows, the result will have 3 * 4 = 12 rows.
+
+
+=================================================================================================================
+=================================================================================================================
+
+5. What are hooks in sequelize ?
+Ans : Hooks (also known as lifecycle events), are functions which are called before and after calls in sequelize are
+executed. For example, if you want to always set a value on a model before saving it, you can add a beforeUpdate hook.
+
+For Example : beforeUpdate , afterValidate .
+
