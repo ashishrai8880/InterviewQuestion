@@ -82,3 +82,10 @@ Right Join (or Right Outer Join):
 Returns all rows from the right table and the matching rows from the left table.
 If there’s no match, it shows NULLs for the left table columns.
 Example: If you want to list all departments with their employees, a right join will show all departments, even if no employees belong to them.
+
+
+Cross Join (also known as a Cartesian Join)
+combines every row from the first table with every row from the second table.
+
+It does not require any matching condition.
+The result is the cartesian product of the two tables, meaning if the first table has 3 rows and the second table has 4 rows, the result will have 3 * 4 = 12 rows.
