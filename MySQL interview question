@@ -52,5 +52,12 @@ we can ensure referential integrity, maintain consistent relationships, and redu
 management tasks.
 
 
+=================================================================================================================
+=================================================================================================================
+
+4. What is Inner Join ?
+Ans : Inner join : The INNER JOIN clause in SQL is used to combine records from two or more tables. The result contains
+only the rows that have matching values in both tables based on a specific condition. 
+
 
 
