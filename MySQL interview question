@@ -59,5 +59,26 @@ management tasks.
 Ans : Inner join : The INNER JOIN clause in SQL is used to combine records from two or more tables. The result contains
 only the rows that have matching values in both tables based on a specific condition. 
 
+Inner Join:
 
+Combines rows from two tables where there is a match based on the condition.
+If there’s no match, those rows are not included in the result.
+Example: If you have two tables, Employees and Departments, an inner join will show only employees who belong to a department.
 
+Outer Join:
+
+Returns all rows from one table and the matching rows from the other table.
+If there is no match, it still returns the rows from the first table with NULLs in place of missing values from the second table.
+There are three types of outer joins: Left, Right, and Full.
+
+Left Join (or Left Outer Join):
+
+Returns all rows from the left table and the matching rows from the right table.
+If there is no match, the result will show NULLs for the right table columns.
+Example: If you have a list of all employees and want to include department details (if available), a left join will return all employees, even if they don’t belong to a department.
+
+Right Join (or Right Outer Join):
+
+Returns all rows from the right table and the matching rows from the left table.
+If there’s no match, it shows NULLs for the left table columns.
+Example: If you want to list all departments with their employees, a right join will show all departments, even if no employees belong to them.
