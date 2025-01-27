@@ -101,3 +101,33 @@ executed. For example, if you want to always set a value on a model before savin
 
 For Example : beforeUpdate , afterValidate .
 
+6. What are procedure in MySQL ?
+Ans:  In MySQL, a stored procedure is a set of SQL statements that can be stored and executed on the database server.
+It is a way to encapsulate complex queries or operations into reusable blocks of code that can be executed multiple 
+times without needing to rewrite the logic every time. Stored procedures can take parameters, perform various operations,
+and return results. They can help improve performance by reducing network traffic and enforcing consistency.
+
+DELIMITER $$
+
+CREATE PROCEDURE procedure_name (IN param1 INT, OUT param2 INT)
+BEGIN
+   -- SQL statements
+   SELECT COUNT(*) INTO param2 FROM table_name WHERE column_name = param1;
+END $$
+
+DELIMITER ;
+In this example:
+
+IN param1 INT: an input parameter.
+OUT param2 INT: an output parameter that will hold the result of the operation.
+
+Example Use Case in a Project:
+In an e-commerce platform, a stored procedure can be used to calculate customer loyalty points. For example,
+after every order, a procedure might be triggered to calculate the loyalty points based on the order value, and
+update the customer's loyalty balance in the database. This could involve updating the orders table and the
+customers table in one seamless operation.
+
+Benefits in this case:
+Consistency: Loyalty points calculation happens in a consistent manner, with no risk of errors in the application layer.
+Performance: The calculation is done directly in the database, making it faster compared to performing these operations
+in the application layer.
