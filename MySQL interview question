@@ -160,3 +160,67 @@ Ans : UPDATE persons
                      WHEN gender = 'f' THEN 'm'
                      WHEN gender = 'm' THEN 'f'
                    END ;
+
+=================================================================================================================
+=================================================================================================================
+
+9. What are subsets of sql and types of sql commands ?
+Ans : In SQL (Structured Query Language), there are different subsets and categories of commands designed for various operations. Here’s a breakdown of the subsets and types of SQL commands:
+
+Subsets of SQL:
+SQL can be broadly categorized into the following subsets:
+
+1. DDL (Data Definition Language):
+
+Purpose: This subset deals with defining and managing database objects such as tables, indexes, and schemas.
+Common Commands: CREATE , ALTER , DROP , TRUNCATE , RENAME 
+
+2. DML (Data Manipulation Language):
+
+Purpose: DML commands are used for managing and manipulating data within the database.
+Common Commands: SELECT , INSERT , UPDATE , DELETE , 
+
+3. DCL (Data Control Language):
+
+Purpose: DCL commands manage access permissions and security within a database.
+Common Commands:
+GRANT – Gives users access privileges to database objects.
+REVOKE – Removes access privileges from users.
+
+4. TCL (Transaction Control Language):
+
+Purpose: TCL commands manage the changes made by DML statements, ensuring that transactions are properly handled.
+Common Commands:
+COMMIT – Saves changes made in a transaction permanently.
+ROLLBACK – Undoes changes made in a transaction.
+SAVEPOINT – Sets a point within a transaction to which you can roll back.
+SET TRANSACTION – Defines properties for a transaction.
+
+=================================================================================================================
+=================================================================================================================
+10. What are advantage and disadvantage of SQL ?
+Ans : Disadvantage : Complex Interface : SQL has a difficult interface that makes few users uncomfortable while 
+dealing with the database.
+-> Cost : Some versions are costly and hence, programmers cannot access it.
+-> Partial Control : Due to hidden business rules, complete control is not given to the database.
+-> Limited Flexibility: SQL databases are less flexible than NoSQL databases when it comes to handling unstructured or
+semi-structured data, as they require data to be structured into tables and columns.
+-> Scalability : It is vertical scalable.
+
+Advantage : Big Community Support . No coding skills required . 
+
+
+=================================================================================================================
+=================================================================================================================
+
+11. What are triggers in MySQL ?
+Ans : In MySQL, a trigger is a special kind of stored procedure that is automatically executed or "triggered" in
+response to certain events on a specific table or view. Triggers are used to enforce business rules, perform 
+validation, or automate actions when changes are made to data in a database.
+
+Key Features of Triggers in MySQL:
+Triggers are tied to specific events that occur on a table (like INSERT, UPDATE, or DELETE).
+They are executed automatically by the database system before or after an event on a table (depending on how they are 
+defined).
+Triggers allow for actions such as logging changes, updating related tables, or enforcing constraints that cannot
+be enforced by the database schema alone.
