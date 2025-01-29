@@ -101,6 +101,9 @@ executed. For example, if you want to always set a value on a model before savin
 
 For Example : beforeUpdate , afterValidate .
 
+=================================================================================================================
+=================================================================================================================
+
 6. What are procedure in MySQL ?
 Ans:  In MySQL, a stored procedure is a set of SQL statements that can be stored and executed on the database server.
 It is a way to encapsulate complex queries or operations into reusable blocks of code that can be executed multiple 
@@ -131,3 +134,29 @@ Benefits in this case:
 Consistency: Loyalty points calculation happens in a consistent manner, with no risk of errors in the application layer.
 Performance: The calculation is done directly in the database, making it faster compared to performing these operations
 in the application layer.
+
+
+=================================================================================================================
+=================================================================================================================
+
+7. How to delete duplicate rows in MySQL ?
+Name    Age    Salary
+Varun   34     40000
+Ravi    45     65000
+Varun   34     40000
+Ravi    45     65000
+Varun   34     40000
+Ravi    45     65000
+
+Ans. Method 1 : DELET from employees WHERE empId not in (Select min(rowId) from employees group by name  )
+
+
+=================================================================================================================
+=================================================================================================================
+
+8. How to swap two values in MySQL . suppose i have gender now i want to change gender of each employee , write query for this ?
+Ans : UPDATE persons
+      SET gender = CASE 
+                     WHEN gender = 'f' THEN 'm'
+                     WHEN gender = 'm' THEN 'f'
+                   END ;
