@@ -224,3 +224,83 @@ They are executed automatically by the database system before or after an event 
 defined).
 Triggers allow for actions such as logging changes, updating related tables, or enforcing constraints that cannot
 be enforced by the database schema alone.
+
+
+=================================================================================================================
+=================================================================================================================
+12. What is Batches in database ?
+Ans: Batch processing in databases refers to the technique of processing large volumes of data in a single operation rather
+than handling them individually. This method involves grouping a series of database operations (such as insert, update,
+delete, or select queries) into a single batch and executing them together. This is particularly useful for performing 
+multiple operations on a large dataset with improved performance and efficiency.
+
+Important Notes:
+Error handling: Always handle errors properly in batch processing to ensure that if one operation fails, the whole batch is not lost.
+
+Transaction Management: If you're doing a critical operation where partial failures can't be accepted, consider using transactions
+(beginning and committing/rolling back transactions) to ensure atomicity.
+
+EG :
+const mysql = require('mysql2');
+
+// Create a connection to the database
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',    // Your MySQL username
+  password: '',    // Your MySQL password
+  database: 'test' // Your database name
+});
+const updateQuery = 'UPDATE users SET email = ? WHERE name = ?';
+
+const usersToUpdate = [
+  ['newemail1@example.com', 'John Doe'],
+  ['newemail2@example.com', 'Jane Smith'],
+];
+connection.beginTransaction((err) => {
+  if (err) {
+    console.error('Error starting transaction:', err);
+    return;
+  }
+
+  connection.query(updateQuery, usersToUpdate, (err, results) => {
+    if (err) {
+      connection.rollback(() => {
+        console.error('Error in batch update, rolling back:', err);
+        connection.end();
+      });
+    } else {
+      connection.commit((err) => {
+        if (err) {
+          connection.rollback(() => {
+            console.error('Error committing transaction, rolling back:', err);
+            connection.end();
+          });
+        } else {
+          console.log('Transaction completed successfully');
+          connection.end();
+        }
+      });
+    }
+  });
+});
+
+
+=================================================================================================================
+=================================================================================================================
+
+13. Difference between Batch Processing and Bulk Operations?
+Ans : The difference lies in how the operations are grouped and executed. Batch processing can involve a series of smaller
+operations executed in bulk, but it is more about managing multiple database queries or operations as a group rather than 
+executing them all at once in a single query.
+
+Limitations on Size: Some databases impose limits on the maximum size of a query. If you're inserting, updating, or deleting
+a very large number of records, you might hit this limit (e.g., MySQL has a max_allowed_packet limit).
+
+Limited Flexibility: Bulk queries are often less flexible when you need to handle complex logic for individual rows
+(e.g., when rows need to be processed differently).
+
+While both bulk operations and batch processing can help you work with large amounts of data efficiently, batch processing provides 
+more flexibility, error handling, and control, especially when working with complex or diverse operations. On the other hand, bulk
+queries are typically faster for simple operations since they execute in a single query and are more straightforward to implement.
+The choice between the two methods depends on your specific use case and the complexity of your operations.
+
