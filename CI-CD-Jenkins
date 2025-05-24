@@ -1,0 +1,161 @@
+
+Steps for Install Jenkins on AWS EC2 Instance
+ ==> If already installed first remove it
+	sudo systemctl stop jenkins
+	sudo apt purge jenkins -y
+	sudo rm -rf /var/lib/jenkins /var/log/jenkins /var/cache/jenkins /etc/default/jenkins /etc/init.d/jenkins
+
+==> Remove java
+	sudo apt purge openjdk-* -y
+	sudo apt autoremove -y
+
+==> Remove Docker
+	sudo systemctl stop docker
+	sudo apt purge docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+	sudo rm -rf /var/lib/docker /etc/docker
+
+==> Remove Nodejs
+	sudo apt purge nodejs npm -y
+	sudo rm -rf /usr/local/lib/node_modules
+
+==>  Clean up apt cache
+	sudo apt autoremove -y
+	sudo apt clean
+
+==> After cleanup : After Cleanup
+You can verify everything is gone by running:
+
+	which jenkins
+	which java
+	which docker
+	which node
+
+==> Jenkins Installation on AWS EC2 Ubuntu
+🧱 Prerequisites (Assumptions):
+Ubuntu EC2 instance is running
+
+You are connected via SSH
+
+Port 8080 is open in your EC2 Security Group (important for accessing Jenkins)
+
+	1. sudo apt update
+
+	2. sudo apt install openjdk-17-jdk -y
+	3. java -version
+
+	4. Add Jenkins GPG key and repository (2024 method)
+
+		curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee \
+  		/usr/share/keyrings/jenkins-keyring.asc > /dev/null
+
+		echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  		https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  		/etc/apt/sources.list.d/jenkins.list > /dev/null
+
+🔹 5. Install Jenkins
+
+	sudo apt update
+	sudo apt install jenkins -y
+
+🔹 6. Start and enable Jenkins service
+
+	sudo systemctl start jenkins
+	sudo systemctl enable jenkins
+	sudo systemctl status jenkins.service  - for viewing jenkins status
+
+🔹 7. Access Jenkins in browser
+
+	http://<your-ec2-public-ip>:8080
+
+ 🔹8. Get the Jenkins initial admin password
+
+	sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+Above command will install jenkins in aws ec2 instance ubuntu . Now you can open jenkins url in browser and set 
+configuration . 
+
+===> Generate AWS EC2 ssh key by command
+
+	ssh-keygen
+
+this command will generate 2 keys , public and private . 
+
+----------------------------------------- Connecting Github With Jenkins---------------------------------
+
+1. First go to the setting in github and add ssh keys . Add aws ec2 public key in github ssh keys . and save it
+2. Go to jenkins and click on New (+) on top right corner . This will ask for cicd type . 
+3. Select Freestyle project and go ahead . Then type description and all . In Source code management select 
+	GIT and then add credentials . Here in key , add aws ec2 private key . ID will be 'ubuntu' or whatever username
+	is . And Then save button 
+
+4. Now Jenkins will get connected with Github . 
+5. Now when you click on build button , it will fetch entire repository , and will give you location of that
+repo . 
+
+At this point you have to restart your node application manually by going to terminal and entering required command . 
+
+-------------------------------------------Containarisation of APP ---------------------------------------
+
+1. Write Dockerfile code . 
+
+	# Node Base Image
+	FROM node:12.2.0-alpine
+
+	#Working Directry
+	WORKDIR /node
+
+	#Copy the Code
+	COPY . .
+
+	#Install the dependecies
+	RUN npm install
+	RUN npm run test
+	EXPOSE 8000
+
+	#Run the code
+	CMD ["node","app.js"]
+
+2. Run below command and make image of application . Below command will make available of every software requirement
+for application . 
+
+	docker build . -t node-todo-app
+
+3. Now run below command to run application
+
+	docker run -d --name todo-node-app -p 8000:8000 node-todo-app
+
+Above 3 command will run your application . 
+
+Above command might create permission issue while running . Please visit stackoverflow for this . for this you can 
+try below command . 
+
+	sudo usermod -a -G docker jenkins (This will resolve permission issue)
+
+By following above command , you will be able to run application in docker , but still you have to run these command
+everytime manually in shell . To automate this , you can paste these command in jenkins configure option . 
+
+You can go to configure option , and then scroll down and then select 'execute shell' from build steps dropdown
+
+Paste docker command there . 
+
+Now there might be issue of duplicate name of docker container after running second build which is normal . 
+For this you can write : docker rm -f todo_app_node || true : at the top of build script shell 
+
+Final will be : 
+	docker rm -f todo_app_node || true
+	docker build . -t node-todo-app
+	docker run -d --name todo_app_node -p 8000:8000 node-todo-app
+
+
+
+----------------------------------- Automation of pulling from github -----------------------------------
+
+1. First install github-integration plugins in jenkins . 
+
+2. Go to the repo settings . And then add webhook . And save it .
+
+	http://ec2-instance-ip:8080/github-webhook/
+
+3. Go to the jenkins configure screen and scroll down and there is Triggers . Select "GitHub hook trigger for 
+GITScm polling" and save it . Now whenever there is change in mentioned branch in jenkins , build will 
+automatically get triggered . 
