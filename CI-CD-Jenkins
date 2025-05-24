@@ -96,6 +96,10 @@ At this point you have to restart your node application manually by going to ter
 
 -------------------------------------------Containarisation of APP ---------------------------------------
 
+=> First install docker in your machine by running command 
+
+	sudo apt install docker.io
+
 1. Write Dockerfile code . 
 
 	# Node Base Image
@@ -118,7 +122,10 @@ At this point you have to restart your node application manually by going to ter
 2. Run below command and make image of application . Below command will make available of every software requirement
 for application . 
 
-	docker build . -t node-todo-app
+	docker build . -t node-todo-app .
+
+Above command can create permission denied issue . You can run below command for this . 
+	sudo usermod -a -G docker $USER
 
 3. Now run below command to run application
 
