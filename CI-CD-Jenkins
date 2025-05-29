@@ -166,3 +166,56 @@ Final will be :
 3. Go to the jenkins configure screen and scroll down and there is Triggers . Select "GitHub hook trigger for 
 GITScm polling" and save it . Now whenever there is change in mentioned branch in jenkins , build will 
 automatically get triggered . 
+
+------------------------------------- Master and Slave Node --------------------------------------------------
+Master Node: In Jenkins, the master node is responsible for managing the overall Jenkins instance, scheduling jobs, managing user permissions, and overseeing the build pipelines.
+It shouldn't be overloaded with actual build tasks because if the master node is busy with heavy tasks, it can affect its core functionality (like job scheduling and management).
+
+Agent Nodes: These are separate, dedicated machines (or virtual machines/containers) where Jenkins can offload the actual work (builds, tests, deployments). Having dedicated agent
+nodes for builds and deployments keeps the master node free for its management responsibilities.
+
+===> Steps
+1. First create dedicated instance for jenkins agent node . 
+2. Jenkins should be installed in master node and it is not necessary to install it in child node . But child node should installed java init . 
+3. Now parent node will connect to child using ssh . Master will contain private key and child will contain public key . 
+   In Master node : cd ~/.ssh
+	Create keys :  ssh key-gen
+	Copy public key .
+4.  Now if you go to manage jenkins , it might showing you warning that master node should not be on same server . For this add agent . 
+	/home/ubuntu Remote directory
+	Labels : This will be agent name . 'vinod' . 
+	Lanuch method : Launch with ssh . Host : child node ip . now enter private key in jenkins master . In Kind : ssh-username . Username : ubuntu . 
+	Jenkins master will contains master node private key . 
+	Host key Verification strategy  : Non verifying verfication strategy . Save it . 
+5. Now add public key to agent . cd  ./ssh 
+	There will be authorised key . Open that file and add public key at the last of file .  Now go to the pipeline script and add agent . 
+6. Now launch agent , it will start working . Now new folder will be created in child node . 
+
+
+-------------------------------------------------------- Push Application Image to Docker Hub --------------------------------------------------------------
+We can write build and all command in github repository seperately in groovy file format . 
+Download pipeline stage plugin for good view . 
+Download docker.io in child node also . sudo apt-get install docker.io
+
+Credentials Binding for docker hub credentials . 
+1. Go to Dashboard -> Manage Jenkins -> Credentials -> System -> Global Credentials (Unrestricted) 
+2. Enter username and required details . Go to Docker Hub and Generate Access Token . Fill ID and this ID will be used in getting username and password . 
+3. Now in script , you can use withCredentials() inbuilt function to get username and password . This complete syntax already available in Jenkins file . 
+
+------------------------------------------------------------ Shared Library ------------------------------------------------------------------------------------
+A Shared Library in Jenkins is a centralized, reusable set of code that you can use across multiple Jenkins pipelines. It’s a way to avoid repeating the same pipeline code in every Jenkinsfile.
+
+Think of it like a function library or a toolbox for your Jenkins pipelines. 
+File of shared library in github repository should be inside 'vars' folder and file format should be in .groovy . 
+
+To use shared library you have to use  @Library("Shared") _ at the top of pipeline script . 
+
+1. First We have to tell Jenkins where to use shared library code . 
+2. Go to Manage Jenkins -> System -> Search "Global Trusted Libraries" . 
+3. cllick on Add . Fill form . Default version : branch name . 
+3. Select GithubSCM and enter repository url and then save it . Code is already available in node-todo-cicd repo -> Jenkins File 
+
+
+
+
+
