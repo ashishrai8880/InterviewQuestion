@@ -1,2 +1,74 @@
 Docker Notes
+
+->  Docker is an open-source containerization platform by which you can pack your application and all its dependencies into a standardized unit called a container.
+Containers are light in weight, which makes them portable, and they are isolated from the underlying infrastructure and from each other's container.
+You can run the docker image as a docker container in any machine where docker is installed without depending on the operating system.
+
+->Docker Image is an executable package of software that includes everything needed to run an application. This image informs how a container should instantiate, determining which software components will run and how.
+Docker container is a runtime instance of an image. Allows developers to package applications with all parts needed such as libraries and other dependencies. Docker Containers are runtime instances of Docker images.
+
+===================================================> Architecture of Docker 
+Docker makes use of a client-server architecture. The Docker client talks with the docker daemon which helps in building, running, and distributing the docker containers. The Docker client runs with the daemon on the 
+same system or we can connect the Docker client with the Docker daemon remotely. With the help of REST API over a  UNIX socket or a network, the docker client and daemon interact with each other. 
+
+Docker daemon manages all the services by communicating with other daemons. It manages docker objects such as images, containers, networks, and volumes with the help of the API requests of Docker.
+
+Docker Client
+With the help of the docker client, the docker users can interact with the docker. The docker command uses the Docker API. The Docker client can communicate with multiple daemons. When a docker 
+client runs any docker command on the docker terminal then the terminal sends instructions to the daemon. The Docker daemon gets those instructions from the docker client withinside the shape of 
+the command and REST API's request
+
+Docker Host
+A Docker host is a type of machine that is responsible for running more than one container. It comprises the Docker daemon, Images, Containers, Networks, and Storage.
+
+Docker Registry
+All the docker images are stored in the docker registry. There is a public registry which is known as a docker hub that can be used by anyone. We can run our private 
+registry also. With the help of docker run or docker pull commands, we can pull the required images from our configured registry. Images are pushed into configured registry 
+with the help of the docker push command.
+
+Docker Engine:
+
+The Docker Engine is the heart of the Docker platform. It comprises two main components:
+Docker Daemon (dockerd): The Docker daemon runs on the host machine and is responsible for managing Docker objects, such as images, containers, networks, and volumes.
+Docker Client: The Docker client is a command-line interface (CLI) tool that allows users to interact with the Docker daemon through commands. Users can build, run, stop,
+and manage Docker containers using the Docker CLI.
+
+Docker Container Lifecycle Management
+The lifecycle of a docker container consists of five states:
+
+Created state
+Running state
+Paused state/unpaused state
+Stopped state
+Killed/Deleted state
+
+
+=====================================================================Commands =============================================================================
+
+  docker ps : list all running containers
+  docker run -d <imagename>  : run docker imae in detach mode . detach mode means it can run in backgroud . 
+  docker stop <container id> : used to stop docker container 
+
+FROM openjdk:17-jdk-alpine        //  openjdk is base image . 17 is the version of jdk and -alpine is the tag .
+
+WORKDIR /app             // defining work directory . whatever command will run will run inside this directory
+
+COPY src/Main.java /app/Main.java                // copy specific file from host directory to working container directory . This is basic project , that is why i copied only specific file , otherwise entire project should be copied
+
+RUN javac Main.java               // compiling java program
+
+CMD ["java","Main"]                      // running the container 
+
+
+Every line in Dockerfile , is used to make image of project . All commmand till RUN is used to make container . if i do not write CMD command , still image will be built . To run built image in container , 
+we need to write CMD command . This is basic difference between RUN and CMD command . RUN is used to build image and CMD is used to actually runn the container (from image) . 
+There is similar ENTRYPOINT command as same as CMD . difference is CMD cannot be overriden and ENTRYPOINT can be overwridden . 
+
+  docker build -t <new image name>  .    : this command is used to build the image of project . -t is used to give image tag name . and (.) this is used to tell docker build command , where is exact Dockerfile present . 
+                                            docker build command build image from Dockerfile . So we need to tell the location of Dockerfile in a project . 
+
+  docker run -d <image tag name>      : this command is used to run container . -d used to run in detach mode (backgroud mode) .
+
+
+iF ANYthing changes in project then we need to run docker build command again to make fresh images . and then again need to run docker run command to run docker container . 
   
