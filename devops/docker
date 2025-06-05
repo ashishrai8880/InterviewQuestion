@@ -62,7 +62,7 @@ CMD ["java","Main"]                      // running the container
 
 Every line in Dockerfile , is used to make image of project . All commmand till RUN is used to make container . if i do not write CMD command , still image will be built . To run built image in container , 
 we need to write CMD command . This is basic difference between RUN and CMD command . RUN is used to build image and CMD is used to actually runn the container (from image) . 
-There is similar ENTRYPOINT command as same as CMD . difference is CMD cannot be overriden and ENTRYPOINT can be overwridden . 
+There is similar ENTRYPOINT command as same as CMD . difference is CMD be be overriden and ENTRYPOINT can not be overwridden . 
 
   docker build -t <new image name>  .    : this command is used to build the image of project . -t is used to give image tag name . and (.) this is used to tell docker build command , where is exact Dockerfile present . 
                                             docker build command build image from Dockerfile . So we need to tell the location of Dockerfile in a project . 
@@ -71,4 +71,45 @@ There is similar ENTRYPOINT command as same as CMD . difference is CMD cannot be
 
 
 iF ANYthing changes in project then we need to run docker build command again to make fresh images . and then again need to run docker run command to run docker container . 
+
+============================================================= Running Flask Project =================================================================================
+
+  docker run -d -p 80:80 <image-name>   :  here -p used to public host port with container port . first 80 is the host port and second 80 is the container port . It basically telling , public container 80 port to the host
+                                            80 port . 
+
+  docker logs <container id >  : To get project logs . It can even give which endpoint is hit . 
+
+  docker attach <container id>  : It will also give project logs , but in real time in attach mode . docker logs command can not give me real time . 
+
+  docker start <container id> : to start container 
+  docker stop <container id > : to stop container 
+
+  docker exec -it <containerId> bash   :  -it : iteractive . this command used to go inside container . like if we run mysql container , then to go inside we can use this command . exec is executes . bash is because
+                                            it is command line . 
+
+  docker images : it shows all the images . 
+
+  docker run -itd ubuntu : this command will run ubuntu in backgroud + in iteractive mode . This will give me ubuntu terminal . -it : interactive terminal and -d : detach mode 
+
+
+====================================================================== Docker Networking =============================================================================================
+
+Docker Networking 
+A network is a group of two or more devices that can communicate with each other either physically or virtually. The Docker network is a virtual network created by Docker to enable 
+communication between Docker containers. If two containers are running on the same host they can communicate with each other without the need for ports to be exposed to the host machine.
+
+Types of Network Drivers
+bridge (default): If you build a container without specifying the kind of driver, the container will only be created in the bridge network, which is the default network. 
+
+Custom ( user defined bridge ) : This is defined by user . 
+
+host: Containers will not have any IP address they will be directly created in the system network which will remove isolation between the docker host and containers. container and host both will have same port and network .
+
+none: IP addresses won't be assigned to containers. These containments are not accessible to us from the outside or from any other container. 
+
+overlay: overlay network will enable the connection between multiple Docker demons and make different Docker swarm services communicate with each other.
+
+ipvlan: Users have complete control over both IPv4 and IPv6 addressing by using the IPvlan driver.
+
+macvlan: macvlan driver makes it possible to assign MAC addresses to a container. 
   
