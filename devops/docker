@@ -113,5 +113,41 @@ ipvlan: Users have complete control over both IPv4 and IPv6 addressing by using 
 
 macvlan: macvlan driver makes it possible to assign MAC addresses to a container. 
 
+  1. docker network ls : to view all network available
 
-  
+  2. docker network create mynetwork -d bridge : use to create new network
+
+  3. docker run -e MYSQL_ROOT_PASSWORD=root mysql : -e used to give environement . mysql cant run without environment . 
+
+  4. docker run -d -p 5000:5000 -e MYSQL_HOST=mysql -e MYSQL_USER=root -e MYSQL_PASSWORD=root -e MYSQL_DB=devops two-tier-backend
+
+  5. docker ps -a : give all container , even past container also . 
+
+  6. docker stop <cID> & docker rm <cId> : stop container and remove it .
+
+  7. docker run -d --name mysql-container --network <networkname> -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=devops mysql . To run mysql in particular network . 
+
+If any app contains db and other requirements , then we need to run all these dependency in same network . For example , if app is using mysql db , then first create
+network of bridge type and then run mysql and application in same network then only it will work . otherwise app will be unable to find
+database host . 
+
+  docker run -d -p 5000:5000 --network <network-name> -e MYSQL_HOST=<mysql container name> -e MYSQL_USER=root -e MYSQL_PASSWORD=root -e MYSQL_DB=devops --name <app-container-name> <image-name>   : This command can be used to 
+    run application within same network . 
+
+  8. docker network inspect <network-name> : use to inspect network 
+
+  9. docker exec -itd <containerId> bash : used to enter into mysql command prompt
+
+
+================================================Docker Volume ====================================================
+
+Volumes are persistent data stores for containers, created and managed by Docker. You can create a volume explicitly using the
+docker volume create command, or Docker can create a volume during container or service creation.
+
+  1. docker volume ls : list all volume
+  2. docker volume create mysql-data  : used to create volume . mysql-data is the name of volume . 
+  3. docker inspect <volume-name> : you can watch where it is storing , what data it holds . 
+
+  4. docker run -d --name mysql-container --network <networkname> -v mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=devops mysql . : in this command attaching volume with mysql container . /var/lib/mysql is actual place in container 
+                                where data is actually saved . And it is mapped with the host . so that data will not lost . 
+
