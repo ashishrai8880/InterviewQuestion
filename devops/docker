@@ -151,3 +151,83 @@ docker volume create command, or Docker can create a volume during container or 
   4. docker run -d --name mysql-container --network <networkname> -v mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=devops mysql . : in this command attaching volume with mysql container . /var/lib/mysql is actual place in container 
                                 where data is actually saved . And it is mapped with the host . so that data will not lost . 
 
+===============================================Docker Compose====================================================
+
+Docker Compose is a powerful tool for managing multi-container applications, and mastering its key components—like services, 
+networks, volumes, and environment variables—can greatly enhance its usage. Let’s break down these concepts and how they work 
+within a Docker Compose file.
+
+Docker Compose File (YAML Format)
+Docker Compose configurations are mainly stored in a file named docker-compose.yml, which uses YAML format to define an 
+application’s environment. This file includes all the necessary details to set up and run your application, such as services,
+networks, and volumes. To use Docker Compose in an effective way you have to know the structure of this file.
+
+Before docker compose , we are first making image by running docker build command , then we run container by docker run command . 
+In running mysql container , we also have to pass environment variables each time which is time consuming process . Instead doing all this configuration
+in terminal every time , we can simply write all this configuration in docker-compose yaml file and automate process . Soundss Cool . 
+
+version: "3.8"     // docker compose version . nowadays , it is optional
+
+services:
+  mysql:          // service name 
+    user: "${UID}:${GID}" 
+    image: mysql:5.7           // image : because it should be pull from registory
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root     // environement variable which is required to connect mysql
+      MYSQL_DATABASE: devops
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    volumes:                      // volumes which is attach with container to store data
+      - ./mysql-data:/var/lib/mysql
+      - ./message.sql:/docker-entrypoint-initdb.d/message.sql        // optioinal
+    networks:
+      - two-tier        // network name under which these container will run
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]      // healthcheck to ensure that , after successfully launching mysql cotainer , only then flas-app will become ready to connect 
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  flask-app:
+    build:
+      context: .
+    container_name: flask-app
+    ports:
+      - "5000:5000"
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DB: devops
+    depends_on:                  // when mysql container up , only then flask container will start making its image and upping its container 
+      - mysql
+    networks:
+      - two-tier
+    restart: always              // if during connection , it should be restart
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+networks:
+  two-tier:
+    driver: bridge
+
+
+1. docker compose up / docker-compose up : this command used to run docker compose yml file , after using docker compose , we get free of writting docker run and docker build command again and again 
+
+2. docker compose up -d : run in detach mode or in backgroud mode . 
+
+3. docker rmi <imageId> : use to remove image 
+
+4. docker images aq : it will give all images id . 
+
+5. docker rmi -f $(docker images aq) : it will remove all docker images . 
+
+6. docker compose down : it will remove all images . 
+
+7. docker compose up -d --build : it will forcefully build image . 
