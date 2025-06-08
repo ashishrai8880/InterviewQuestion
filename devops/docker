@@ -231,3 +231,46 @@ networks:
 6. docker compose down : it will remove all images . 
 
 7. docker compose up -d --build : it will forcefully build image . 
+
+
+================================================================= Multistage Docker Build =========================================================
+
+A multistage Dockerfile is a feature introduced in Docker to address the challenge of creating lean and efficient container images Traditionally, Docker images used to
+contain all the dependencies, libraries, and tools required to run an application, leading to bloated images that consume unnecessary disk space and hence increase the
+deployment times Now Multistage builds allow developers to build multiple intermediate images within a single Dockerfile, and each intermediate image serves a specific
+purpose in the build process.
+
+In a multistage Dockerfile, developers define multiple build stages, each encapsulating a specific set of instructions and dependencies. These stages can be named and
+referenced within the Dockerfile, enabling seamless communication between them. Basically, the first stage of creating a multistage Dockerfile is dedicated to building 
+the application code, while subsequent stages focus on packaging the application and preparing it for runtime. Intermediate images that are generated in earlier stages 
+are discarded just after their purpose is served, resulting in a final production image that contains only the essential components required to run the application.
+
+# ------------------- Stage 1: Build Stage ------------------------------
+FROM python:3.9 AS builder                 // big image to download all dependenciees 
+
+WORKDIR /app
+
+# Install build dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc default-libmysqlclient-dev pkg-config && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# ------------------- Stage 2: Final Stage ------------------------------
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Install runtime dependencies only
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libmariadb3 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy dependencies and application code from the builder stage
+COPY --from=builder /usr/local/lib/python3.9/site-packages/ /usr/local/lib/python3.9/site-packages/
+COPY . .
+
+CMD ["python", "app.py"]
