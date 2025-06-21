@@ -280,3 +280,149 @@ CMD ["python", "app.py"]
 ================================================= LOgs and Monitoring ================================================================
 
   1. nohup docker attach <cotainerId> &  : this command will start storing application logs in output file nohup.out file
+
+====================================================NGINX 3 Tier Application =======================================
+
+Github : Shubham Londhe -> Repository -> django notes app
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+    container_name: "nginx_cont"
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - django
+    networks:
+      - notes-app
+
+  django:
+    build:
+      context: .
+    image: django
+    container_name: "django_cont"
+    ports:
+      - "8000:8000"
+    command: sh -c "python manage.py migrate --noinput && gunicorn notesapp.wsgi --bind 0.0.0.0:8000"
+    env_file:
+      - ".env"
+    depends_on:
+      - db
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/admin || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - notes-app
+
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
+    container_name: "db_cont"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=test_db
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    networks:
+      - notes-app
+    restart: always
+
+
+volumes:
+  mysql-data:
+
+networks:
+  notes-app:
+
+
+----------------> Nginx default.conf file code 
+
+upstream django{
+    server django_cont:8000;
+}
+
+server {
+    listen 80;
+
+    server_name localhost;
+
+    location / {
+        proxy_pass http://django_cont:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+-------------------------> Java Spring Boot APP docker compose file code -----------------
+
+version: "3.8"
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Test@123
+      MYSQL_DATABASE: expenses_tracker
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    networks:
+      - appbridge
+    healthcheck:
+      test: ["CMD","mysqladmin","ping","-h","localhost","-uroot","-pTest@123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: always
+
+  mainapp:
+    image: snehcreate/expensetracker_v3
+    container_name: Expensetracker
+    environment:
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/expenses_tracker?allowPublicKeyRetrieval=true&useSSL=false"
+      SPRING_DATASOURCE_PASSWORD: Test@123
+    ports:
+      - "8080:8080"
+    networks:
+      - appbridge
+    depends_on:
+      - mysql
+    restart: always
+
+networks:
+  appbridge:
+
+volumes:
+  mysql-data:
+
+
+================================================Docker Scout =================================================
+Docker scout is image scanning tool . It can scan vulnerabilities in image . 
+Docker Scout is an innovative tool that simplifies securing Docker images by analyzing their contents and generating a 
+detailed report of any vulnerabilities detected during the process. Docker Scout’s key features include inspecting for
+common vulnerabilities and exposures (CVE), providing security recommendations, and seamless integration with continuous
+integration, continuous delivery (CI/CD) workflows, helping you discover and remediate vulnerabilities during development.
+
+    docker scout quickview <image name> : This command will give all vulnerabilities of image . One need to login with docker hub to run this command . 
+
+    docker scout cves <image name> : This command used to go more deep in vulnerabilities . cves : common vulnerabilities end scan
+
+
+    Docker INIT -> this will generate all docker related file 
+
