@@ -1,1 +1,107 @@
+Nginx ("engine x") is an HTTP web server, reverse proxy, content cache, load balancer, TCP/UDP proxy server, and mail 
+proxy server. Originally written by Igor Sysoev and distributed under the 2-clause BSD License.
 
+NGINX is open-source web server software used for reverse proxy, load balancing, and caching. It provides HTTPS server 
+capabilities and is mainly designed for maximum performance and stability. It also functions as a proxy server for email
+communications protocols, such as IMAP, POP3, and SMTP. 
+
+========================== The NGINX Architecture ==========================
+By implementing event-driven, asynchronous, and non-blocking models, NGINX uses master-slave architecture.
+
+It also uses an advanced event-based mechanism in many operating systems. Additionally, NGINX uses multiplexing and event
+notifications and dedicates specific tasks to separate processes. For example, if you have 10 tasks, 10 different processes
+will handle each of them. NGINX processes highly efficient run loops in a single-thread process called workers.
+
+Workers :  accept new requests from a shared listen socket and execute highly efficient run loops inside each worker to
+process thousands of requests. 
+Masters : read and validate configurations by creating, binding, and crossing sockets. They also handle starting, terminations,
+and maintaining the number of configured worker processes. The master node can also reconfigure the worker process with no 
+service interruption.
+Proxy : caches are special processes. They have a cache loader and manager. The cache loader checks the disk cache item and 
+populates the engine’s in-memory database with the cache metadata. It prepares the NGINX instances to work with the files
+already stored on the disk in a specifically allocated structure. The cache manager handles cache expiration and invalidation.
+
+
+----------------------------Use Cases
+An instance of NGINX can be configured as any of the following:
+
+A web server. This is the most common because of its performance and scalability.
+A reverse proxy server. NGINX does this by directing the client’s request to the appropriate back-end server.
+A load balancer. It automatically distributes your network traffic load without manual configuration.
+An API gateway. This is useful for request routing, authentication, and exception handling.
+A firewall for web applications. This protects your application by filtering incoming and outgoing network requests on your server.
+A cache. NGINX acts as a cache to help store your data for future requests.
+Protection against distributed-denial-of-service (DDoS) attacks.
+K8s. These automate deployments and scaling and manage containerized applications.
+A sidecar proxy. This routes traffic to and from the container it runs alongside.
+
+====================================================== Nginx Configuration File ======================================
+events {}
+
+http {
+    upstream node_app {
+        server app1:3000;
+        server app2:3000;
+        server app3:3000;
+    }
+
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://node_app;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+    }
+}
+
+
+docker-compose file 
+version: '3'
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - app1
+      - app2
+      - app3
+
+  app1:
+    build:
+      context: ./app
+    environment:
+      - PORT=3000
+
+  app2:
+    build:
+      context: ./app
+    environment:
+      - PORT=3000
+
+  app3:
+    build:
+      context: ./app
+    environment:
+      - PORT=3000
+
+
+File Strucuture 
+
+/my-app
+│
+├── nginx/
+│   └── nginx.conf
+│
+├── app/
+│   └── index.js  # Your Node.js app
+│   └── Dockerfile
+│
+├── docker-compose.yml
