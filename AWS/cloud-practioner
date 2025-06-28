@@ -123,3 +123,146 @@ D. Physical security of data centers
 E. Encrypting customer data
 
 ✅ Answers: B and D
+
+ ==============================================✅ Topic: What is AWS IAM (Identity and Access Management)? =================================================
+🔹 Definition:
+AWS IAM is a free AWS service that helps you securely control access to AWS services and resources.
+
+It allows you to:
+Create and manage users and groups
+Assign permissions to allow or deny access to AWS resources
+Use policies to define who can do what (e.g., read S3, start EC2)
+Role  : role can be assigned to user , service and application . It is like 1 day prime minister . and if any user assigned any role , then it will be overcome over user's group 
+assgined policy . 
+
+Root User should be avoided and there is no way to reduce its permssion . Newly created user has not permission by default until it is assigned to some group 
+One can create upto 5000 account or user . There can be more but after raising request to AWS . 
+
+An Amazon Resource Name (ARN) is a unique identifier for an AWS resource, such as an EC2 instance, S3 bucket, or IAM user. It's a string of characters that
+specifies the resource's location and other identifying information within the AWS ecosystem. ARNs are crucial for unambiguously referencing resources across AWS,
+especially in scenarios like IAM policies, API calls, and resource tagging
+
+There always should be least priviledge possible or policy to any user . IAM policies are JSON documented . 
+
+🛡️ Key Features of IAM
+Feature	Description
+Users	Individual accounts for people or applications
+Groups	Collections of users with shared permissions
+Roles	Temporary access permissions for users/services (no credentials needed)
+Policies	JSON documents that define what actions are allowed or denied
+MFA (Multi-Factor Auth)	Adds extra layer of security to user logins
+Federation	Allows users from external identity providers (e.g., Active Directory, Google) to access AWS
+
+🔑 Exam-Relevant Points
+IAM is global (not tied to a region)
+IAM allows granular permissions (per service, per action)
+IAM is free
+Root user has full access — should be protected and rarely used
+IAM roles are used by AWS services or external users to assume temporary access
+
+📌 Sample Exam Questions
+❓Question 1:
+What does AWS Identity and Access Management (IAM) enable you to do?
+
+A. Automatically scale AWS resources
+B. Securely control access to AWS services and resources
+C. Monitor AWS usage across regions
+D. Encrypt data in transit
+✅ Answer: B
+
+❓Question 2:
+Which IAM entity is used to grant temporary access to AWS resources?
+
+A. IAM User
+B. IAM Policy
+C. IAM Role
+D. IAM Group
+✅ Answer: C
+
+❓Question 3:
+Which of the following is a best practice for the AWS root user account?
+
+A. Use it for everyday tasks
+B. Disable it completely
+C. Share it with your team
+D. Enable MFA and use only when necessary
+✅ Answer: D
+
+ ==========================================================🔹 Main Types of AWS Policies ===========================================================
+1. Identity-Based Policies (Most Common)
+Attached to: IAM users, groups, or roles
+Purpose: Grant permissions to users or roles
+Examples: Allow a user to access Amazon S3 , Deny EC2 access for a grou
+🟢 You define and manage these.
+
+2. Resource-Based Policies
+Attached to: AWS resources directly (e.g., an S3 bucket, SNS topic)
+Purpose: Specify who (which users, accounts, or services) can access that specific resource
+Examples: An S3 bucket policy that allows another AWS account to read from the bucket . An SNS topic policy allowing Lambda to publish messages
+🟢 Often used for cross-account access.
+
+3. Permissions Boundaries
+Attached to: IAM users or roles
+Purpose: Define the maximum permissions an identity-based policy can grant . Permission boundaries actually do not grant permission . Ye bas boundaries set karta hai . 
+like ec2 me user 2-3 cheeze kar sakta hai . ab ye permission boundaries set karne k baad , user bas ec2 me hi kuch kar sakta hai . s3 , lambda ya koi or service me kuch 
+nahi kar sakta . isse bas boundaries set karte hai . actual me ye permissioin deta nahii h kisi ko . 
+Think of this as a "permissions ceiling" — you can’t go beyond it even if other policies allow more.
+🟢 Used for advanced access control, especially in large orgs.
+
+4. Service Control Policies (SCPs)
+Attached to: AWS Organizations organizational units (OUs) or accounts . It is same as permission boundaries ,but at large level . if there is more than 1 organisation 
+then basically one can set its policies to its sub organisational units . If i give permission that particular sub organisation unit can just create 5 ec2 , then that 
+sub organisation will be able to just create 5 ec2 not more than that . 
+Purpose: Set permission guardrails across multiple accounts
+Can allow or deny certain actions regardless of the IAM policies in those accounts.
+🟢 Only available when using AWS Organizations
+
+5. Session Policies
+Used with: Temporary credentials (like when using STS AssumeRole)
+Purpose: Provide temporary, scoped-down permissions for a session
+Useful for fine-grained, temporary access
+
+6. ACL (Access Control Policies )
+Amazon S3 access control lists (ACLs) enable you to manage access to buckets and objects. Each bucket and object has an ACL attached to it as a subresource. It defines
+which AWS accounts or groups are granted access and the type of access. When a request is received against a resource, Amazon S3 checks the corresponding ACL to verify
+that the requester has the necessary access permissions. It is first policies which do not use JSON format . Also ACL is like resource based policy but it can be use accross
+different aws accounts . Like s3 bucket , we can give access to different account by using ACL . 
+
+Best Practice of IAM 
+1. use MFA
+2. Rotate keys and password . Do not use root user account . 
+3. Least priviledge permission . 
+4. IAM access analyzer -> tool to generate least priviledge policy based on access activity
+5. Regulary remove user , role , permissioin , policy and credentials .
+6. condition like IP range and geo location can be applied . 
+
+📌 Sample Exam Questions
+❓Question 1:
+Which type of policy is attached directly to an AWS resource, such as an S3 bucket, to control access?
+
+A. Identity-based policy
+B. Resource-based policy
+C. Session policy
+D. Permissions boundary
+
+✅ Answer: B
+
+❓Question 2:
+What is the purpose of a permissions boundary in AWS IAM?
+
+A. To define resource-level access
+B. To allow access to external accounts
+C. To define the maximum permissions a user or role can have
+D. To allow cross-region access to resources
+
+✅ Answer: C
+
+❓Question 3:
+Which AWS feature allows organizations to set permission limits across multiple AWS accounts?
+
+A. IAM policies
+B. Resource policies
+C. Service Control Policies (SCPs)
+D. Permission boundaries
+
+✅ Answer: C
