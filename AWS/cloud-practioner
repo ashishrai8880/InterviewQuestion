@@ -585,3 +585,245 @@ C. To launch and manage virtual private servers with simplified management
 D. To deploy high-performance GPU instances for AI workloads
 
 ✅ Answer: C
+
+=================================================================✅ Topic: EBS Volume Types — General Purpose SSD vs. Provisioned IOPS SSD ===========================
+🔹 1. General Purpose SSD (gp2 / gp3)
+📌 What is it?
+A balanced EBS volume type that provides a good mix of price and performance
+Ideal for most everyday workloads like:
+Boot volumes
+Development and test environments
+Low-latency applications
+
+🧠 Key Features:
+Feature	gp2	gp3
+IOPS performance	Scales with size (up to 16,000 IOPS)	Baseline of 3,000 IOPS (gp3)
+Max throughput	Up to 250 MB/s	Up to 1,000 MB/s
+Cost	Lower	Lower (and more flexible)
+Use case	General-purpose computing	Better for predictable workloads
+
+🔸 Summary:
+General Purpose SSD is the default volume type for most EC2 instances. It provides good performance at a lower cost and is suitable for most applications.
+
+🔹 2. Provisioned IOPS SSD (io1 / io2)
+📌 What is it?
+Designed for I/O-intensive workloads that require high, consistent, and predictable performance
+Used when applications need very fast, high-throughput disk access, like:
+Large databases (e.g., Oracle, SQL Server, MySQL)
+Business-critical applications
+
+🧠 Key Features:
+Feature	io1 / io2
+Max IOPS	Up to 64,000 (io2 Block Express)
+Max throughput	Up to 4,000 MB/s
+Performance tuning	You specify the exact IOPS
+Durability	io2 offers higher durability (99.999%)
+Cost	Higher than gp2/gp3
+
+🔸 Summary:
+Provisioned IOPS SSD is for high-performance workloads where disk performance is critical and must be custom-defined and guaranteed.
+
+
+📌 Sample Exam Questions
+❓Question 1:
+Which Amazon EBS volume type is best suited for workloads that require high IOPS and low latency, such as large database workloads?
+
+A. Cold HDD
+B. General Purpose SSD (gp3)
+C. Provisioned IOPS SSD (io2)
+D. Throughput Optimized HDD
+
+✅ Answer: C
+
+❓Question 2:
+Which EBS volume type provides a balance of price and performance for everyday workloads like boot volumes and web servers?
+
+A. Provisioned IOPS SSD
+B. Cold HDD
+C. General Purpose SSD
+D. Magnetic Standard Volume
+
+✅ Answer: C
+
+
+============================================================================✅ Detailed: Amazon EFS (Elastic File System) ========================================
+🔹 What is it?
+Amazon EFS is a scalable, fully managed network file system that you can mount and share across multiple EC2 instances, like a shared drive.
+It’s ideal for situations where multiple servers need to read/write the same files at the same time.
+
+🧠 Simple Explanation:
+Imagine a shared folder (like on Google Drive) that multiple computers can access at the same time — that’s what EFS does, but for EC2 servers.
+
+🔸 Key Features of EFS:
+Feature	Description
+Shared access	Multiple EC2 instances can read/write the same files at the same time
+Elastic	Automatically grows and shrinks as files are added or removed
+Fully managed	No need to provision storage or servers
+POSIX-compliant	Works like a traditional Linux file system (supports standard file ops)
+Pay-as-you-go	Pay only for what you use
+Regional service	Can be accessed from different Availability Zones
+
+⚙️ Common Use Cases:
+Shared application config files
+Content management systems
+Web servers needing a common file source
+Big data and analytics
+Container storage with ECS/EKS
+
+🔐 Security:
+Supports encryption at rest and in transit
+
+Uses security groups and IAM for access control
+
+📌 Sample Exam Questions
+❓Question 1:
+Which AWS storage service allows multiple EC2 instances to access the same file system at the same time?
+
+A. Amazon S3
+B. Amazon EBS
+C. Amazon EFS
+D. Amazon Glacier
+
+✅ Answer: C
+
+❓Question 2:
+Which AWS storage option is best suited for storing long-term, infrequently accessed backups?
+
+A. Amazon S3
+B. Amazon EFS
+C. Amazon FSx
+D. Amazon S3 Glacier
+
+✅ Answer: D
+
+======================================================== Types of Storage Service in AWS ================================================================
+1. EBS Elastic Block Store (SSD/HDD) - OS can be installed over it . It is attached to EC2 . It can be attached to only 1 EC2 machine . 1 EC2 machine can have multiple 
+      EBS attached with it .  EC2 and EBS should be in same availability zone . it should not in different AZs . 
+
+      Nowadays , AWS is trying to give multi attach EBS , means one EBS can be shared among multiple instance . cool and optimized but need lot configuration . 
+
+      Since EBS attached with EC2 , so when ec2 instance deleted , it will also get deleted . 
+2. EFS : which is already discussed above . It is basically shared drive which can be used by multiple instance . 
+3. S3 : Object Storage . Stores everything in object format . like images, backups, data lakes. Very scalable.
+      It uses http protocol to access and upload data over it .  
+
+
+
+ =============================================================✅ Topic 1: EBS Snapshots ===============================================================
+🔹 What is an EBS Snapshot?
+An EBS Snapshot is a backup of your EBS volume (like a disk image). It captures the state of the volume at a specific point in time and stores it in Amazon S3.
+Think of it as taking a picture of your disk so you can restore it later if needed.
+
+🧠 Key Features:
+Feature	Description
+Incremental	Only the first snapshot is full; others store changes
+Stored in S3	But not directly accessible via S3
+Used for backup & restore	Can restore volume from a snapshot anytime
+Manual or automatic	Snapshots can be created manually or via automation
+
+🔧 Common Use Cases:
+Backup EC2 volumes before updates
+
+Restore corrupted disks
+
+Create new EBS volumes in other regions from a snapshot
+
+✅ Topic 2: Data Lifecycle Manager (DLM)
+🔹 What is DLM?
+AWS Data Lifecycle Manager is a tool that automates the creation, retention, and deletion of EBS Snapshots based on policies you define.
+Instead of manually creating and deleting snapshots, DLM does it on a schedule for you.
+
+🧠 Key Features:
+Feature	Description
+Automated Snapshots	Create policies to take snapshots on a schedule
+Retention Rules	Automatically delete old snapshots after a certain number/days
+Tag-based management	Apply policies to volumes with specific tags
+Cost optimization	Helps prevent over-paying for unused snapshots
+
+🔧 Example:
+You create a policy to:
+Take snapshots of all volumes tagged Environment:Production
+Every 12 hours
+Keep only the last 7 snapshots
+
+DLM handles this automatically — no manual work needed!
+
+🔁 EBS Snapshots + DLM Workflow:
+You create an EBS volume and attach it to an EC2 instance
+You want regular backups — so you set up a DLM policy
+DLM automatically takes snapshots and deletes old ones per your rules
+
+📌 Sample Exam Questions
+❓Question 1:
+What is the purpose of an EBS snapshot in AWS?
+
+A. To improve EC2 performance
+B. To archive data directly to Glacier
+C. To back up an EBS volume at a point in time
+D. To monitor disk I/O
+
+✅ Answer: C
+
+❓Question 2:
+Which AWS service allows you to automatically manage the lifecycle of EBS snapshots, including creation and deletion?
+
+A. Amazon S3
+B. AWS Backup
+C. Amazon Inspector
+D. AWS Data Lifecycle Manager (DLM)
+
+✅ Answer: D
+
+❓Question 3:
+What is a benefit of using incremental EBS snapshots?
+
+A. They automatically compress your data
+B. They store only changes since the last snapshot, reducing cost
+C. They require no storage in S3
+D. They run only on EC2 with EFS
+
+✅ Answer: B
+
+
+==========================================================✅ Topic: AWS Instance Store =============================================================
+🔹 What is it?
+Instance Store is temporary block-level storage that is physically attached to the EC2 host machine. EBS may or may not available in same computer . Actually it is attached 
+volume , but instance store is avaiable in same disk . It will be lost once ec2 instance is shut down .
+Think of it like a local hard drive that comes with your EC2 instance — fast, but temporary.
+
+🧠 Key Characteristics:
+Feature	Description
+Ephemeral	Data is lost if the instance is stopped, terminated, or fails
+Very fast	High IOPS performance — good for caching or temporary files
+No additional cost	Included with some EC2 instance types (like i3, d2, r5d, etc.)
+Cannot be detached	Unlike EBS, it cannot be moved between instances
+No durability	Not recommended for critical or persistent data
+
+🔧 Common Use Cases:
+Temporary storage for:
+Buffering
+Scratch space
+Cache
+High-performance workloads that can tolerate data loss
+Big data processing (e.g., Hadoop, Spark) where intermediate data is temporary
+
+📌 Sample Exam Questions
+❓Question 1:
+Which AWS storage type is physically attached to the EC2 host and data is lost when the instance stops or terminates?
+
+A. Amazon S3
+B. Amazon EBS
+C. Instance Store
+D. Amazon EFS
+
+✅ Answer: C
+
+❓Question 2:
+Which statement best describes Amazon Instance Store?
+
+A. It is a managed object store that stores files indefinitely
+B. It is durable and persists even if the instance is stopped
+C. It is temporary block storage physically attached to the EC2 instance
+D. It can be used as shared storage between multiple EC2 instances
+
+✅ Answer: C
