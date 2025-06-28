@@ -1,1 +1,125 @@
 
+Traditional Infra -> You own everything or rent it out .
+There are government cloud also whcih is completely seperate from other . 
+
+-> Types of Cloud Service
+1. Infrastructure as a service (IAAS) -> OS Level responsibility . eg : ec2 .
+  What it is: Provides virtualized computing resources over the internet.
+  Users manage: Applications, data, runtime, middleware, and OS.
+  Providers manage: Virtualization, servers, storage, and networking.
+  Examples: Amazon Web Services (AWS EC2) , Microsoft Azure Virtual Machines , Google Compute Engine
+
+2. Platform as a service (PAAS)-> code level resposibility . eg : AWS elastic beanstalk , azure webapps .
+  What it is: Offers a development and deployment environment for applications.
+  Users manage: Applications and data.
+  Providers manage: Everything else including OS, middleware, runtime, and infrastructure.
+  Examples:Google App Engine , Microsoft Azure App Services ,Heroku
+
+3. Software as a service (SAAS) -> Consumer eg : twitter . 
+  What it is: Delivers fully functional applications over the internet.
+  Users manage: Only usage and configuration.
+  Providers manage: Everything else (application, data, infrastructure).
+  Examples: Google Workspace (Gmail, Docs, Sheets) , Microsoft 365 , Salesforce
+
+4. Function as a Service (FaaS) / Serverless
+  What it is: A model where developers deploy code in response to events without managing servers.
+  Users manage: Only the code and event triggers.
+  Providers manage: Entire infrastructure and scaling.
+  Examples: AWS Lambda , Azure Functions , Google Cloud Functions
+
+ ============================Types of Cloud Deployment Models
+1. Public Cloud
+Definition: Cloud services offered over the internet by third-party providers.
+Owned and operated by: Providers like AWS, Microsoft Azure, Google Cloud.
+Resources: Shared among multiple customers ("multi-tenant").
+Pros: Cost-effective, scalable, no maintenance.
+Cons: Less control, data security concerns for sensitive workloads.
+
+2. Private Cloud
+Definition: Cloud infrastructure dedicated to a single organization.
+Owned and operated by: Either the company itself or a third-party exclusively for one client.
+Resources: Used by one organization only.
+Pros: High security and control.
+Cons: Expensive and complex to manage.
+
+3. Hybrid Cloud
+Definition: A mix of public and private clouds with integration between them.
+Use Case: Keep sensitive data in a private cloud and use public cloud for less critical workloads.
+Pros: Flexibility, cost-efficiency, and scalability.
+Cons: Complex integration and management.
+
+4. Multi-Cloud
+Definition: Using services from multiple cloud providers (e.g., AWS + Azure + GCP).
+Purpose: Avoid vendor lock-in, use best-of-breed services.
+Pros: Redundancy, flexibility, optimization.
+Cons: Complex governance and security management.
+
+===================================================🧱 Core Components of AWS Global Infrastructure ===============================================================
+1. Regions
+Definition: A geographic area (e.g., US East, Europe, Asia Pacific). Regions are inter connected with AWS network .
+Each region consists of multiple Availability Zones.
+AWS has over 30 regions globally (and more coming).
+✅ You choose which region to run your applications in.
+
+2. Availability Zones (AZs)
+Definition: Physically separate data centers within a region.
+Each region has at least 2 to 6 AZs, designed for high availability.
+AZs are isolated but connected with low-latency, high-speed links.
+Example: US East (N. Virginia) has 6 AZs.
+
+3. Edge Locations
+Definition: Data centers used by Amazon CloudFront (AWS’s CDN) to cache content closer to users.
+Located in hundreds of cities worldwide.
+Improve performance and reduce latency for content delivery.
+
+4. Local Zones
+Definition: Extensions of a region placed near large population or business centers.
+Designed to run latency-sensitive applications closer to end-users.
+
+5. Wavelength Zones
+Definition: Infrastructure placed at telecom providers’ networks to deliver ultra-low latency for 5G apps.
+Used for things like real-time gaming, AR/VR, or autonomous vehicles.
+
+6. AWS Outposts
+Definition: Physical racks of AWS hardware installed on-premises (in your own data center).
+Extends AWS infrastructure and services to private or hybrid cloud environments.
+
+==========================🧩 AWS Shared Responsibility Model Responsibility Breakdown =======================================================
+1. AWS (Cloud Provider) – "Security of the Cloud"
+AWS is responsible for securing the infrastructure that runs all the services offered in the AWS Cloud:
+Physical security of data centers
+Hardware, networking, and facilities
+Software for compute, storage, and database services
+Global infrastructure (Regions, AZs, Edge Locations)
+
+2. Customer (You) – "Security in the Cloud"
+You are responsible for managing everything you put into the cloud and how you configure it:
+Data (encryption, classification)
+Identity and Access Management (IAM)
+Applications
+OS and network configurations (for IaaS)
+Firewall settings
+Client-side encryption
+UserData , encryption , scaling , ec2 and lot more is user responsibility
+
+📌 Sample Exam Questions
+❓Question 1:
+Which of the following is the customer’s responsibility under the AWS Shared Responsibility Model?
+
+A. Maintaining the physical security of AWS data centers
+B. Managing access to data stored in Amazon S3
+C. Securing the underlying hypervisor
+D. Monitoring network infrastructure
+
+✅ Answer: B
+
+❓Question 2:
+In the AWS shared responsibility model, AWS is responsible for which of the following? (Choose TWO)
+
+A. Configuring security group rules
+B. Updating the firmware on host servers
+C. Enforcing multi-factor authentication for users
+D. Physical security of data centers
+E. Encrypting customer data
+
+✅ Answers: B and D
