@@ -86,18 +86,45 @@ class Graph{
             if(!isVisited[q.peek()]){
                 console.log(q.peek());
                 currVertex.forEach((ele)=>{
-                    const child = ele.dest ;
-                    q.push(child)
+                    q.push(ele.dest)
                 })
                 isVisited[currVertexIndex] = true ;
             }
             q.pop()
         }
     }
+    bfsTraversalInBrokenGraph(start , isVisited=[]){
+        const q = new Queue();
+        q.push(start);
+        
+        while(!q.isEmpty()){
+            const currVertex = this.graph[q.peek()];
+            if(!isVisited[q.peek()] ){
+                isVisited[q.peek()] = true ;
+                console.log(q.peek());
+                currVertex.forEach((ele)=>{
+                    q.push(ele.dest);
+                })
+            }
+             q.pop();
+        }
+        
+    }
 }
 
 const graph = new Graph();
 graph.createGraph()
 graph.printNeighbours(2)
+
+// bfs traversal
+graph.bfsTraversal(0) ;
+
+// for broken graph 
+const isVisited = Array.from({ length: 4 }, () => false);
+for(let i =0 ; i< isVisited.length ; i++){
+    if(isVisited[i] == false){
+        graph.bfsTraversalInBrokenGraph(i , isVisited)
+    }
+}
 
 
