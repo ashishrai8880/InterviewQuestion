@@ -1,3 +1,11 @@
+/*
+1 --- 3
+/ | \
+0 | 5 -- 6
+\ | /
+2 ---- 4
+*/
+
 //Helper Queue
 class Queue{
     constructor(){
