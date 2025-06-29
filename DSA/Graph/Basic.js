@@ -1,3 +1,30 @@
+//Helper Queue
+class Queue{
+    constructor(){
+        this.arr = [];
+    }
+    
+    push(e){
+        this.arr.push(e);
+    }
+    
+    pop(){
+        this.arr.shift();
+    }
+    
+    peek(){
+        return this.arr[0];
+    }
+    
+    print(){
+        console.log(this.arr);
+    }
+    
+    isEmpty(){
+        return !this.arr.length ;
+    }
+}
+
 
 class Edge{
     constructor(src , dest , weight=0){
@@ -35,6 +62,34 @@ class Graph{
         vertex.forEach(ele=>{
             console.log(ele.src , " ", ele.dest , " ",ele.weight)
         })
+    }
+
+    
+    bfsTraversal(index){
+        const startVertex = this.graph[index];
+        
+        const q = new Queue();
+        q.push(index);
+        
+        const isVisited = new Array(4);
+        isVisited.fill(false);
+        
+        while(!q.isEmpty()){
+            const currVertexIndex = q.peek();
+            const currVertex = this.graph[currVertexIndex] ;
+            
+            if(!isVisited[q.peek()]){
+                console.log(q.peek());
+                let i = 0 ;
+                while(i < currVertex.length){
+                    const child = currVertex[i].dest ;
+                    q.push(child)
+                    i++ ;
+                }
+                isVisited[currVertexIndex] = true ;
+            }
+            q.pop()
+        }
     }
 }
 
