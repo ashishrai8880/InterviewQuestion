@@ -74,8 +74,6 @@ class Graph{
 
     
     bfsTraversal(index){
-        const startVertex = this.graph[index];
-        
         const q = new Queue();
         q.push(index);
         
@@ -83,17 +81,14 @@ class Graph{
         isVisited.fill(false);
         
         while(!q.isEmpty()){
-            const currVertexIndex = q.peek();
-            const currVertex = this.graph[currVertexIndex] ;
+            const currVertex = this.graph[q.peek()] ;
             
             if(!isVisited[q.peek()]){
                 console.log(q.peek());
-                let i = 0 ;
-                while(i < currVertex.length){
-                    const child = currVertex[i].dest ;
+                currVertex.forEach((ele)=>{
+                    const child = ele.dest ;
                     q.push(child)
-                    i++ ;
-                }
+                })
                 isVisited[currVertexIndex] = true ;
             }
             q.pop()
