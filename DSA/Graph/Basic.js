@@ -167,6 +167,7 @@ for(let i =0 ; i<isVisited.length ; i++){
 
 
 // print all path
+isVisited[0] = true ;
 graph.printAllPaths(0 , 5 , "0" , isVisited)
     
 
