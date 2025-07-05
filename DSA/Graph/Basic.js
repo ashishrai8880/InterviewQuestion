@@ -172,7 +172,22 @@ graph.printAllPaths(0 , 5 , "0" , isVisited)
 
 
 
-// ======================================== Part 2 Cycle Detection ===========================================
+// ========================================  2 Cycle Detection (TC = O(V+E)===========================================
+/*
+ 1 --->  0                                              
+        ⬇️  ↖️
+        ⬇️     3
+        ⬇️   ↗️
+        2
+*/
+
+/*
+ 0 ----->  1 <------ 2                                              
+                ↙️  ⬆️
+             ↙️     ⬆️
+           3 --------> 4
+*/
+
 class Edge{
    
     constructor(src , dest){
@@ -242,6 +257,93 @@ class Graph{
 const g = new Graph(4);
 g.createGraph();
 console.log("is cyclic updated : ",g.isCyclic());
+
+
+
+// ========================================  3 Topological Sort ===========================================
+
+// It is only for Directed Acyclic Graph (DAG) . DAG is a linear order of vertices such that  every directed edge
+//  U -> V , the vertex u comes before v in the order . 
+/*
+  5                   4
+ ⬇️  ↘️         ↙️  ⬇️
+ ⬇️     ↘️   ↙️     ⬇️                     
+ ⬇️        0         ⬇️
+ ⬇️                  ⬇️
+  2                   1
+    ↘️        ↗️
+          3  
+*/
+
+
+class Edge{
+   
+    constructor(src , dest){
+        this.src = src ;
+        this.dest = dest ;
+    }
+}
+
+class Graph{
+    
+    constructor(size){
+        this.graph = Array.from({length : size} , ()=>[]);
+    }
+    
+    constructor(size){
+        this.graph = Array.from({length : size} , ()=>[]);
+    }
+    
+    createGraph(){
+
+        this.graph[2].push(new Edge(2,3)) ;
+        this.graph[3].push(new Edge(3,1)) ;
+        this.graph[4].push(new Edge(4,0) ,  new Edge(4,1)) ;
+        this.graph[5].push(new Edge(5,0) , new Edge(5,2) ) ;
+        
+    }
+    
+    topologicalSortUtil(curr , isVisited=[] , stack=[]){
+        
+        isVisited[curr] = true ;
+        
+        
+        const vertex = this.graph[curr];
+        
+        //call for each of its neighbours
+        for(let i = 0 ; i<vertex.length ; i++){
+            if(isVisited[vertex[i].dest] == false){
+                this.topologicalSortUtil(vertex[i].dest , isVisited , stack);
+            }
+        }
+        
+        stack.push(curr);
+        console.log({stack , isVisited})
+        
+    }
+    
+    topologicalSort(){
+        let stack = [] ;
+        let isVisited = Array.from( {length : this.graph.length }  , ()=>false );
+       
+        
+        for(let i = 0 ; i<this.graph.length ; i++){
+            console.log(" i : ",i)
+            if(isVisited[i] == false){
+                this.topologicalSortUtil(i ,isVisited , stack);
+            }
+        }
+        return stack ;
+        
+    }
+}
+
+
+const g = new Graph(6);
+g.createGraph();
+const stack = g.topologicalSort();
+console.log(stack.reverse());   // opposite console of stack will print correct topoplogical order 
+
 
     
 
