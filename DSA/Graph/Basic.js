@@ -172,7 +172,7 @@ graph.printAllPaths(0 , 5 , "0" , isVisited)
 
 
 
-// ========================================  2 Cycle Detection (TC = O(V+E)===========================================
+// ========================================  2 Cycle Detection (Directed Graph) (TC = O(V+E)===========================================
 /*
  1 --->  0                                              
         ⬇️  ↖️
@@ -343,6 +343,104 @@ const g = new Graph(6);
 g.createGraph();
 const stack = g.topologicalSort();
 console.log(stack.reverse());   // opposite console of stack will print correct topoplogical order 
+
+
+
+
+
+// ========================================== Cycle Detection in Undirected Graph ======================================
+
+/*
+     1 --------2 
+  /  |         |
+0    |         |
+  \  |         |
+     4         3
+       \
+         5
+ 
+*/
+
+
+/*
+Pseudo Code : We need to store parent of vertex . because in Undirected graph , one can easily go back to previous vertex 
+which will give wrong result . for eg : vertex 0 to vertex 1 , now 1 is also connected to 0 , that doesnot mean it is cyclic
+graph . 
+
+CASE 1 : if  visited[dest] == true  &&   parent != dest 
+         This means traversing coming back to previous visited node and it is not its just immediate previous node , it means it is making
+         cycle 
+
+CASE 2 : if   visited[dest] == false 
+                 call for its neighbours , and if in further traversing there is cycle found  , then return true 
+                 dfs(dest , visited , curr)  curr will now act as a parent for next node 
+*/
+
+
+
+class Graph{
+    
+    constructor(size){
+        this.graph = Array.from({length : size} , ()=>[]);
+    }
+    
+    createGraph(){
+
+        this.graph[0].push(new Edge(0,1) , new Edge(0,4)) ;
+        
+        this.graph[1].push(new Edge(1,0),new Edge(1,2) , new Edge(1,4)) ;
+        
+        this.graph[2].push(new Edge(2,3) ) ;
+        
+        this.graph[4].push(new Edge(4,0) , new Edge(4,1) , new Edge(4,5) ) ;
+        
+        this.graph[5].push(new Edge(5,4))
+        
+    }
+    
+    isCyclicUtil(curr , isVisited=[] , parent){
+        console.log({curr , isVisited , parent})
+        
+        isVisited[curr] = true ;
+        const vertex = this.graph[curr] ;
+        
+        for(let i = 0 ; i<vertex.length ; i++){
+            const dest = vertex[i].dest ;
+            
+            if(isVisited[dest] == true && dest != parent ){
+                return true ;
+            }
+            
+            if(isVisited[dest] == false){
+                const r = this.isCyclicUtil(dest , isVisited , curr) ;
+                if(r == true){
+                    return true ;
+                }
+            }
+            
+        }
+        
+    }
+    
+    isCyclic(){
+        
+        let isVisited = Array.from({length : 6} , ()=>false);
+        
+        for(let i = 0 ; i<this.graph.length ; i++){
+            return this.isCyclicUtil(i , isVisited , -1);
+        }
+    }
+    
+    
+    
+}
+
+const g = new Graph(6);
+g.createGraph();
+
+const result = g.isCyclic();
+console.log(result); 
+
 
 
     
