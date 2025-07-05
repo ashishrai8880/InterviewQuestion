@@ -169,6 +169,80 @@ for(let i =0 ; i<isVisited.length ; i++){
 // print all path
 isVisited[0] = true ;
 graph.printAllPaths(0 , 5 , "0" , isVisited)
+
+
+
+// ======================================== Part 2 Cycle Detection ===========================================
+class Edge{
+   
+    constructor(src , dest){
+        this.src = src ;
+        this.dest = dest ;
+    }
+}
+
+class Graph{
+    
+    constructor(size){
+        console.log("size is : ",size)
+        this.graph = Array.from({length : size} , ()=>[]);
+    }
+    
+    createGraph(){
+
+        this.graph[0].push(new Edge(0,2)) ;
+        this.graph[1].push(new Edge(1,0)) ;
+        this.graph[2].push(new Edge(2,3)) ;
+        this.graph[3].push(new Edge(3,0)) ;
+        
+    }
+    
+    isCyclicHelper(start , isVisited=[] , rec=[]){
+        
+        isVisited[start] = true ;
+        rec[start] = true ;
+        
+        const vertices = this.graph[start] ;
+        
+        for(let i = 0 ; i<vertices.length ; i++){
+            const edge = vertices[i] ;
+            if(rec[edge.dest]){ //cycle
+                return true ;
+            }
+            else if(!isVisited[edge.dest]){
+                if(this.isCyclicHelper(edge.dest , isVisited , rec)){
+                    return true ;
+                }
+            }
+        }
+        
+        rec[start] = false ;
+        return false ;
+        
+    }
+    
+    // ✅ Wrapper that checks all nodes
+    isCyclic() {
+        console.log("length of graph : ",this.graph.length)
+        const isVisited = Array(this.graph.length).fill(false);
+        const rec = Array(this.graph.length).fill(false);
+
+        for (let i = 0; i < this.graph.length; i++) {
+            if (!isVisited[i]) {
+                if (this.isCyclicHelper(i, isVisited, rec)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+}
+
+const g = new Graph(4);
+g.createGraph();
+console.log("is cyclic updated : ",g.isCyclic());
+
     
 
 
