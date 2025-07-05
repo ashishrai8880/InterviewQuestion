@@ -72,3 +72,86 @@ var orangesRotting = function(grid) {
     return time ? time : -1 ;
 
 };
+
+
+
+
+// ======================================= 2. Number of Island ====================================================
+// LeetCode : https://leetcode.com/problems/number-of-islands/
+//  Need to find number of island in matrix . where 1 denotes land and 0 is water . Island can be formed by connecting land 
+// horizontally and vertically . 
+/**
+ * @param {character[][]} grid
+ * @return {number}
+ */
+
+// Example 1:
+
+// Input: grid = [
+//   ["1","1","1","1","0"],
+//   ["1","1","0","1","0"],
+//   ["1","1","0","0","0"],
+//   ["0","0","0","0","0"]
+// ]
+// Output: 1
+// Example 2:
+
+// Input: grid = [
+//   ["1","1","0","0","0"],
+//   ["1","1","0","0","0"],
+//   ["0","0","1","0","0"],
+//   ["0","0","0","1","1"]
+// ]
+// Output: 3
+
+const isValid = (i , j , row , col , grid)=>{
+    if(i>=0 && i<row && j>=0 && j<col && grid[i][j] == '1' ){
+        return true ;
+    }
+    return false ;
+}
+
+const dfsTraversal = (i , j , row , col , grid)=>{
+
+    if(grid[i][j] == '1'){
+        grid[i][j] = '0';
+    }
+
+    if(isValid(i+1 , j , row , col , grid)){
+        dfsTraversal(i+1 , j , row , col ,grid)
+    }
+
+    if(isValid(i , j+1 , row , col , grid)){
+        dfsTraversal(i , j+1 , row , col ,grid)
+    }
+    
+    if(isValid(i-1 , j , row , col , grid)){
+        dfsTraversal(i-1 , j , row , col ,grid)
+    }
+    
+    if(isValid(i , j-1 , row , col , grid)){
+        dfsTraversal(i , j-1 , row , col ,grid)
+    }
+
+}
+
+var numIslands = function(grid) {
+    
+    let ans = 0 ;
+    let row = grid.length ;
+    let col = grid[0].length ;
+
+    for(let i=0 ; i<row ; i++){
+
+        for(let j=0 ; j<col ; j++){
+            if(grid[i][j] == '1'){
+                ans = ans + 1 ;
+                dfsTraversal(i , j , row , col , grid);
+            }
+        }
+
+    }
+    return ans ;
+
+
+};
