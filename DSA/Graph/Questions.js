@@ -251,3 +251,108 @@ class Graph{
     }
 }
 
+
+//======================================================================4. Eventual Safe Space . TC O(E+V) ================================================================================================
+// LEET CODE LINK : https://leetcode.com/problems/find-eventual-safe-states/
+
+//PROBLEM STATEMENT : There is a directed graph of n nodes with each node labeled from 0 to n - 1. The graph is represented by a 0-indexed 2D integer array graph where graph[i] is an integer array of nodes
+//adjacent to node i, meaning there is an edge from node i to each node in graph[i].
+// A node is a terminal node if there are no outgoing edges. A node is a safe node if every possible path starting from that node leads to a terminal node (or another safe node).
+// Return an array containing all the safe nodes of the graph. The answer should be sorted in ascending order.
+
+// Example 1:
+
+// Illustration of graph
+// Input: graph = [[1,2],[2,3],[5],[0],[5],[],[]]
+// Output: [2,4,5,6]
+// Explanation: The given graph is shown above.
+// Nodes 5 and 6 are terminal nodes as there are no outgoing edges from either of them.
+// Every path starting at nodes 2, 4, 5, and 6 all lead to either node 5 or 6.
+// Example 2:
+
+// Input: graph = [[1,2,3,4],[1,2],[3,4],[0,4],[]]
+// Output: [4]
+// Explanation:
+// Only node 4 is a terminal node, and every path starting at node 4 leads to node 4.
+
+// Solution : Idea is to find all node which is not in any cycle . If any node is in any cycle , make its index as true . And at last filter all item which index is false . That will be answer .
+
+
+/**
+ * @param {number[][]} graph
+ * @return {number[]}
+ */
+var eventualSafeNodes = function(graph) {
+    const g = new Graph(graph.length);
+    g.createGraph(graph);
+    const safeNode = Array.from({length : graph.length},()=>false);
+    g.isCyclic(safeNode);
+
+    let ans = []
+    safeNode.forEach((e,i)=>{
+        if(e == false){
+           ans.push(i);
+        }
+    });
+    return ans ;
+};
+
+class Edge{
+    constructor(src , dest){
+        this.src = src ;
+        this.dest = dest ;
+    }
+}
+
+class Graph{
+    constructor(size){
+        this.graph = Array.from({length : size} , ()=> []);
+    }
+
+    createGraph(arr){
+
+        arr.forEach((node , i)=>{
+            node.forEach((d)=>{
+                this.graph[i].push(new Edge(i , d));
+            }) 
+        })
+    }
+
+    isCyclicUtil(curr , isVisited=[] , callStack=[],safeNode=[]){
+
+        isVisited[curr] = true ;
+        callStack[curr] = true ;
+        const vertex = this.graph[curr];
+        const len = vertex.length ;
+
+        for(let i = 0 ; i<len ; i++){
+            const dest = vertex[i].dest ;
+
+            if(callStack[dest]== true ){
+                safeNode[curr] = true ; 
+                return true ;
+            }
+            else if(isVisited[dest] == false){
+                if(this.isCyclicUtil(dest , isVisited , callStack , safeNode)){
+                    safeNode[curr] = true ;
+                    return true ;
+                }
+            }
+        }
+        callStack[curr] = false ;
+        return false ;
+    }
+
+    isCyclic(safeNode=[]){
+        const len = this.graph.length ; 
+        const isVisited = Array.from({length : len} , ()=>false) ;
+        const callStack = Array.from({length : len} , ()=>false) ;
+        
+        for(let i=0 ; i<len ; i++ ){
+            if(isVisited[i] == false){
+                this.isCyclicUtil(i , isVisited , callStack,safeNode)
+            }
+        }
+        return false ;
+    }
+}
