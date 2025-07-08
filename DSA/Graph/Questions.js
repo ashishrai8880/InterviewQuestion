@@ -356,3 +356,111 @@ class Graph{
         return false ;
     }
 }
+
+
+
+
+
+
+
+// =========================================================== 4.  Cheapes flight with at most k stops ================================================================================================================
+
+// Leetcode : https://leetcode.com/problems/cheapest-flights-within-k-stops/description/
+// There are n cities connected by some number of flights. You are given an array flights where flights[i] = [fromi, toi, pricei] indicates that there is a flight from city fromi to city toi with cost pricei.
+// You are also given three integers src, dst, and k, return the cheapest price from src to dst with at most k stops. If there is no such route, return -1.
+
+// METHOD 1 : Brute Force Approach : Use DFS and search for all path and its cost and then find chepest cost . Time Complexity O(E^E) : Very bad , it will throw TLE 
+var findCheapestPrice = function(n, flights, src, dst, k) {
+    const graph = new Graph(n);
+    graph.createGraph( n , flights) ;
+
+    let isVisited = Array.from({length : n } , ()=>false);
+    let answer = [];
+    let tempArr = [src] ;
+    let cost = 0 ;
+
+    graph.allPath(src , dst , isVisited , answer , tempArr , cost , k ,new Set());
+
+    // now answer array will contain all path with at most k stops , and at last of each element there is total cost 
+    let minCost = Infinity ;
+    answer.forEach((ele)=>{
+        const c = ele.at(-1);
+        if(c < minCost){
+            minCost = c ;
+        }
+    })
+
+    return minCost == Infinity ? -1 : minCost ;
+};
+
+class Edge{
+    constructor(src , dest , cost){
+        this.src = src ; 
+        this.dest = dest ;
+        this.cost = cost ;
+    }
+}
+
+class Graph{
+    constructor(size){
+        this.graph = Array.from({length : size} , ()=>[]);
+    }
+
+    createGraph(size , matrix){
+        matrix.forEach((ele)=>{
+            const src = ele[0];
+            const dest = ele[1];
+            const cost = ele[2];
+            this.graph[src].push(  new Edge( src , dest , cost  )  ) ;
+        })
+    }
+
+    allPath(src , dest , isVisited=[] , answer=[] , tempArr=[] , cost , kStops ,  visitedSet = new Set()){
+        if (visitedSet.has(src)) return; 
+         
+        console.log({src , dest , isVisited , answer , tempArr , cost })
+        if(src == dest){
+            if(tempArr.length -2 <= kStops ){
+                answer.push([...tempArr , cost]) ;
+            }
+            return ;  
+        }
+        
+         visitedSet.add(src);
+
+        const vertex = this.graph[src];
+        const vertexLen = vertex.length ;
+        
+        isVisited[src] = true ;
+
+        for(let i=0 ; i<vertexLen ; i++){
+            const d = vertex[i].dest ;
+            const c = vertex[i].cost ;
+            
+                isVisited[dest] = true ;
+                cost = cost + c ;
+                tempArr.push(d);
+                
+                this.allPath(d , dest , isVisited , answer , tempArr , cost , kStops , visitedSet);
+                
+                isVisited[dest] = false ;
+                tempArr.pop();
+                cost = cost - c;
+        }
+        visitedSet.delete(src); // backtrack visit
+        return ;
+    }
+}
+
+const flights = [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]]
+const n = 4
+const src = 0
+const dest = 3
+const k = 1
+const ans = findCheapestPrice( n , flights , src , dest , k) ;
+console.log({ans});
+
+
+
+
+
