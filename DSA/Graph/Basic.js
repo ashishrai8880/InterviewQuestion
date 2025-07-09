@@ -443,6 +443,132 @@ const result = g.isCyclic();
 console.log(result); 
 
 
+// ============================================= Part 3 : Dijkstra Algorithm (Shortest Path between source to destination)=========================================================================
+// Approach : First take cheapest array , which will at starting save infinity for all destination except source . Source will contain 0 cost , because source to source takes 
+// 0 cost . This algorithm uses BFS technique . It also uses priority queue or MIN Heap of Pair . 
+// Pair class will contain 2 data , one is destination and second is cost to go to that destination . It is stored inside priority queue or min heap . 
+// This PQ will sort data based on cost in ascending order . 
+
+/*        7
+      1 ------->3 
+2 ↗️  |         |  ↘️ 1
+0      |1      2|     5
+4 ↘️  |         |  ↗️ 5
+     2 ------> 4
+          3
+      
+ 
+*/
+class Pair{
+    constructor(dest , cost){
+        this.dest = dest ;
+        this.cost = cost ;
+    }
+}
+
+class MinHeap{
+    constructor(){
+        this.arr = [];
+    }
+    
+    add(pair){
+        this.arr.push(pair);
+        this.arr.sort((a , b)=> a.cost - b.cost);
+    }
+    
+    peek(){
+        return this.arr[0] ;
+    }
+    
+    pop(){
+        const poppedElement = this.arr[0];
+        this.arr.shift();
+        return poppedElement ;
+    }
+    
+    size(){
+        return this.arr.length ;
+    }
+    
+    isEmpty(){
+        return this.arr.length > 0 ? false : true ;
+    }
+}
+
+class Edge{
+    constructor(src , dest , cost){
+        this.src = src ;
+        this.dest = dest ;
+        this.cost = cost ;
+    }
+}
+
+class Graph{
+    constructor(n){
+        this.graph = Array.from({length : n} , ()=>[]);
+    }
+    
+    createGraph(){
+      this.graph[0].push(new Edge(0, 1, 2));
+      this.graph[0].push(new Edge(0, 2, 4));
+      this.graph[1].push(new Edge(1, 3, 7));
+      this.graph[1].push(new Edge(1, 2, 1));
+      this.graph[2].push(new Edge(2, 4, 3));
+      this.graph[3].push(new Edge(3, 5, 1));
+      this.graph[4].push(new Edge(4, 3, 2));
+      this.graph[4].push(new Edge(4, 5, 5));
+    }
+    
+    getShortestPath(src){
+        
+        const isVisited = Array.from({length : this.graph.length}, ()=>false);
+        const cheapest = Array.from({length : this.graph.length}, ()=>Infinity);
+        
+        cheapest[src] = 0 ;  // source to source , cost will be 0
+        
+        const pq = new MinHeap();
+        pq.add( new Pair(src , 0)); // add first element in priority queue 
+       
+        while(!pq.isEmpty()){
+            
+            const pair = pq.pop();
+            const u = pair.dest ;
+            const vertex = this.graph[u] ;
+         
+            if(isVisited[u] == false){
+                isVisited[u] = true ;
+                for(let e of vertex){
+                    const v = e.dest ;
+                    if( cheapest[u] + e.cost < cheapest[v] ){
+                        cheapest[v] = cheapest[u] + e.cost ;
+                        pq.add( new Pair(v , cheapest[v] ));
+                    }
+                }
+            }
+        }
+        return cheapest ;
+    }
+}
+
+const g = new Graph(6);
+g.createGraph();
+console.log(g.getShortestPath(0))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     
 
