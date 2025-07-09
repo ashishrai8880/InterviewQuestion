@@ -449,6 +449,8 @@ console.log(result);
 // Pair class will contain 2 data , one is destination and second is cost to go to that destination . It is stored inside priority queue or min heap . 
 // This PQ will sort data based on cost in ascending order . 
 
+// Time Complexity : O( E + ELogV)
+
 /*        7
       1 ------->3 
 2 ↗️  |         |  ↘️ 1
