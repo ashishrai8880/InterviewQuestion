@@ -632,6 +632,124 @@ console.log({ans})
 
 
 
+// ============================================= Part 4 : Prim's Algorithm (For MST Minimum Spanning Tree)=========================================================================
+// Approach : Similar To Dijkstra . Uses BFS . Time Complexity is : O(ELogE) Everytime there is sorting in minHeap that's why ElogE .
+// A minimum spanning tree (MST) or minimum weight spanning tree is a subset of the edges of a connected, edge-weighted undirected graph that connects all the vertices together, without any cycles and with the minimum possible total edge weight.
+// MST will contain all vertex of graph , but sum of all edge should be minimum .
+// It should not contains any cycle in it . There should not any directed graph . And All node should be connected . Only then prim's algorithm can apply .
+
+
+/*     
+
+           0 
+    10   / | \  15
+       /   |    \
+     1     |30   2        
+       \   |    /
+    40   \ |  /  50
+           3
+
+
+         Answer Should be 55
+
+           0 
+    10   / | \  15
+       /   |    \
+     1     |30   2        
+           |    
+           |    
+           3
+           
+*/
+
+class Pair{
+    constructor(dest , cost){
+        this.dest = dest ;
+        this.cost = cost ;
+    }
+}
+
+class MinHeap{
+    constructor(){
+        this.arr = [] ;
+    }
+    
+    push(pair){
+        this.arr.push(pair);
+        this.arr.sort((a,b)=>a.cost-b.cost);
+    }
+    
+    isEmpty(){
+        return this.arr.length == 0 ;
+    }
+    
+    peek(){
+        return this.arr[0];
+    }
+    
+    pop(){
+        const popped = this.peek()
+        this.arr.shift();
+        return popped ;
+    }
+}
+
+class Edge{
+    constructor(src , dest , cost){
+        this.src = src ;
+        this.dest = dest ;
+        this.cost = cost ;
+    }
+}
+
+class Graph{
+    constructor(n){
+        this.graph = Array.from({length : n},()=>[]);
+    }
+    
+    createGraph(){
+        
+        this.graph[0].push(new Edge(0, 1, 10));
+        this.graph[0].push(new Edge(0, 2, 15));
+        this.graph[0].push(new Edge(0, 3, 30));
+        this.graph[1].push(new Edge(1, 0, 10));
+        this.graph[1].push(new Edge(1, 3, 40));
+        this.graph[2].push(new Edge(2, 0, 15));
+        this.graph[2].push(new Edge(2, 3, 50));
+        this.graph[3].push(new Edge(3, 1, 40));
+        this.graph[3].push(new Edge(3, 2, 50));
+    }
+    
+    primsAlgorithm(){
+        
+        const isVisited = Array.from({length : this.graph.length} , ()=>false) ;
+        const pq = new MinHeap();
+        pq.push(new Pair(0,0));
+        let cost = 0 ;
+        
+        while(!pq.isEmpty()){
+            
+            const curr = pq.pop();
+            if(isVisited[curr.dest] == false){
+                isVisited[curr.dest] = true ;
+                cost = cost + curr.cost ;
+                for(let node of this.graph[curr.dest]){
+                    if(isVisited[node.dest] == false){
+                        pq.push(new Pair(node.dest , node.cost))
+                    }
+                }
+            }
+        }
+        return cost ;
+        
+    }
+}
+
+const g = new Graph(4);
+g.createGraph()
+const ans = g.primsAlgorithm();
+console.log({ans})
+
 
 
 
