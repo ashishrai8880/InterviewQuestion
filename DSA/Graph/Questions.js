@@ -463,4 +463,42 @@ console.log({ans});
 
 
 
+// Optimized Approach using Bellman Ford Approach with K+1 relaxation
+/**
+ * @param {number} n
+ * @param {number[][]} flights
+ * @param {number} src
+ * @param {number} dst
+ * @param {number} k
+ * @return {number}
+ */
+var findCheapestPrice = function(n, flights, src, dst, k) {
+    
+    let price = Array.from({length : n},()=>Infinity) ;
+    price[src] = 0 ;
+    
+    for(let i = 0 ; i<k+1 ; i++){
+        
+        let temp = [...price] ;
+        
+        for(let j=0 ; j<flights.length ; j++){
+            
+            const f = flights[j] ;
+            const u = f[0];
+            const v = f[1];
+            const w = f[2];
+            
+            if(price[u] != Infinity && price[u]+w < temp[v]){
+                temp[v] = price[u] + w ;
+            }
+        }
+        
+        price = [...temp] ;
+    }
+    return price[dst] == Infinity ? -1 : price[dst];
+};
+
+
+
+
 
