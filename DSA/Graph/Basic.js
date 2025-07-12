@@ -558,6 +558,80 @@ console.log(g.getShortestPath(0))
 
 
 
+// ============================================= Part 3 : BellmanFord Algorithm (Shortest Path between source to destination)=========================================================================
+// Approach : Easier Than Dijksta . Time Complexity is : O(V*E) more than Dijkstra .
+//Just iterate over loop and keep saving minimum cost to reach to destination . 
+// Bellman ford algorithm fail in negative weight cycle . Negative weight cycle forms where , there is sum of all weight in 
+//cycle is in negative or less than 0 . To detect negative weight cycle , there is another loop at last . All logic will be same
+// This is just to check , if there is still relaxation conditioin is true ,it means it is forming negative weight cycle . 
+
+class Edge{
+    constructor(src , dest , cost){
+        this.src = src ;
+        this.dest = dest ;
+        this.cost = cost ;
+    }
+}
+
+class Graph{
+    constructor(n){
+        this.graph = Array.from({length : n},()=>[]);
+    }
+    
+    createGraph(){
+        
+        this.graph[1].push( new Edge(1,0,4) , new Edge(1,2,-6) )
+        this.graph[2].push(new Edge(2,3,5))
+        this.graph[3].push(new Edge(3,1,-2))
+        
+    }
+    
+    bellmanFord(src){
+        const cost = Array.from({length : this.graph.length},()=>Infinity)
+        
+        cost[src] = 0 ;
+        
+        this.graph.forEach((node , index)=>{
+            node.forEach((edge)=>{
+                const u = index ;
+                const c = edge.cost ;
+                const v = edge.dest ;
+                if(cost[u] + c < cost[v]){
+                    cost[v] = cost[u] + c ;
+                }
+            })
+        })
+        
+        // To Detect Negative Cycle
+        let flag = false ;
+        this.graph.forEach((node , index)=>{
+            node.forEach((edge)=>{
+                const u = index ;
+                const c = edge.cost ;
+                const v = edge.dest ;
+                if(cost[u] + c < cost[v]){
+                    flag = true ;
+                }
+            })
+        })
+        if(flag){
+            return [-1]
+        }
+        
+        return cost ;
+    }
+}
+
+const g = new Graph(4);
+g.createGraph()
+const ans = g.bellmanFord(1);
+console.log({ans})
+
+
+
+
+
+
 
 
 
