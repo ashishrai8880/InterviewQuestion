@@ -746,6 +746,87 @@ layout: exam
     <details markdown=1><summary markdown='span'>Answer</summary>
       Correct answer: D
     </details>
+    <details markdown=1><summary markdown='span'>Answer</summary>
+      ✅ What is AWS WAF?
+        AWS WAF (Web Application Firewall) is a security service that protects your web applications from common web exploits that could affect application availability, compromise security, or consume excessive resources.
+        
+        It allows you to control access to your content by allowing, blocking, or monitoring (counting) HTTP(S) requests based on customizable rules.
+        
+        🔑 Key Features of AWS WAF:
+        Feature	Description
+        Web Traffic Filtering	Blocks/monitors traffic based on IP, headers, URI strings, etc.
+        Pre-configured Rules	Use managed rule groups from AWS or AWS Marketplace.
+        Custom Rules	Create rules based on conditions like SQL injection, XSS, geo-location, IP addresses, and more.
+        Real-time Metrics	Integrated with Amazon CloudWatch for logging and alerts.
+        Global Protection	Protects applications on Amazon CloudFront, Application Load Balancer (ALB), API Gateway, or App Runner.
+        Rate-based Rules	Block or throttle IPs that exceed a threshold number of requests.
+        
+        ✅ Use Cases:
+        Protecting APIs and web apps from common vulnerabilities (like OWASP Top 10)
+        
+        Limiting traffic from specific IP addresses or countries
+        
+        Throttling abusive traffic using rate-based rules
+        
+        Logging and analyzing potentially malicious requests
+        
+        🚧 AWS WAF vs AWS Shield vs AWS Firewall Manager:
+        Feature	AWS WAF	AWS Shield	AWS Firewall Manager
+        Purpose	Protects web apps from common exploits	DDoS protection	Centralized management of WAF/Shield rules
+        Focus	App layer (Layer 7)	Network/transport layer (L3/L4)	Enterprise-scale security management
+        Customization	High (custom and managed rules)	Minimal (auto protection)	Centralized rule propagation
+        
+        📌 Sample Exam Questions
+        ❓ Question 1:
+        What is the purpose of AWS WAF?
+        
+        A. To encrypt data at rest in Amazon S3
+        B. To monitor VPC network traffic logs
+        C. To protect web applications from common web exploits
+        D. To manage SSL certificates for APIs
+        
+        ✅ Answer: C. To protect web applications from common web exploits
+        
+        ❓ Question 2:
+        Which AWS service allows you to block or allow web traffic based on IP addresses, query strings, or URI patterns?
+        
+        A. AWS Shield
+        B. Amazon Route 53
+        C. AWS WAF
+        D. Amazon Inspector
+        
+        ✅ Answer: C. AWS WAF
+        
+        ❓ Question 3:
+        A company wants to block HTTP requests from a specific country to its web application hosted on CloudFront. Which service should it use?
+        
+        A. AWS Shield
+        B. AWS WAF
+        C. Amazon GuardDuty
+        D. AWS IAM
+        
+        ✅ Answer: B. AWS WAF
+        
+        ❓ Question 4:
+        Which AWS service can be used to create custom rules that allow or block traffic to your web applications?
+        
+        A. AWS Firewall Manager
+        B. Amazon CloudWatch
+        C. AWS WAF
+        D. AWS Config
+        
+        ✅ Answer: C. AWS WAF
+        
+        ❓ Question 5:
+        Which of the following AWS services is often used with AWS WAF to centrally manage WAF rules across multiple accounts?
+        
+        A. AWS Security Hub
+        B. AWS Firewall Manager
+        C. Amazon Inspector
+        D. AWS Shield Standard
+        
+        ✅ Answer: B. AWS Firewall Manager
+    </details>
 
 28. An organization needs to analyze and process a large number of data sets. Which AWS service should they use?
     - A. Amazon EMR.
