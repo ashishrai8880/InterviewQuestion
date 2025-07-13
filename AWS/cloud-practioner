@@ -1805,3 +1805,84 @@ C. It provides downloadable compliance reports and agreements
 D. It encrypts EBS volumes
 
 ✅ Answer: C. It provides downloadable compliance reports and agreements
+
+
+
+===================================================✅ What is AWS KMS? ===============================================
+AWS Key Management Service (KMS) is a fully managed service that enables you to create, manage, and control encryption
+keys used to encrypt your data across AWS services and custom applications.
+
+It helps you:
+
+Secure sensitive data using encryption
+
+Meet compliance requirements
+
+Centralize key management
+
+🔐 Key Concepts in AWS KMS:
+Term	Description
+CMK (Customer Master Key)	Primary encryption key managed in KMS
+AWS Managed Key	Automatically created and managed by AWS for specific services (e.g., S3, EBS)
+Customer Managed Key	Created and managed by the customer; offers full control
+Key Policies	Define who can use and manage keys
+Envelope Encryption	A process where data is encrypted using a data key, and that data key is encrypted using a CMK
+
+✅ KMS Integration Examples:
+Amazon S3 – Encrypt objects using SSE-KMS
+
+Amazon EBS – Encrypt volumes
+
+Amazon RDS – Encrypt database storage
+
+AWS Lambda – Encrypt environment variables
+
+AWS Secrets Manager – Automatically uses KMS for encryption
+
+🧠 AWS KMS vs AWS Secrets Manager
+Feature	AWS KMS	Secrets Manager
+Stores Encryption Keys	✅ Yes	❌ No (stores secrets, not keys)
+Stores Secrets	❌ No	✅ Yes (e.g., DB passwords, API keys)
+Main Use	Key generation and encryption management	Secret storage and rotation
+
+📌 Sample Exam Questions
+❓ Question 1:
+Which AWS service helps you create and manage encryption keys to protect your data?
+
+A. AWS Shield
+B. AWS KMS
+C. Amazon Macie
+D. AWS WAF
+
+✅ Answer: B. AWS KMS
+
+❓ Question 2:
+A company wants to encrypt data stored in Amazon S3 using envelope encryption. Which service will manage the encryption keys?
+
+A. AWS IAM
+B. Amazon GuardDuty
+C. AWS KMS
+D. AWS Config
+
+✅ Answer: C. AWS KMS
+
+❓ Question 3:
+Which of the following statements about AWS KMS are TRUE? (Select TWO)
+
+A. AWS KMS can store plaintext passwords
+B. KMS supports automatic key rotation
+C. KMS is only available for EC2
+D. AWS services can integrate with KMS to encrypt data
+E. KMS must be installed on EC2 instances
+
+✅ Answer: B. KMS supports automatic key rotation, D. AWS services can integrate with KMS to encrypt data
+
+❓ Question 4:
+You want to control who can use and manage a Customer Managed Key in KMS. What should you use?
+
+A. IAM Roles only
+B. Security Groups
+C. Key Policies
+D. Access Control Lists (ACLs)
+
+✅ Answer: C. Key Policies
