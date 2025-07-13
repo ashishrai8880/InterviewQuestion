@@ -1306,3 +1306,171 @@ C. It supports popular open messaging protocols like AMQP and JMS
 D. It requires manual scaling and patching
 
 ✅ Answer: C. It supports popular open messaging protocols like AMQP and JMS
+
+
+==============================================✅ AWS CloudTrail ============================================
+AWS CloudTrail records every API call made in your AWS account, whether it's from the AWS Management Console, CLI, SDKs, 
+or other services.
+
+Tracks who, when, what, from where
+
+Useful for security analysis, auditing, and troubleshooting
+
+Delivers logs to Amazon S3 for long-term storage
+
+🔍 Example: CloudTrail shows that “user Alice used the EC2:TerminateInstances API at 2:32 PM from IP 10.0.0.1”
+
+✅ AWS Config
+AWS Config continuously monitors and records resource configurations and evaluates them against desired baselines using 
+Config Rules.
+
+Detects unauthorized or unintended changes
+
+Maintains resource history
+
+Great for compliance and auditing (e.g., PCI, HIPAA)
+
+🔍 Example: AWS Config shows that an S3 bucket’s policy was made public at a specific point in time and who made the 
+change.
+
+📌 Sample Exam Questions
+❓ Question 1:
+Which AWS service records user activity and API calls made on your account?
+
+A. AWS Config
+B. Amazon CloudWatch
+C. AWS CloudTrail
+D. AWS IAM
+
+✅ Answer: C. AWS CloudTrail
+
+❓ Question 2:
+Which AWS service helps you track configuration changes and compliance of your AWS resources over time?
+
+A. AWS CloudTrail
+B. AWS Config
+C. AWS Shield
+D. AWS CloudFormation
+
+✅ Answer: B. AWS Config
+
+❓ Question 3:
+A company needs to investigate who terminated an EC2 instance last week. Which service should they use?
+
+A. AWS CloudTrail
+B. AWS Config
+C. Amazon GuardDuty
+D. AWS CloudWatch
+
+✅ Answer: A. AWS CloudTrail
+
+❓ Question 4:
+Which AWS service provides detailed resource configuration history and compliance evaluation?
+
+A. AWS CloudTrail
+B. AWS Config
+C. Amazon Inspector
+D. AWS Audit Manager
+
+✅ Answer: B. AWS Config
+
+❓ Question 5:
+Which of the following AWS services can help you ensure that S3 buckets are not publicly accessible by evaluating
+compliance?
+
+A. Amazon S3
+B. AWS IAM
+C. AWS Config
+D. AWS Trusted Advisor
+
+✅ Answer: C. AWS Config
+
+
+
+=======================================================What is Amazon CloudWatch? ==================================
+Amazon CloudWatch is a monitoring and observability service that helps you collect, visualize, and analyze metrics, 
+logs, and events from AWS resources, applications, and on-prem systems.
+
+It’s essential for:
+
+Monitoring performance
+
+Setting up alarms and automated actions
+
+Troubleshooting operational issues
+
+Gaining visibility into your AWS environment
+
+🔑 Key Features of Amazon CloudWatch:
+Feature	Description
+CloudWatch Metrics	Real-time data about AWS resources (e.g., CPU, disk, network).
+CloudWatch Logs	Collect and store log files from applications or services.
+CloudWatch Alarms	Take automated actions when metrics exceed thresholds (e.g., stop instance, send alert).
+CloudWatch Dashboards	Custom visual dashboards for metrics.
+CloudWatch Events (now part of EventBridge)	Detect changes in your environment and respond automatically.
+CloudWatch Logs Insights	Query and analyze log data interactively.
+Custom Metrics	Send your own application data to CloudWatch.
+
+✅ Use Cases:
+Monitoring EC2 instance performance
+
+Creating alarms when CPU exceeds 80%
+
+Setting up dashboards for system-wide visibility
+
+Triggering Lambda functions when specific events occur
+
+Analyzing log data for troubleshooting
+
+Monitoring container workloads in ECS/EKS
+
+📌 Sample Exam Questions
+❓ Question 1:
+What is the primary purpose of Amazon CloudWatch?
+
+A. To provision EC2 instances across multiple regions
+B. To monitor AWS resources and applications in real-time
+C. To host static websites on S3
+D. To manage user identities and access policies
+
+✅ Answer: B. To monitor AWS resources and applications in real-time
+
+❓ Question 2:
+Which Amazon CloudWatch feature allows you to automatically respond when a metric crosses a threshold?
+
+A. CloudWatch Logs
+B. CloudWatch Events
+C. CloudWatch Dashboards
+D. CloudWatch Alarms
+
+✅ Answer: D. CloudWatch Alarms
+
+❓ Question 3:
+Which AWS service should you use to collect and monitor log files from EC2 instances or Lambda functions?
+
+A. Amazon Inspector
+B. AWS Config
+C. Amazon CloudWatch Logs
+D. AWS CloudTrail
+
+✅ Answer: C. Amazon CloudWatch Logs
+
+❓ Question 4:
+A company wants to be notified when the CPU utilization of an EC2 instance exceeds 80%. Which AWS feature should they use?
+
+A. AWS Auto Scaling
+B. CloudWatch Dashboard
+C. CloudWatch Alarm
+D. CloudTrail Log
+
+✅ Answer: C. CloudWatch Alarm
+
+❓ Question 5:
+What is the difference between Amazon CloudWatch and AWS CloudTrail?
+
+A. CloudTrail is for storage; CloudWatch is for compute
+B. CloudWatch is for logging API activity; CloudTrail is for performance metrics
+C. CloudTrail tracks user/API activity; CloudWatch monitors performance metrics and logs
+D. Both are used to create IAM users
+
+✅ Answer: C. CloudTrail tracks user/API activity; CloudWatch monitors performance metrics and logs
