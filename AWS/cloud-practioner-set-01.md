@@ -75,6 +75,112 @@ layout: exam
     <details markdown=1><summary markdown='span'>Answer</summary>
       Correct answer: A, B
     </details>
+    <details markdown=1><summary markdown='span'>Resource</summary>
+      ✅ AWS Trusted Advisor
+        AWS Trusted Advisor is a real-time online tool that provides best practice recommendations across several categories to help optimize your AWS environment. It inspects your AWS account and makes suggestions to improve:
+        
+        Cost Optimization
+        
+        Performance
+        
+        Security
+        
+        Fault Tolerance
+        
+        Service Limits
+        
+        🔑 Key Features:
+        Provides a dashboard with checks and recommendations.
+        
+        Helps reduce unnecessary costs (e.g., idle resources).
+        
+        Alerts about security misconfigurations (e.g., open ports).
+        
+        Some checks are free (basic), while full access is available with Business or Enterprise support plans.
+        
+        ✅ Amazon Inspector
+        Amazon Inspector is an automated security assessment service that helps you improve the security and compliance of your AWS workloads.
+        
+        🔑 Key Features:
+        Scans EC2 instances and containers (ECR) for vulnerabilities, such as software flaws or outdated packages.
+        
+        Performs network reachability analysis to check if your instances are accessible from the internet.
+        
+        Integrates with AWS Security Hub and Amazon EventBridge.
+        
+        Supports automated and continuous scanning.
+        
+        Helps meet compliance requirements (e.g., PCI DSS, CIS benchmarks).
+        
+        🔄 Comparison Summary:
+        Feature	AWS Trusted Advisor	Amazon Inspector
+        Purpose	Best practices and optimization	Security vulnerability assessment
+        Scope	Account-wide checks	EC2 instances & container image scans
+        Focus Areas	Cost, performance, security, limits	Security vulnerabilities and compliance
+        Real-Time/Automated	Yes (some real-time, dashboard-based)	Yes (automated and continuous scanning)
+        Support Plan Requirement	Full checks with Business/Enterprise	No specific plan required
+        
+        📌 Sample Exam Questions
+        ❓ Question 1:
+        Which AWS service provides real-time guidance to help you follow AWS best practices for cost optimization, security, and performance?
+        
+        A. Amazon Inspector
+        B. AWS Trusted Advisor
+        C. AWS Config
+        D. AWS CloudTrail
+        
+        ✅ Answer: B. AWS Trusted Advisor
+        
+        ❓ Question 2:
+        What is the primary function of Amazon Inspector?
+        
+        A. To recommend cost savings for underutilized EC2 instances
+        B. To monitor and log all AWS API activity
+        C. To scan EC2 instances for security vulnerabilities and compliance issues
+        D. To encrypt data stored in Amazon S3
+        
+        ✅ Answer: C. To scan EC2 instances for security vulnerabilities and compliance issues
+        
+        ❓ Question 3:
+        Which AWS service will notify you if you have EC2 instances with unrestricted access to the internet?
+        
+        A. AWS CloudTrail
+        B. AWS Trusted Advisor
+        C. Amazon Inspector
+        D. AWS Identity and Access Management (IAM)
+        
+        ✅ Answer: B. AWS Trusted Advisor
+        
+        ❓ Question 4:
+        You want to continuously scan your Amazon EC2 instances and container images for software vulnerabilities. Which AWS service should you use?
+        
+        A. AWS Shield
+        B. Amazon Inspector
+        C. AWS GuardDuty
+        D. AWS WAF
+        
+        ✅ Answer: B. Amazon Inspector
+        
+        ❓ Question 5:
+        Which service requires a Business or Enterprise support plan to access full checks?
+        
+        A. Amazon Inspector
+        B. AWS Security Hub
+        C. AWS Trusted Advisor
+        D. AWS Config
+        
+        ✅ Answer: C. AWS Trusted Advisor
+        
+        ❓ Question 6:
+        An administrator wants to get a recommendation to improve fault tolerance and performance of AWS resources. Which AWS service should be used?
+        
+        A. AWS CloudTrail
+        B. Amazon Inspector
+        C. AWS Trusted Advisor
+        D. AWS IAM
+        
+        ✅ Answer: C. AWS Trusted Advisor
+    </details>
 
 8. What is the AWS feature that provides an additional level of security above the default authentication mechanism of usernames and passwords?
     - A. Encrypted keys.
