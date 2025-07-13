@@ -496,6 +496,104 @@ layout: exam
     <details markdown=1><summary markdown='span'>Answer</summary>
       Correct answer: A
     </details>
+    <details markdown=1><summary markdown='span'>Resource</summary>
+      ✅ What is Amazon ElastiCache?
+        Amazon ElastiCache is a fully managed in-memory data store and cache service that supports two popular open-source engines:
+        
+        Redis
+        
+        Memcached
+        
+        It is used to cache frequently accessed data to reduce latency, increase throughput, and relieve database load, improving overall application performance.
+        
+        🔑 Key Features:
+        Feature	Description
+        In-Memory Storage	Extremely fast access (microsecond latency) to data.
+        Supports Redis & Memcached	You can choose either engine depending on your use case.
+        Fully Managed	AWS handles maintenance, backups, patching, monitoring, and scaling.
+        Use with Other AWS Services	Commonly used with Amazon RDS, DynamoDB, Lambda, and EC2.
+        High Availability	Redis supports multi-AZ with automatic failover.
+        Scalable	Supports both vertical and horizontal scaling.
+        
+        ✅ Use Cases:
+        Caching frequently read data (e.g., product details, user sessions)
+        
+        Session storage (especially Redis for its persistence support)
+        
+        Real-time analytics (e.g., leaderboards, counters)
+        
+        Database query result caching
+        
+        Reducing load on backend databases
+        
+        🔄 Redis vs. Memcached (Quick Comparison):
+        Feature	Redis	Memcached
+        Data Types	Strings, Lists, Sets, etc.	Strings only
+        Persistence	Yes	No
+        Replication	Yes (multi-AZ)	No
+        Pub/Sub	Yes	No
+        
+        📌 Sample Exam Questions
+        ❓ Question 1:
+        What is the primary purpose of Amazon ElastiCache?
+        
+        A. To store static website files
+        B. To monitor AWS resource usage
+        C. To improve application performance by caching frequently accessed data
+        D. To serve video content directly from the cloud
+        
+        ✅ Answer: C. To improve application performance by caching frequently accessed data
+        
+        ❓ Question 2:
+        Which two engines are supported by Amazon ElastiCache?
+        
+        A. MySQL and MongoDB
+        B. Redis and Memcached
+        C. DynamoDB and Cassandra
+        D. PostgreSQL and Aurora
+        
+        ✅ Answer: B. Redis and Memcached
+        
+        ❓ Question 3:
+        Which of the following is a benefit of using Amazon ElastiCache?
+        
+        A. It provides automatic file backup to S3
+        B. It decreases application latency by storing data in memory
+        C. It automatically converts relational data to JSON
+        D. It enforces IAM policies across all AWS services
+        
+        ✅ Answer: B. It decreases application latency by storing data in memory
+        
+        ❓ Question 4:
+        A developer wants to reduce database read load and improve response times by caching data. Which AWS service should they use?
+        
+        A. Amazon RDS
+        B. Amazon DynamoDB
+        C. Amazon ElastiCache
+        D. AWS Lambda
+        
+        ✅ Answer: C. Amazon ElastiCache
+        
+        ❓ Question 5:
+        Which of the following use cases is not typically associated with Amazon ElastiCache?
+        
+        A. Storing user session data
+        B. Running complex relational joins
+        C. Caching API responses
+        D. Real-time leaderboard updates
+        
+        ✅ Answer: B. Running complex relational joins
+        
+        ❓ Question 6:
+        Which ElastiCache engine supports advanced data types and persistence?
+        
+        A. Memcached
+        B. Redis
+        C. MySQL
+        D. Aurora
+        
+        ✅ Answer: B. Redis
+    </details>
 
 21. What is the AWS service that enables you to manage all of your AWS accounts from a single master account?
     - A. AWS WAF.
