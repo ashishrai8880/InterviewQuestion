@@ -348,6 +348,102 @@ layout: exam
     <details markdown=1><summary markdown='span'>Answer</summary>
       Correct answer: D
     </details>
+    <details markdown=1><summary markdown='span'>Resource</summary>
+      ✅ What is Amazon VPC?
+        Amazon Virtual Private Cloud (VPC) allows you to launch AWS resources like EC2 instances into a logically isolated virtual network that you define. It gives you full control over your virtual networking environment — including IP address ranges, subnets, route tables, and network gateways.
+        
+        🔑 Key Concepts of VPC:
+        Component	Description
+        VPC	Your own isolated network in the AWS cloud.
+        Subnet	A subdivision of your VPC. Can be public (connected to the internet) or private (internal-only).
+        Route Table	Defines rules (routes) to control network traffic flow.
+        Internet Gateway (IGW)	Enables access to the internet for public subnets.
+        NAT Gateway	Allows private subnets to access the internet (e.g., for updates), but prevents incoming connections from the internet.
+        Security Groups	Virtual firewalls that control inbound and outbound traffic at the instance level.
+        Network ACLs	Firewall at the subnet level (stateless).
+        Peering	Connects two VPCs so they can communicate privately.
+        VPC Endpoints	Private connections to AWS services without going over the public internet.
+        
+        ✅ VPC Use Cases:
+        Hosting secure web applications
+        
+        Running private backend servers
+        
+        Creating isolated development and production environments
+        
+        Connecting to on-premises data centers (via VPN or Direct Connect)
+        
+        📌 Sample Exam Questions
+        ❓ Question 1:
+        What does Amazon VPC allow you to do?
+        
+        A. Store objects like files and images
+        B. Launch AWS resources into a virtual network you define
+        C. Analyze large datasets using machine learning
+        D. Host web applications without any network configuration
+        
+        ✅ Answer: B. Launch AWS resources into a virtual network you define
+        
+        ❓ Question 2:
+        Which component of a VPC allows instances in a private subnet to access the internet, but prevents incoming traffic from the internet?
+        
+        A. Internet Gateway
+        B. NAT Gateway
+        C. Route Table
+        D. VPC Peering
+        
+        ✅ Answer: B. NAT Gateway
+        
+        ❓ Question 3:
+        What is the function of an Internet Gateway in an Amazon VPC?
+        
+        A. To encrypt data traveling over the internet
+        B. To allow instances in the VPC to connect to the internet
+        C. To filter traffic using firewall rules
+        D. To allow cross-region replication of instances
+        
+        ✅ Answer: B. To allow instances in the VPC to connect to the internet
+        
+        ❓ Question 4:
+        Which VPC component acts as a virtual firewall for EC2 instances, controlling inbound and outbound traffic?
+        
+        A. Network ACL
+        B. Route Table
+        C. Security Group
+        D. Subnet
+        
+        ✅ Answer: C. Security Group
+        
+        ❓ Question 5:
+        Which VPC component is stateful, meaning if you allow inbound traffic, the return traffic is automatically allowed?
+        
+        A. Subnet
+        B. Security Group
+        C. Network ACL
+        D. Internet Gateway
+        
+        ✅ Answer: B. Security Group
+        
+        ❓ Question 6:
+        What is the difference between a Security Group and a Network ACL?
+        
+        A. Security Groups are subnet-level and stateless; Network ACLs are instance-level and stateful
+        B. Both are stateless and apply only to private subnets
+        C. Security Groups are stateful and apply at the instance level; Network ACLs are stateless and apply at the subnet level
+        D. There is no difference between them
+        
+        ✅ Answer: C. Security Groups are stateful and apply at the instance level; Network ACLs are stateless and apply at the subnet level
+        
+        ❓ Question 7:
+        Which VPC feature allows secure and private communication between two VPCs?
+        
+        A. Internet Gateway
+        B. NAT Gateway
+        C. VPC Peering
+        D. Route Table
+        
+        ✅ Answer: C. VPC Peering
+    </details>
 
 16. According to the AWS Shared responsibility model, which of the following are the responsibility of the customer? (Choose TWO)
     - A. Managing environmental events of AWS data centers.
