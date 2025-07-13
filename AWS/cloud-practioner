@@ -1474,3 +1474,84 @@ C. CloudTrail tracks user/API activity; CloudWatch monitors performance metrics 
 D. Both are used to create IAM users
 
 ✅ Answer: C. CloudTrail tracks user/API activity; CloudWatch monitors performance metrics and logs
+
+
+====================================================✅ What is AWS X-Ray? ============================================
+
+AWS X-Ray is a distributed tracing service that helps developers analyze and debug production, distributed applications.
+
+It provides a visual map of request flows and helps you pinpoint:
+
+Latency bottlenecks
+
+Error hotspots
+
+Performance issues in microservices or serverless apps
+
+🔑 Key Features of AWS X-Ray:
+Feature	Description
+Distributed Tracing	Tracks requests end-to-end as they travel through multiple services (e.g., API Gateway → Lambda → DynamoDB).
+Service Map	Visualizes your application's components and their interactions.
+Latency Analysis	Identifies performance bottlenecks by showing how long each part of a request takes.
+Error Detection	Helps find root causes of errors, exceptions, or timeouts.
+Integrated Services	Works with Lambda, EC2, Elastic Beanstalk, ECS, API Gateway, etc.
+Trace Sampling	Supports automatic sampling to reduce overhead and cost.
+
+✅ Use Cases:
+Debugging serverless applications (e.g., Lambda with API Gateway)
+
+Identifying slow microservices
+
+Monitoring performance in distributed systems
+
+Troubleshooting 500 errors or timeouts
+
+Seeing full lifecycle of a user request
+
+🧠 AWS X-Ray vs CloudWatch vs CloudTrail
+Service	Focus	Example
+X-Ray	Application tracing and debugging	“Where is my app slowing down?”
+CloudWatch	Metrics, logs, and alarms	“How is my EC2 instance performing?”
+CloudTrail	Audit and API activity	“Who terminated this instance?”
+
+📌 Sample Exam Questions
+❓ Question 1:
+Which AWS service helps developers trace and analyze requests made through distributed applications?
+
+A. Amazon CloudWatch
+B. AWS CloudTrail
+C. AWS X-Ray
+D. Amazon Inspector
+
+✅ Answer: C. AWS X-Ray
+
+❓ Question 2:
+A developer wants to trace how a request flows through a Lambda function, an API Gateway, and DynamoDB to find latency issues. Which service should they use?
+
+A. Amazon CloudWatch Logs
+B. AWS X-Ray
+C. Amazon SNS
+D. AWS Config
+
+✅ Answer: B. AWS X-Ray
+
+❓ Question 3:
+Which of the following services does AWS X-Ray integrate with natively? (Select TWO)
+
+A. Amazon S3
+B. AWS Lambda
+C. AWS Elastic Beanstalk
+D. Amazon CloudFront
+E. Amazon Route 53
+
+✅ Answer: B. AWS Lambda, C. AWS Elastic Beanstalk
+
+❓ Question 4:
+What type of diagram does AWS X-Ray use to show the flow of a request through different components?
+
+A. Pie chart
+B. Scatter plot
+C. Service map
+D. Line graph
+
+✅ Answer: C. Service map
