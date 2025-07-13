@@ -1633,3 +1633,88 @@ C. Improved global application performance and availability
 D. Monitoring VPC flow logs
 
 ✅ Answer: C. Improved global application performance and availability
+
+
+============================================✅ What is AWS Elastic Beanstalk? ====================================
+AWS Elastic Beanstalk is a fully managed service that makes it easy to deploy, manage, and scale web applications and services.
+
+You just upload your code, and Elastic Beanstalk automatically handles:
+
+Infrastructure provisioning
+
+Load balancing
+
+Auto scaling
+
+Monitoring
+
+Environment updates
+
+It supports several programming languages and platforms such as Java, .NET, Node.js, Python, PHP, Ruby, Go, and Docker.
+
+🔑 Key Features of Elastic Beanstalk:
+Feature	Description
+Managed Platform	Beanstalk handles provisioning, patching, and updates for you.
+Multiple Environment Types	Web server or worker environments.
+Supports Multiple Languages	Java, Node.js, Python, Go, .NET, PHP, Ruby, Docker.
+Auto Scaling	Automatically scales your application based on demand.
+Health Monitoring	Integrated with Amazon CloudWatch and X-Ray.
+Custom Configs	You can customize EC2 instances or install software via .ebextensions.
+
+✅ Use Cases:
+Fast deployment of web apps and APIs without managing infrastructure
+
+Building apps in familiar languages like Node.js, Java, or Python
+
+Scaling apps easily with built-in load balancers and auto-scaling
+
+Developers who want code-first deployment with minimal DevOps
+
+🧠 AWS Elastic Beanstalk vs Alternatives
+Service	What it Does	Best For
+Elastic Beanstalk	Deploys web apps with minimal setup	Developers who want simple deployment
+Amazon EC2	Full control over compute instances	Custom environments and deep OS control
+AWS Lambda	Run code without managing servers	Event-driven or microservices apps
+Amazon ECS/EKS	Run containerized applications	Complex, container-based workloads
+
+📌 Sample Exam Questions
+❓ Question 1:
+Which AWS service allows developers to deploy web applications without provisioning the underlying infrastructure?
+
+A. Amazon EC2
+B. AWS Lambda
+C. Amazon ECS
+D. AWS Elastic Beanstalk
+
+✅ Answer: D. AWS Elastic Beanstalk
+
+❓ Question 2:
+A developer wants to deploy a Python web app and let AWS handle infrastructure, auto scaling, and monitoring. Which service should they use?
+
+A. Amazon EC2
+B. AWS Lambda
+C. AWS Elastic Beanstalk
+D. Amazon S3
+
+✅ Answer: C. AWS Elastic Beanstalk
+
+❓ Question 3:
+Which of the following actions is automatically managed by AWS Elastic Beanstalk?
+
+A. Writing your application code
+B. Choosing programming language
+C. Setting up auto scaling and load balancing
+D. Designing the UI for your app
+
+✅ Answer: C. Setting up auto scaling and load balancing
+
+❓ Question 4:
+What type of application environments can you create using AWS Elastic Beanstalk? (Select TWO)
+
+A. Web server environment
+B. Object storage environment
+C. Worker environment
+D. Database-only environment
+E. Lambda@Edge environment
+
+✅ Answer: A. Web server environment, C. Worker environment
