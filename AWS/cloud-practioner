@@ -1223,3 +1223,86 @@ C. It allows businesses to only pay for recovery resources when needed, making i
 D. It automatically backups your EC2 instances to Amazon Glacier.
 
 ✅ Answer: C. It allows businesses to only pay for recovery resources when needed, making it more cost-effective.
+
+
+========================================================✅ What is Amazon MQ? ====================================================================
+Amazon MQ is a managed message broker service for Apache ActiveMQ and RabbitMQ that enables applications, systems, and services to communicate and exchange information asynchronously via message queues and topics.
+
+It’s ideal when you're migrating from on-premises messaging systems that already use standards like:
+
+JMS (Java Message Service)
+
+AMQP (Advanced Message Queuing Protocol)
+
+MQTT
+
+STOMP
+
+OpenWire
+
+🔑 Key Features of Amazon MQ:
+Feature	Description
+Fully Managed	AWS manages provisioning, patching, failure detection, and recovery.
+Supports Popular Engines	Apache ActiveMQ and RabbitMQ.
+Compatible with Existing Apps	Works with standard APIs and protocols, making migration easy.
+Reliable Messaging	Supports message ordering, delivery guarantees, and durable queues.
+Monitoring	Integrated with Amazon CloudWatch for monitoring.
+High Availability	Supports Multi-AZ deployment for failover.
+
+✅ Use Cases:
+Migrating from existing on-prem message brokers to AWS
+
+Decoupling microservices and components
+
+Asynchronous processing (e.g., order processing, task queues)
+
+Legacy systems using JMS or AMQP
+
+🧠 Amazon MQ vs SQS (Simple Queue Service):
+Feature	Amazon MQ	Amazon SQS
+Protocol Support	Open protocols (JMS, AMQP, MQTT, etc.)	AWS proprietary API only
+Migration	Ideal for legacy apps using standard messaging	Best for new cloud-native apps
+Managed Broker	Yes (ActiveMQ or RabbitMQ)	No traditional broker required
+Ease of Use	More complex, but flexible	Simpler to set up and scale
+
+📌 Sample Exam Questions
+❓ Question 1:
+What is the primary purpose of Amazon MQ?
+
+A. To host machine learning models
+B. To manage user identities and access
+C. To provide a managed message broker for communication between applications
+D. To replicate data across AWS regions
+
+✅ Answer: C. To provide a managed message broker for communication between applications
+
+❓ Question 2:
+Which messaging protocols does Amazon MQ support? (Select TWO)
+
+A. MQTT
+B. SMTP
+C. AMQP
+D. HTTP
+E. STOMP
+
+✅ Answer: A. MQTT, C. AMQP
+
+❓ Question 3:
+A company is migrating a legacy Java application that uses JMS for messaging. Which AWS service is the best fit?
+
+A. Amazon SQS
+B. Amazon SNS
+C. Amazon MQ
+D. Amazon Kinesis
+
+✅ Answer: C. Amazon MQ
+
+❓ Question 4:
+Which of the following is a benefit of using Amazon MQ?
+
+A. It supports long-term archival storage
+B. It is an in-memory data store
+C. It supports popular open messaging protocols like AMQP and JMS
+D. It requires manual scaling and patching
+
+✅ Answer: C. It supports popular open messaging protocols like AMQP and JMS
