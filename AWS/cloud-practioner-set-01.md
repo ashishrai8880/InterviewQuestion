@@ -30,8 +30,9 @@ layout: exam
     - C. AWS Auto Scaling.
     - D. AWS Cost Explorer.
 
-    <details markdown=1><summary markdown='span'>Answer</summary>
+    <details markdown=1><summary markdown='span'>Answer (Learn more: <a href="https://www.geeksforgeeks.org/devops/amazon-web-services-scaling-amazon-ec2/" target="_blank">Resource</a>) </summary>
       Correct answer: C
+       
     </details>
 
 4. Which S3 storage class is best for data with unpredictable access patterns?
