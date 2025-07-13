@@ -645,6 +645,87 @@ layout: exam
     <details markdown=1><summary markdown='span'>Answer</summary>
       Correct answer: A
     </details>
+    <details markdown=1><summary markdown='span'>Resource</summary>
+      ✅ What is AWS Direct Connect?
+        AWS Direct Connect is a dedicated network connection between your on-premises data center (or office) and AWS. It allows you to bypass the public internet and establish a private, high-bandwidth, low-latency connection to AWS services.
+        
+        🔑 Key Features of AWS Direct Connect:
+        Feature	Description
+        Dedicated Connection	Establishes a private network connection between your network and AWS.
+        Consistent Performance	Avoids internet congestion, offering more reliable and predictable network performance.
+        High Bandwidth Options	Supports speeds from 50 Mbps to 100 Gbps.
+        Secure Connection	Traffic does not traverse the public internet, which enhances security and privacy.
+        Works with All AWS Services	Can access Amazon EC2, Amazon S3, VPC, and more.
+        Integration with VPN	Can be used together with AWS Site-to-Site VPN for redundancy.
+        
+        ✅ Use Cases:
+        Transferring large datasets to AWS (e.g., backups, video, analytics data)
+        
+        Hybrid cloud deployments (on-prem + AWS)
+        
+        Applications that need consistent low-latency performance
+        
+        Meeting compliance/security requirements by avoiding the internet
+        
+        🔄 Direct Connect vs VPN:
+        Feature	AWS Direct Connect	AWS VPN
+        Connection Type	Dedicated physical connection	Over the public internet
+        Performance	High, consistent	Variable (depends on internet)
+        Security	Private	Encrypted, over internet
+        Setup Time	Longer (physical provisioning)	Fast (software configuration)
+        Redundancy	Can be paired with VPN	Often used as backup for DX
+        
+        📌 Sample Exam Questions
+        ❓ Question 1:
+        What is the primary benefit of using AWS Direct Connect over a standard internet connection?
+        
+        A. Higher encryption for API traffic
+        B. Dedicated network connection for consistent, low-latency performance
+        C. Ability to host websites on AWS
+        D. Built-in DDoS protection for EC2
+        
+        ✅ Answer: B. Dedicated network connection for consistent, low-latency performance
+        
+        ❓ Question 2:
+        A company wants a private and reliable connection between its on-premises data center and AWS. Which service should they use?
+        
+        A. Amazon VPC Peering
+        B. AWS Site-to-Site VPN
+        C. AWS Direct Connect
+        D. AWS Transit Gateway
+        
+        ✅ Answer: C. AWS Direct Connect
+        
+        ❓ Question 3:
+        Which of the following statements is true about AWS Direct Connect?
+        
+        A. It encrypts traffic using IPsec over the public internet
+        B. It is used to host public websites in AWS
+        C. It uses dedicated connections to provide predictable performance
+        D. It automatically connects your AWS resources to third-party clouds
+        
+        ✅ Answer: C. It uses dedicated connections to provide predictable performance
+        
+        ❓ Question 4:
+        Which AWS service is best suited for securely transferring large volumes of data between your on-premises data center and AWS?
+        
+        A. Amazon CloudFront
+        B. AWS Direct Connect
+        C. AWS Snowball
+        D. AWS VPN
+        
+        ✅ Answer: B. AWS Direct Connect
+        
+        ❓ Question 5:
+        If a company wants to use AWS Direct Connect for production workloads but still maintain failover in case the connection goes down, what AWS service should they use in combination?
+        
+        A. Amazon Route 53
+        B. AWS Global Accelerator
+        C. AWS VPN
+        D. AWS WAF
+        
+        ✅ Answer: C. AWS VPN
+    </details>
 
 26. You are working on two projects that require completely different network configurations. Which AWS service or feature will allow you to isolate resources and network configurations?
     - A. Internet gateways.
