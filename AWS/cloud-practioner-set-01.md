@@ -201,6 +201,92 @@ layout: exam
     <details markdown=1><summary markdown='span'>Answer</summary>
       Correct answer: C
     </details>
+    <details markdown=1><summary markdown='span'>Resource</summary>
+      ✅ What is AWS Infrastructure Event Management (IEM)?
+        AWS Infrastructure Event Management (IEM) is a short-term, consultative engagement provided by AWS to help you plan and execute large-scale events that involve significant changes to your AWS infrastructure.
+        
+        These events can include:
+        
+        Large product launches
+        
+        Migration cutovers
+        
+        Major marketing campaigns (like Black Friday)
+        
+        Application go-lives
+        
+        Infrastructure upgrades or expansions
+        
+        📌 Important: AWS IEM is available for Business and Enterprise Support plan customers.
+        
+        🔑 Key Features of AWS IEM:
+        Feature	Description
+        Event Planning Support	AWS helps you create a detailed runbook and timeline for your event.
+        Architecture and Scaling Guidance	Ensures your architecture is ready for high traffic or workload changes.
+        Operational Readiness Reviews	Reviews your AWS environment to spot gaps or risks.
+        Monitoring and Incident Support	AWS provides enhanced monitoring during the event and quicker response if issues arise.
+        Post-Event Analysis	Review of performance, issues, and improvement areas after the event.
+        
+        ✅ Use Cases:
+        Retailer preparing for Black Friday surge
+        
+        Gaming company launching a new title
+        
+        Media platform streaming a live global event
+        
+        Enterprise migrating critical workloads to AWS
+        
+        📌 Sample Exam Questions
+        ❓ Question 1:
+        What is the purpose of AWS Infrastructure Event Management (IEM)?
+        
+        A. To manage IAM user policies and permissions
+        B. To help customers plan and support large-scale infrastructure events
+        C. To provide detailed billing breakdowns
+        D. To analyze container performance metrics
+        
+        ✅ Answer: B. To help customers plan and support large-scale infrastructure events
+        
+        ❓ Question 2:
+        Which AWS support plans provide access to Infrastructure Event Management (IEM)?
+        
+        A. Basic and Developer
+        B. Business and Enterprise
+        C. Developer and Enterprise
+        D. Only available with the Free Tier
+        
+        ✅ Answer: B. Business and Enterprise
+        
+        ❓ Question 3:
+        An e-commerce company is planning for a major product launch and expects a large spike in traffic. Which AWS offering can help them plan and monitor this event?
+        
+        A. AWS Shield Advanced
+        B. Amazon Inspector
+        C. AWS Infrastructure Event Management (IEM)
+        D. AWS Control Tower
+        
+        ✅ Answer: C. AWS Infrastructure Event Management (IEM)
+        
+        ❓ Question 4:
+        Which of the following does AWS not typically offer as part of Infrastructure Event Management?
+        
+        A. Architectural guidance
+        B. Cost forecasting and billing analysis
+        C. Operational readiness reviews
+        D. Real-time monitoring and incident support
+        
+        ✅ Answer: B. Cost forecasting and billing analysis
+        
+        ❓ Question 5:
+        Which AWS service is designed to help ensure a smooth launch of mission-critical workloads by offering planning, architectural review, and enhanced support?
+        
+        A. AWS Systems Manager
+        B. AWS Elastic Beanstalk
+        C. AWS Infrastructure Event Management
+        D. Amazon CloudWatch
+        
+        ✅ Answer: C. AWS Infrastructure Event Management
+    </details>
 
 10. You work as an on-premises MySQL DBA. The work of database configuration, backups, patching, and DR can be time-consuming and repetitive. Your company has decided to migrate to the AWS Cloud. Which of the following can help save time on database maintenance so you can focus on data architecture and performance?
     - A. Amazon RDS.
