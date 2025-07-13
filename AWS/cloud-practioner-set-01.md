@@ -837,6 +837,104 @@ layout: exam
     <details markdown=1><summary markdown='span'>Answer</summary>
       Correct answer: A
     </details>
+    <details markdown=1><summary markdown='span'>Resource</summary>
+      ✅ What is Amazon EMR?
+        Amazon EMR (Elastic MapReduce) is a cloud big data platform that allows you to process and analyze vast amounts of data quickly and cost-effectively using open-source tools such as:
+        
+        Apache Hadoop
+        
+        Apache Spark
+        
+        Apache Hive
+        
+        Presto
+        
+        HBase
+        
+        Flink
+        
+        EMR simplifies running big data frameworks on Amazon EC2 or Amazon EKS (Kubernetes), enabling fast and scalable data processing.
+        
+        🔑 Key Features of Amazon EMR:
+        Feature	Description
+        Scalable	Easily scales to hundreds or thousands of EC2 instances.
+        Cost-Effective	Pay-as-you-go pricing; supports use of Spot Instances.
+        Open-Source Tools	Run tools like Spark, Hive, and Hadoop in a managed environment.
+        Integrated with S3	Store input/output data in Amazon S3.
+        Flexible Deployment	Run on EC2, EKS (containers), or use EMR Serverless.
+        EMR Studio	An IDE for data scientists and engineers to run notebooks and workflows.
+        
+        ✅ Use Cases:
+        Big data analytics
+        
+        ETL (Extract, Transform, Load) pipelines
+        
+        Machine learning preprocessing
+        
+        Log analysis
+        
+        Data warehousing
+        
+        🧠 Core Concepts:
+        Term	Description
+        Cluster	A group of EC2 instances running the big data tools.
+        Master Node	Coordinates tasks and manages the cluster.
+        Core/Task Nodes	Execute data processing tasks.
+        Steps	Instructions (jobs) for the cluster to perform (e.g., run a Hive query).
+        EMRFS	Allows Hadoop to work with Amazon S3 as a data store.
+        
+        📌 Sample Exam Questions
+        ❓ Question 1:
+        Which AWS service is used to process large amounts of data using popular big data frameworks like Spark and Hadoop?
+        
+        A. Amazon Redshift
+        B. Amazon RDS
+        C. Amazon EMR
+        D. Amazon Athena
+        
+        ✅ Answer: C. Amazon EMR
+        
+        ❓ Question 2:
+        What is the purpose of Amazon EMR?
+        
+        A. To automate the deployment of web applications
+        B. To process large-scale data using open-source tools like Hadoop and Spark
+        C. To migrate on-prem databases to the cloud
+        D. To analyze relational data using SQL
+        
+        ✅ Answer: B. To process large-scale data using open-source tools like Hadoop and Spark
+        
+        ❓ Question 3:
+        Which of the following can you use with Amazon EMR to store data separately from the compute cluster?
+        
+        A. Amazon RDS
+        B. Amazon DynamoDB
+        C. Amazon S3
+        D. Amazon ElastiCache
+        
+        ✅ Answer: C. Amazon S3
+        
+        ❓ Question 4:
+        What is an advantage of using Amazon EMR over managing a Hadoop cluster manually on EC2?
+        
+        A. EMR is only used for storing files in S3
+        B. EMR provides fully managed clusters, automatic provisioning, and scaling
+        C. EMR supports only machine learning workloads
+        D. EMR does not allow integration with other AWS services
+        
+        ✅ Answer: B. EMR provides fully managed clusters, automatic provisioning, and scaling
+        
+        ❓ Question 5:
+        Which deployment models does Amazon EMR support? (Select TWO)
+        
+        A. EMR on EC2
+        B. EMR on CloudFront
+        C. EMR on EKS
+        D. EMR on Lightsail
+        E. EMR on Lambda
+        
+        ✅ Answer: A. EMR on EC2, C. EMR on EKS
+    </details>
 
 29. Based on the AWS Shared Responsibility Model, which of the following are the sole responsibility of AWS? (Choose TWO)
     - A. Monitoring network performance.
