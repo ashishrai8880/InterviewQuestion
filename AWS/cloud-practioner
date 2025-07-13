@@ -1555,3 +1555,81 @@ C. Service map
 D. Line graph
 
 ✅ Answer: C. Service map
+
+
+===============================================✅ What is AWS Global Accelerator? ============================================
+AWS Global Accelerator is a networking service that directs traffic to your global applications through the AWS global network 
+instead of the public internet, providing:
+
+Lower latency
+
+Higher availability
+
+Improved performance for your users worldwide
+
+It works with Elastic Load Balancers (ALB/NLB), EC2 instances, and Elastic IPs.
+
+🔑 Key Features of AWS Global Accelerator:
+Feature	Description
+Static Anycast IPs	Provides two static IP addresses that serve as a global entry point for your application.
+Global Traffic Distribution	Routes users to the nearest healthy endpoint using AWS global network.
+Health Checks	Continuously monitors the health of your endpoints and routes traffic away from unhealthy ones.
+Intelligent Routing	Routes traffic based on performance and health, not just geolocation.
+Failover and Resilience	Automatically reroutes traffic if an endpoint or AWS Region becomes unavailable.
+
+✅ Use Cases:
+Gaming, media streaming, and real-time apps with global users
+
+Reducing latency for international traffic
+
+Ensuring application availability across multiple AWS Regions
+
+Replacing Geo DNS-based routing with smarter performance routing
+
+🧠 AWS Global Accelerator vs CloudFront
+Feature	Global Accelerator	CloudFront
+Purpose	Optimizes performance of non-cacheable content (like APIs)	Caches and delivers static & dynamic content
+Static IPs	✅ Yes	❌ No
+Latency Optimization	✅ Global routing with health-based decisions	✅ Yes, for cached content
+Common Use Case	Real-time apps, APIs, multi-region failover	Static websites, video streaming, CDN use
+
+📌 Sample Exam Questions
+❓ Question 1:
+Which AWS service provides static IP addresses to serve as a fixed entry point for applications hosted in multiple AWS Regions?
+
+A. Amazon CloudFront
+B. AWS Route 53
+C. AWS Global Accelerator
+D. AWS Transit Gateway
+
+✅ Answer: C. AWS Global Accelerator
+
+❓ Question 2:
+A global company wants to reduce latency for users accessing a non-cacheable API hosted in multiple AWS Regions. Which service should they use?
+
+A. AWS CloudFront
+B. AWS Global Accelerator
+C. Amazon RDS Proxy
+D. AWS Shield Advanced
+
+✅ Answer: B. AWS Global Accelerator
+
+❓ Question 3:
+What is a key difference between AWS Global Accelerator and Amazon CloudFront?
+
+A. CloudFront routes traffic based on health checks; Global Accelerator does not
+B. Global Accelerator improves performance for dynamic content; CloudFront caches static content
+C. Global Accelerator provides WAF protection; CloudFront does not
+D. CloudFront uses static IP addresses; Global Accelerator uses dynamic IPs
+
+✅ Answer: B. Global Accelerator improves performance for dynamic content; CloudFront caches static content
+
+❓ Question 4:
+Which of the following is a benefit of using AWS Global Accelerator?
+
+A. Secure storage for medical data
+B. Auto-scaling EC2 instances
+C. Improved global application performance and availability
+D. Monitoring VPC flow logs
+
+✅ Answer: C. Improved global application performance and availability
