@@ -344,7 +344,49 @@ g.createGraph();
 const stack = g.topologicalSort();
 console.log(stack.reverse());   // opposite console of stack will print correct topoplogical order 
 
+//=========2nd method of topological sort
+class Solution {
+    topoSort(V, edges) {
+        let indeg = Array.from({length : V} , ()=>0);
+        let adj = {} ;
+        
+        for (let i = 0; i < V; i++) {
+            adj[i] = [];
+        }
 
+        edges.forEach((e) => {
+            const src = e[0];
+            const dest = e[1];
+            indeg[dest]++;
+            adj[src].push(dest);
+        });
+        
+        let q = [];
+        indeg.forEach((e , i)=>{
+            if(e == 0 ){
+                q.push(i)
+            }
+        })
+        
+        let res = [];
+        while(q.length !== 0){
+            const v = q.shift();
+            res.push(v);
+            
+            // checking its neighbours
+            const vertex = adj[v];
+            for(const ver of vertex){
+                indeg[ver]-- ;
+                
+                if(indeg[ver] == 0){
+                    q.push(ver);
+                }
+            }
+        }
+        return res ;
+        
+    }
+}
 
 
 
