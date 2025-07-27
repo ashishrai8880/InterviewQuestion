@@ -275,6 +275,9 @@ console.log("is cyclic updated : ",g.isCyclic());
           3  
 */
 
+// Algo 
+// 1. Apply Simple DFS , take 1 stack , which will store data at last . When it arrives at the peak or leaf element , it will store it . And print stack in reverse order .
+
 
 class Edge{
    
@@ -345,6 +348,11 @@ const stack = g.topologicalSort();
 console.log(stack.reverse());   // opposite console of stack will print correct topoplogical order 
 
 //=========2nd method of topological sort
+// Algo : First calculate indegree of each node . 
+// Take one queue , and first time push all node which have indegree 0 . 
+// Apply loop until queue is empty . For every node , subtract its neigbour node indeg by 1 and check , if there is again 0 indeg node is coming ,then again push into queue.
+
+
 class Solution {
     topoSort(V, edges) {
         let indeg = Array.from({length : V} , ()=>0);
