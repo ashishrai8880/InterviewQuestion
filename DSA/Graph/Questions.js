@@ -251,6 +251,51 @@ class Graph{
     }
 }
 
+// Easy Approach : Just apply bfs form of topological sort . and at last check , it queue runs numberOfCourse time , it means there is not cycle and student can finish all course
+var canFinish = function(n, pre) {
+  
+    let adj = {};
+    let indeg = Array.from({length :n }, ()=>0);
+    for(let i = 0 ; i<n ; i++){
+        adj[i] = [];
+    }
+
+    pre.forEach((e)=>{
+        const dest = e[0];
+        const src = e[1];
+        adj[src].push(dest);
+        indeg[dest]++ ;
+    })
+
+    let q = [];
+    indeg.forEach((e , i)=>{
+        if(e == 0 ){
+            q.push(i);
+        }
+    })
+    if(q.length == 0){
+        return false ;
+    }
+
+    let count = 0 ;
+    while( q.length != 0 ){
+        const curr = q.shift();
+        const vertex = adj[curr];
+        count++ ;
+        for(const v of vertex){
+            indeg[v]-- ;
+
+            if(indeg[v] == 0){
+                q.push(v);
+            }
+        }
+    }
+
+    return count == n ;
+
+
+};
+
 
 //======================================================================4. Eventual Safe Space . TC O(E+V) ================================================================================================
 // LEET CODE LINK : https://leetcode.com/problems/find-eventual-safe-states/
@@ -360,6 +405,57 @@ class Graph{
 
 
 
+// Easy way : We just need to detech which node is in cycle , marks it to true , and at the end return all the node which is not in cycle
+var eventualSafeNodes = function(graph) {
+    
+    const n = graph.length ;
+    let isVisited = Array.from({length : n} , ()=>false);
+    let stack = Array.from({length : n} , ()=>false);
+    let isInCycle = Array.from({length : n} , ()=>false);
+    
+    for(let i = 0 ; i<n ; i++){
+        if(isVisited[i] == false){
+            if(dfs( i , graph , isVisited , stack , isInCycle)){
+                isInCycle[i] = true ;
+            }
+        }
+    }
+
+    let res = [];
+    isInCycle.forEach((e , i)=>{
+        if(!e){
+            res.push(i)
+        }
+    })
+
+    return res ;
+
+};
+
+const dfs = (curr , graph , isVisited=[] , stack=[] , isInCycle=[])=>{
+
+    isVisited[curr] = true ;
+    stack[curr] = true ;
+    const vertex = graph[curr];
+
+    for(const v of vertex){
+
+        if(isVisited[v] == false){
+            if(dfs(v , graph , isVisited , stack , isInCycle)){
+                isInCycle[curr] = true ;
+                return true ;
+            };
+        }
+        else if(isVisited[v]==true && stack[v] == true){
+            isInCycle[curr] = true ;
+            return true ;
+        }
+
+    }
+    stack[curr] = false ;
+    return false ;
+
+}
 
 
 
