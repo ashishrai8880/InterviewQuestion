@@ -492,6 +492,65 @@ g.createGraph();
 const result = g.isCyclic();
 console.log(result); 
 
+// ===================================================Shortest Path In Unweighted Graph ===================================================================================================================
+// Logic : Take distance array and initialize with Infinity . It will be like greedy technique . When you move forward , just store dist[v] = dist[u] + 1 , when you are going from u->v
+
+
+class Edge{
+    constructor(src , dest){
+        this.src = src ;
+        this.dest = dest ;
+    }
+}
+
+class Graph{
+    constructor(n , mat){
+        this.graph = Array.from({length : n},()=>[]);
+        this.size = n ;
+        
+        mat.forEach((e)=>{
+            const s = e[0];
+            const d = e[1]
+            this.graph[s].push(new Edge(s , d));
+            this.graph[d].push(new Edge(d , s));
+        })
+    }
+    
+    shortestPath(src , dest ){
+        
+        let isVisited = Array.from({length : this.size} , ()=>false);
+        let distance = Array.from({length : this.size} , ()=>Infinity);
+        
+        //Apply BFS
+        distance[src] = 0 ;
+        isVisited[src] = true ;
+        let q = [];
+        q.push(src);
+        
+        while(q.length !=0 ){
+            
+            const u = q.shift();
+            const vertex = this.graph[u];
+            
+            // iterating its neighbour
+            for(const v of vertex){
+                if(isVisited[v.dest] == false){
+                    isVisited[v.dest] = true ;
+                    distance[v.dest] = distance[u]+1 ;
+                    q.push(v.dest);
+                }
+            }
+        }
+        return distance ;
+        
+    }
+}
+
+const n = 8 ;
+const list = [[1,2],[1,0],[0,3],[3,7],[3,4],[7,4],[7,6],[4,6],[4,5],[6,5]];
+const g= new Graph(8 , list);
+console.log(g.shortestPath(0,7))
+
 
 // ============================================= Part 3 : Dijkstra Algorithm (Shortest Path between source to destination)=========================================================================
 // Approach : First take cheapest array , which will at starting save infinity for all destination except source . Source will contain 0 cost , because source to source takes 
