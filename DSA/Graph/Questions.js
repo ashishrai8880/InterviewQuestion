@@ -627,3 +627,85 @@ const g = [[4,3,1],[3,2,4],[3],[4],[]];
 const res = allPathsSourceTarget(g);
 console.log(res)
 
+
+
+// Question : Surrounded Regioin . Leetcode : https://leetcode.com/problems/surrounded-regions/
+// Ideas is very simple , just first boundary traversal of matrix , and set 'B' to the place where there is '0' and its related neighobour . Next time , just replace 
+// every 'O' with 'X' and in last loop just remove 'B' and place 'O' . COOL
+/**
+ * @param {character[][]} board
+ * @return {void} Do not return anything, modify board in-place instead.
+ */
+var solve = function(board) {
+    
+    const m = board.length ;
+    const n = board[0].length ;
+
+    const isValid = (i , j)=>{
+        if(i>=0 && i < m && j>=0 && j<n){
+            return true ;
+        }
+        return false ;
+    }
+
+    const dfs = (i , j , val)=>{
+
+        board[i][j] = val ;
+
+        if(isValid(i+1 , j) && board[i+1][j] == 'O'){
+            dfs(i+1 , j , val)
+        }
+
+        if(isValid(i-1 , j) && board[i-1][j] == 'O'){
+            dfs(i-1 , j , val)
+        }
+
+        if(isValid(i , j+1) && board[i][j+1] == 'O'){
+            dfs(i , j+1 , val)
+        }
+
+        if(isValid(i , j-1) && board[i][j-1] == 'O'){
+            dfs(i , j-1 , val)
+        }
+
+    }
+
+    // boundary traversal
+    // left side : top -> bottom . First column . Right side : top -> bottom . Last Column
+    for(let i = 0 ; i<m ; i++){
+        if(board[i][0] == 'O'){
+            dfs(i , 0 , 'B');
+        }
+        if(board[i][n-1] == 'O'){
+            dfs(i , n-1 , 'B');
+        }
+    }
+
+    // top side : left -> right . First row . top side : left -> right . Last Row
+    for(let j = 0 ; j<n ; j++){
+        if(board[0][j] == 'O'){
+            dfs(0 , j , 'B');
+        }
+        if(board[m-1][j] == 'O'){
+            dfs(m-1 , j , 'B');
+        }
+    }
+    
+
+    for(let i =0 ; i<m ; i++){
+        for(let j = 0 ; j< n ; j++){
+            if(board[i][j] == 'O'){
+                board[i][j] = 'X';
+            }
+        }
+    }
+
+    for(let i = 0 ; i< m ; i++){
+        for(let j = 0 ; j<n ; j++){
+            if(board[i][j] == 'B'){
+                board[i][j] = 'O'
+            } 
+        }
+    }
+
+};
