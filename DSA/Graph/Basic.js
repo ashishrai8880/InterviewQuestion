@@ -861,6 +861,73 @@ console.log({ans})
 
 
 
+// short method of prim's algorithm . It is greedy type of algorithm . 
+class Edge{
+    constructor(src , dest , wt){
+        this.src = src ;
+        this.dest = dest ;
+        this.wt = wt ;
+    }
+}
+
+class Graph{
+    constructor(n , mat){
+        this.graph = Array.from({length : n} , ()=>[]);
+        this.size = n ;
+        
+        mat.forEach((e)=>{
+            const src = e[0];
+            const dest = e[1];
+            const wt = e[2];
+            this.graph[src].push(new Edge(src , dest , wt));
+            this.graph[dest].push(new Edge(dest , src , wt));
+        })
+    }
+    
+    primsAlgo(startNode){
+        
+        let vis = Array.from({length : this.size} , ()=>false);
+        
+        vis[startNode] = true ;
+        let edges = [];
+        let mst = [];
+        let cost = 0 ;
+        
+        // traversing start node and add to edge
+        const vertex = this.graph[startNode];
+        for(const v of vertex){
+            edges.push(v);
+        }
+        
+        while(edges.length != 0){
+            
+            edges.sort((a,b)=>a.wt - b.wt);
+            
+            const curr = edges.shift();
+            
+            if(vis[curr.dest] == false){
+                mst.push(curr);
+                cost = cost + curr.wt ;
+                vis[curr.dest] = true ;
+                
+                // pushing its neighbours
+                for(const v of this.graph[curr.dest]){
+                    if(vis[v.dest] == false){
+                        edges.push(v)
+                    }
+                }
+            }
+        }
+        return { edge : mst , cost} ;
+    }
+}
+
+const n = 4 ;
+const mat = [[0, 1, 10] , [0, 2, 15] , [0, 3, 30] , [1, 3, 40] , [2, 3, 50]] ;
+const g = new Graph(n , mat);
+const res = g.primsAlgo(3);
+console.log(res);
+
 
 
 
