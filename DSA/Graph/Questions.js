@@ -596,5 +596,34 @@ var findCheapestPrice = function(n, flights, src, dst, k) {
 
 
 
+// All Path from source to target . Updated code . No need to maintain visited array , because below is DAG directed acyclic graph . there is no cycle . 
+// Leetcode : https://leetcode.com/problems/all-paths-from-source-to-target/
+/**
+ * @param {number[][]} graph
+ * @return {number[][]}
+ */
+var allPathsSourceTarget = function(graph) {
+    
+    const dfs = (curr, path = [], ans = []) => {
+        if (curr === graph.length - 1) {
+            ans.push([...path]);
+            return;
+        }
 
+        for (const v of graph[curr]) {
+            path.push(v);
+            dfs(v, path, ans);
+            path.pop(); // backtrack , no need to maintain vis in DAG graph
+        }
+    };
+
+    const ans = [];
+    dfs(0, [0], ans);
+    return ans;
+
+};
+
+const g = [[4,3,1],[3,2,4],[3],[4],[]];
+const res = allPathsSourceTarget(g);
+console.log(res)
 
