@@ -885,4 +885,73 @@ var findCircleNum = function(isConnected) {
 };
 
 
+// ================================================ 10. Number of Enclaves =============================================================================
+// Leetcode : https://leetcode.com/problems/number-of-enclaves/
+// This question is similar to surrounded region . First traverse all boundaries and fill land 1 with 'B' . In second loop just count how many remaining land left .
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+var numEnclaves = function(grid) {
+    const m = grid.length ;
+    const n = grid[0].length ;
+
+    const isValid=(i , j )=>{
+        if(i>=0 && i<m && j>=0 && j<n && grid[i][j] == 1){
+            return true ;
+        }
+        return false ;
+    }
+
+    const dfs = (i , j , val )=>{
+
+        grid[i][j] = val ;
+
+        if(isValid(i+1 , j)){
+            dfs(i+1 , j , val);
+        }
+        if(isValid(i-1 , j)){
+            dfs(i-1 , j , val);
+        }
+        if(isValid(i , j+1)){
+            dfs(i , j+1 , val);
+        }
+        if(isValid(i , j-1)){
+            dfs(i , j-1 , val);
+        }
+    }
+
+    // traverse boundary and set 'B'
+
+    for(let i = 0 ; i< m ; i++){
+        if(grid[i][0] == 1){
+            dfs(i , 0 , 'B');
+        }
+        if(grid[i][n-1] == 1){
+            dfs(i , n-1 , 'B')
+        }
+    }
+
+    for(let j = 0 ; j< n ; j++){
+        if(grid[0][j] == 1){
+            dfs(0 , j , 'B');
+        }
+        if(grid[m-1][j] == 1){
+            dfs(m-1 , j , 'B')
+        }
+    }
+
+    let ans = 0 ;
+    grid.forEach((row , ri)=>{
+        row.forEach((col , ci)=>{
+            if(col == 1){
+                ans++ ;
+            }
+        })
+    })
+
+    return ans ;
+
+};
+
 
