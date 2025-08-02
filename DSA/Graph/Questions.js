@@ -830,3 +830,59 @@ class Solution {
      
     }
 }
+
+
+// ==================================================9. Number of Provice ====================================================================================
+// Leetcode : https://leetcode.com/problems/number-of-provinces/
+// Logic : simply calculate number of disconnected components in graph . Cool . 
+/**
+ * @param {number[][]} isConnected
+ * @return {number}
+ */
+var findCircleNum = function(isConnected) {
+
+    const V = isConnected.length ;
+
+    const createGraph = (mat)=>{
+        graph = Array.from({length : V}, ()=>[]);
+        
+        mat.forEach((row , rI)=>{
+            row.forEach((col , cI)=>{
+                if(col == 1){
+                    graph[rI].push(cI);
+                    graph[cI].push(rI);
+                }
+            })
+        })
+
+        return graph ;
+    }
+    
+    const dfs = (curr , vis , graph)=>{
+        vis[curr] = true ;
+        
+        for(const v of graph[curr]){
+            if(vis[v] == false){
+                dfs(v , vis , graph)
+            }
+        }
+    }
+    
+    const g = createGraph(isConnected)
+
+    let vis = Array.from({length : V }, ()=>false)
+
+    let ans = 0 ;
+
+    for(let i =0 ; i< V ; i++){
+        if(vis[i] == false){
+            ans = ans + 1 ;
+            dfs(i , vis , g)
+        }
+    }
+    return ans ;
+
+};
+
+
+
