@@ -459,7 +459,7 @@ const dfs = (curr , graph , isVisited=[] , stack=[] , isInCycle=[])=>{
 
 
 
-// =========================================================== 4.  Cheapes flight with at most k stops ================================================================================================================
+// =========================================================== 5.  Cheapes flight with at most k stops ================================================================================================================
 
 // Leetcode : https://leetcode.com/problems/cheapest-flights-within-k-stops/description/
 // There are n cities connected by some number of flights. You are given an array flights where flights[i] = [fromi, toi, pricei] indicates that there is a flight from city fromi to city toi with cost pricei.
@@ -629,7 +629,7 @@ console.log(res)
 
 
 
-// Question : Surrounded Regioin . Leetcode : https://leetcode.com/problems/surrounded-regions/
+// ===============================================Question 6 : Surrounded Regioin . Leetcode : https://leetcode.com/problems/surrounded-regions/ ===================
 // Ideas is very simple , just first boundary traversal of matrix , and set 'B' to the place where there is '0' and its related neighobour . Next time , just replace 
 // every 'O' with 'X' and in last loop just remove 'B' and place 'O' . COOL
 /**
@@ -709,3 +709,124 @@ var solve = function(board) {
     }
 
 };
+
+
+// ===================================================================== 7. Max Area of Island ==================================================================
+// Leetcode : https://leetcode.com/problems/max-area-of-island/
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+var maxAreaOfIsland = function(grid) {
+    const m = grid.length ;
+    const n = grid[0].length ;
+    
+    const isValid = (i , j )=>{
+        if(i>=0 && i< m && j>=0 && j < n){
+            return true ;
+        }
+        return false ;
+    }
+
+    const dfs = (i , j )=>{
+        if(!isValid(i , j) || grid[i][j] == 0){
+            return 0 ;
+        }
+
+        grid[i][j] = 0 ;
+
+        return 1 + dfs(i+1 , j) + dfs(i-1 , j) + dfs(i , j+1) + dfs(i , j-1) ;
+
+    }
+
+    let maxArea =0 ;
+    for(let i = 0 ; i <m ; i++){
+        for(let j = 0 ; j<n ; j++){
+            if(grid[i][j] == 1){
+                maxArea = Math.max(maxArea , dfs(i , j ));
+            } 
+        }
+    }
+
+    return maxArea ;
+
+};
+
+
+// =======================================================8. Minimum Knight move to reach target ======================================================================
+// GFG : https://www.geeksforgeeks.org/problems/steps-by-knight5927/1
+// Logic => Simply Apply BFS init , for everytime q traversing , increase step to 1 . very easy . Don't apply DFS ;
+class Solution {
+    
+    isValid (i , j , vis , n){
+        if(i>=0 && i< n && j>=0 && j<n && vis[i][j] == false){
+            return true ;
+        }
+        return false ;
+    }
+    
+    
+    minStepToReachTarget(knightPos, target,  n) {
+        // code here
+   
+        let vis = Array.from({length : n} , ()=>{
+            return Array.from({length : n },()=>false)
+        })
+        
+        let ans = 0 ;
+        let ki = knightPos[0]-1;
+        let kj = knightPos[1]-1;
+        
+        let ti = target[0]-1;
+        let tj = target[1]-1;
+        
+        if(ki == ti && kj == tj){
+            return ans ;
+        }
+        
+        let q = [];
+        q.push([ki , kj]);
+        vis[ki][kj] = true ;
+        
+        const dx = [2 , 2, -2 , -2 , 1 , -1, 1 , -1];
+        const dy = [ 1 , -1, 1 , -1 , 2 , 2, -2 , -2];
+        
+        while(q.length != 0){
+            
+            ans = ans + 1 ;
+            const qSize = q.length ;
+            
+            for(let k = 0 ; k<qSize ; k++){
+                
+                const curr = q.shift();
+                const ci = curr[0];
+                const cj = curr[1];
+                
+                vis[ci][cj] = true ;
+                
+                for(let i = 0 ; i<8 ; i++){
+                    
+                    
+                    const nx = ci+dx[i]
+                    const ny = cj+dy[i]
+                    
+                    if(this.isValid(nx , ny ,vis ,  n) && vis[nx][ny] == false){
+                        
+                        if(  nx == ti && ny == tj ){
+                            return ans ;
+                        }
+                        
+                        vis[nx][ny] = true;
+                        q.push([nx , ny]  )
+                        
+                    }
+                  
+                }
+                
+            }
+            
+        }
+        return ans ;
+     
+    }
+}
