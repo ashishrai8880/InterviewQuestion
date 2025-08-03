@@ -930,6 +930,141 @@ console.log(res);
 
 
 
+// ================================================================== Part 4. Kosaraju Algorithm ==================================================================
+// This Algorithm is used to find strongly connected components in graph . Not new algorithm . Just a set of some steps of previos algorithm . Time Complexity : O(V+E)
+// Step 1 : Find Topological Sort of graph .
+// Step 2 : Reverse the edges of graph.
+// Step 3 : Apply DFS over topological order in reverse graph . 
+
+/*     
+
+0 ----> 1 ------>3
+  \    /         |
+   \  /          |
+   ⬇️           ⬇️
+    2            4
+
+
+  Answer Should be [ [0,1,2] , [3] , [4] ]
+           
+*/
+
+
+class Edge{
+    constructor(src , dest){
+        this.src = src ;
+        this.dest = dest ;
+    }
+}
+
+class Graph{
+    constructor(n , mat){
+        this.graph = Array.from({length : n },()=>[]);
+        this.size = n ;
+        
+        mat.forEach((e)=>{
+            const src = e[0];
+            const dest = e[1];
+            this.graph[src].push(new Edge(src , dest));
+        })
+    }
+    
+    topSort(){
+        
+        const topSortUtil = (curr , vis , stack)=>{
+            if(vis[curr] == true){
+                return ;
+            }
+            
+            vis[curr] = true ;
+            const vertex = this.graph[curr];
+            for(const v of vertex){
+                if(vis[v.dest] == false){
+                    topSortUtil(v.dest , vis , stack);
+                }
+            }
+            stack.push(curr);
+            
+        }
+        
+        let vis = Array.from({length : n} , ()=>false);
+        let stack = [];
+        
+        for(let i = 0 ; i<this.size ; i++){
+            if(vis[i] == false){
+                topSortUtil(i , vis , stack);
+            }
+        }
+        
+        return stack ;
+        
+    }
+    
+    reverseEdges(){
+        console.log(this.graph)
+        let reverseGraph = Array.from({length : this.size}, ()=>[]) ;
+        
+        this.graph.forEach((edges)=>{
+            edges.forEach((edge)=>{
+                const src = edge.src ;
+                const dest = edge.dest ;
+                reverseGraph[dest].push(new Edge(dest , src));
+            })
+        })
+        
+        return reverseGraph ;
+    }
+    
+    dfs(curr , graph , vis , components){
+        if(vis[curr] == true){
+            return ;
+        }
+        
+        vis[curr] = true ;
+        components.push(curr);
+        
+        const vertex = graph[curr];
+        
+        for(const v of vertex ){
+            if(vis[v.dest] == false){
+                this.dfs(v.dest , graph , vis , components);
+            }
+        }
+    }
+    
+    kosaraju(){
+        const topSort =  this.topSort();
+        const reverseGraph = this.reverseEdges();
+        
+        let vis = Array.from({length : this.size},()=>false);
+        let ans = [];
+        
+        for(let i = 0 ; i<this.size ; i++){
+            if(vis[i] == false){
+                let components = [];
+                this.dfs(i , reverseGraph , vis , components);
+                ans.push(components);
+            }
+        }
+        
+        return ans ;
+        
+    }
+    
+}
+
+const n = 5 ;
+const mat = [[0,1], [1,2] , [2,0] , [1,3] , [3,4] ];
+const g = new Graph(n , mat);
+const res = g.kosaraju();
+console.log(res)
+
+
+
+
+
+
+
 
 
 
