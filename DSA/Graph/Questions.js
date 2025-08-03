@@ -955,3 +955,38 @@ var numEnclaves = function(grid) {
 };
 
 
+// =====================================================================Keys And Room . Very Simple Problem ============================================================
+// Leetcode : https://leetcode.com/problems/keys-and-rooms/
+// Just check , is it disconnected graph or connected graph 
+/**
+ * @param {number[][]} rooms
+ * @return {boolean}
+ */
+var canVisitAllRooms = function(rooms) {
+    
+    const dfs = (curr , vis)=>{
+        if(vis[curr] == true){
+            return ;
+        }
+
+        vis[curr] = true ;
+        const vertex = rooms[curr];
+        
+        for(const v of vertex){
+            if(vis[v] == false){
+                dfs(v , vis);
+            }
+        }
+    }
+
+    let vis = Array.from({length : rooms.length } , ()=> false);
+    dfs(0 , vis);
+
+    return !vis.includes(false);
+
+};
+
+
+
+
+
