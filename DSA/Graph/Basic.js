@@ -1039,10 +1039,11 @@ class Graph{
         let vis = Array.from({length : this.size},()=>false);
         let ans = [];
         
-        for(let i = 0 ; i<this.size ; i++){
-            if(vis[i] == false){
+        while(topSort.length != 0){
+            const curr = topSort.pop();
+            if(vis[curr]== false){
                 let components = [];
-                this.dfs(i , reverseGraph , vis , components);
+                this.dfs(curr , reverseGraph , vis , components);
                 ans.push(components);
             }
         }
