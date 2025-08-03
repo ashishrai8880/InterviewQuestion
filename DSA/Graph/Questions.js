@@ -955,7 +955,7 @@ var numEnclaves = function(grid) {
 };
 
 
-// =====================================================================Keys And Room . Very Simple Problem ============================================================
+// =====================================================================11. Keys And Room . Very Simple Problem ============================================================
 // Leetcode : https://leetcode.com/problems/keys-and-rooms/
 // Just check , is it disconnected graph or connected graph 
 /**
@@ -987,6 +987,77 @@ var canVisitAllRooms = function(rooms) {
 };
 
 
+
+// ========================================================Questioin 12: Number of closed Island ===================================================================
+// Leetcode : https://leetcode.com/problems/number-of-closed-islands/
+// Similar to surrounded region 
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+var closedIsland = function(grid) {
+    
+    const m = grid.length ;
+    const n = grid[0].length ;
+
+    const isValid = (i , j )=>{
+        if(i >=0 && i<m && j>=0 && j< n && grid[i][j] == 0){
+            return true ;
+        }
+        return false ;
+    }
+
+    const dfs = (i , j ,  val)=>{
+        
+        grid[i][j] = val ;
+
+        if(isValid(i+1 , j)){
+            dfs(i+1 , j  , val) ;
+        }
+        if(isValid(i , j+1)){
+            dfs(i , j+1 , val) ;
+        }
+        if(isValid(i , j-1)){
+            dfs(i , j-1 , val) ;
+        }
+        if(isValid(i-1 , j)){
+            dfs(i-1 , j , val) ;
+        }
+    }
+
+    // boundary traversal of matrix
+    for(let i = 0 ; i<m ; i++){
+        if(grid[i][0] == 0){
+            dfs(i , 0 , 'B');
+        }
+        if(grid[i][n-1] == 0){
+            dfs(i , n-1 , 'B')
+        }
+    }
+
+    for(let j = 0 ; j<n ; j++){
+        if(grid[0][j] == 0){
+            dfs(0 , j , 'B');
+        }
+        if(grid[m-1][j] == 0){
+            dfs(m-1 , j , 'B')
+        }
+    }
+
+    // count number of closed island from bfs
+    let ans = 0 ;
+    for(let i = 0 ; i<m ; i++){
+        for(let j = 0 ; j<n ;j++){
+            if(grid[i][j] == 0){
+                ans = ans + 1 ;
+                dfs(i , j , 1);
+            }
+        }
+    }
+
+    return ans ;
+
+};
 
 
 
