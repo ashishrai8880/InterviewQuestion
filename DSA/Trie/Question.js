@@ -179,3 +179,28 @@ const res = t.checkPrefix(prefix);
 console.log({res})
 
 
+// ==================================================================3. Count number of distinct substring from a string ===========================================================================================
+// GFG : https://www.geeksforgeeks.org/problems/count-of-distinct-substrings/1       Leetcode : https://leetcode.com/problems/count-unique-characters-of-all-substrings-of-a-given-string/description/
+// Example : strng : "ababa" , ans : 10 . Substrinig can be :  [ '' ,a ,ab ,aba ,abab ,ababa ,b ,ba ,bab ,baba] 
+
+
+// Brute Force Method , which will work for each and every case but will throw TLE
+class Solution {
+    countDistinctSubstring(s) {
+        let distinct = {} ;
+        let len = s.length ;
+        
+        for(let i = 0 ; i<len ; i++){
+            for(let j=i ; j<=len ; j++){
+                const sub = s.slice(i,j);
+                if(!distinct[sub]){
+                    distinct[sub] = 1 ;
+                }
+            }
+        }
+        return Object.keys(distinct).length  ;   
+    }
+}
+
+
+
