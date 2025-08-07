@@ -125,3 +125,56 @@ var wordBreak = function(s, wordDict) {
     return check(s);
 
 };
+
+// ==========================================================================2. Starswith Prefix ==============================================================================================================
+
+class Node{
+    constructor(){
+        this.children = Array.from({length : 26} , ()=>null);
+        this.eow = false ;
+    }
+}
+
+class Trie{
+    constructor(){
+        this.root = new Node();
+    }
+    
+    insert(word){
+        
+        let curr = this.root ;
+        for(let index in word){
+            const idx = word.charCodeAt(index) - 'a'.charCodeAt(0);
+            if(curr.children[idx] == null){
+                curr.children[idx] = new Node();
+            }
+            curr = curr.children[idx];
+        }
+        curr.eow = true ;
+    }
+    
+    checkPrefix(prefix){
+        let curr = this.root ;
+        
+        for(let index in prefix){
+            const idx = prefix.charCodeAt(index) - 'a'.charCodeAt(0);
+            if(curr.children[idx]== null){
+                return false ;
+            }
+            curr = curr.children[idx];
+        }
+        return true ;
+    }
+    
+}
+
+const t = new Trie();
+const arr = ["apple" , "woman" , "mango"];
+const prefix = "moon";
+arr.forEach((e)=>{
+    t.insert(e);
+})
+const res = t.checkPrefix(prefix);
+console.log({res})
+
+
