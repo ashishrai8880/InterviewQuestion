@@ -202,5 +202,105 @@ class Solution {
     }
 }
 
+// Optimized way . But it will still throw TLE
+// Approach : In any string , total substring would be 1. All suffix of all prefix or 2. All prefix of all suffix .  We can find all suffix of string and then will find all prefix of all suffix . We can go with the second approach
+// also . Step 2. Insert all suffix of string in a trie . 
+// Step 3 . Just count all number of nodes in a trie . NOTE : Number of nodes in a string will be equal to the all number of prefix .
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+
+class Solution {
+    countDistinctSubstring(s) {
+        // code here
+        let suffix = [];
+        let i = -1 ;
+        let len = s.length ;
+        
+        while(len > 0){
+            suffix.push(s.slice(i));
+            len-- ;
+            i-- ;
+        }
+        
+        const t = new Trie();
+        suffix.forEach((e)=>t.insert(e));
+        return t.countNode();
+        
+        
+    }
+}
+
+class Node{
+    constructor(){
+        this.children = {} ;
+        this.eow = false ;
+    }
+}
+
+class Trie{
+    constructor(){
+        this.root = new Node();
+    }
+    
+    insert(word){
+        let curr = this.root ;
+        for(const index in word){
+            const ch = word[index];
+            if(!curr.children[ch]){
+                curr.children[ch] = new Node();
+            }
+            curr = curr.children[ch];
+        }
+        curr.eow = true ;
+    }
+    
+    countNode(){
+        let obj = {ans : 0 } ;
+        
+        const countUtil = (curr , obj)=>{
+            obj.ans = obj.ans + 1;
+            Object.values(curr.children).forEach((node)=>{
+                countUtil(node , obj)
+            })
+        }
+        countUtil(this.root , obj);
+        return obj.ans ;
+    }
+}
+
+// Need to change how we are counting nodes , there is tle coming from counting nodes logic . 
+class Solution {
+    countDistinctSubstring(s) {
+        const t = new Trie();
+        for (let i = 0; i < s.length; i++) {
+            t.insert(s, i);
+        }
+        return 1+ t.countNode(t.root);
+    }
+}
+
+class Trie{
+
+    countNode(node) {
+        let res = 0;
+        for (let ch in node.children) {
+            res = res + 1 + this.countNode(node.children[ch]);
+        }
+        return res;
+    }
+    
+}
+
+
+
+
+
+
+
+
+
 
 
