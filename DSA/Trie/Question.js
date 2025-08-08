@@ -299,8 +299,55 @@ class Trie{
 }
 
 
+// ==============================================================================4. Longest word with all prefixes ==========================================================================================
+// Brute Force Approach . Leetcode : https://leetcode.com/problems/longest-word-in-dictionary/
+/* Example 2:
+Input: words = ["a","banana","app","appl","ap","apply","apple"]
+Output: "apple"
+Explanation: Both "apply" and "apple" can be built from other words in the dictionary. However, "apple" is lexicographically smaller than "apply".
+*/
+// Logic : Check all prefix of all word in words array , and store in seperate array which meet all requirement . Javascript sort method sort it in asceneding lexicographical order by default . 
+var longestWord = function(words) {
 
+    let wordMap = {};
+    words.map((e)=>wordMap[e]= 1);
+    
+    const len = words.length ;
+    let ans = [];
 
+    words.forEach((word)=>{
+
+        //finding all prefix
+        let isExists = true ;
+        for(let i=0 ; i<word.length ; i++){
+            const prefix = word.slice(0 ,i);
+            if(prefix != "" && !wordMap[prefix]){
+                isExists = false ;
+                break ;
+            }
+        }
+        if(isExists){
+            ans.push(word);
+        }
+    })
+    if(ans.length == 0){
+        return "";
+    }
+
+    const sortedAns = ans.sort();
+    let maxLen = -1 ;
+    let maxString = "";
+
+    sortedAns.forEach((e)=>{
+        if(e.length > maxLen){
+            maxLen = e.length ;
+            maxString = e ;
+        }
+    })
+
+    return maxString ;
+
+};
 
 
 
