@@ -271,14 +271,14 @@ class Trie{
     }
 }
 
-// Need to change how we are counting nodes , there is tle coming from counting nodes logic . 
+// Need to change how we are counting nodes , there is tle coming from counting nodes logic . NOTE : Object.values method every time create array in every call stack , which caused TLE or space occupies more . 
 class Solution {
     countDistinctSubstring(s) {
         const t = new Trie();
         for (let i = 0; i < s.length; i++) {
             t.insert(s, i);
         }
-        return 1+ t.countNode(t.root);
+        return t.countNode(t.root);
     }
 }
 
@@ -286,9 +286,13 @@ class Trie{
 
     countNode(node) {
         let res = 0;
-        for (let ch in node.children) {
-            res = res + 1 + this.countNode(node.children[ch]);
+        const countUtil = (curr)=>{
+            res = res + 1 ;
+            for(let ch in curr.children){
+                countUtil(curr.children[ch]);
+            }
         }
+        countUtil(this.root);
         return res;
     }
     
