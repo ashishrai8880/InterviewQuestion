@@ -306,7 +306,7 @@ Input: words = ["a","banana","app","appl","ap","apply","apple"]
 Output: "apple"
 Explanation: Both "apply" and "apple" can be built from other words in the dictionary. However, "apple" is lexicographically smaller than "apply".
 */
-// Logic : Check all prefix of all word in words array , and store in seperate array which meet all requirement . Javascript sort method sort it in asceneding lexicographical order by default . 
+//Brute Force Approach Logic : Check all prefix of all word in words array , and store in seperate array which meet all requirement . Javascript sort method sort it in asceneding lexicographical order by default . 
 var longestWord = function(words) {
 
     let wordMap = {};
@@ -348,6 +348,106 @@ var longestWord = function(words) {
     return maxString ;
 
 };
+
+// Logic 2 : Use of Trie , Just store all word in a trie , and check its longest word . In a trie , there should be 
+// end of word value is true for each node for longest word . Recursively check all such word . Take one temp variable 
+// also , every time add 1 character when going to check next child , and after coming remove its last character . 
+/**
+ * @param {string[]} words
+ * @return {string}
+ */
+var longestWord = function(words) {
+
+    const t = new Trie();
+    words.forEach((word)=>t.insert(word));
+
+    return t.longestWord();
+
+};
+
+class Node{
+    constructor(){
+        this.children = Array.from({length : 26},()=>null);
+        this.eow = false ;
+    }
+}
+
+class Trie{
+    constructor(){
+        this.root = new Node();
+    }
+    insert(word){
+        let curr = this.root ;
+        for(const index in word){
+            let idx = word.charCodeAt(index) - 'a'.charCodeAt(0)
+            if(!curr.children[idx]){
+                curr.children[idx] = new Node();
+            }
+            curr = curr.children[idx];
+        }
+        curr.eow = true ;
+    }
+    
+    longestWord(){
+        let res = "";
+        let temp = "";
+
+        const longestUtil = (curr)=>{
+            if(curr.eow == false && curr != this.root){
+                return  ;
+            }
+
+            curr.children.forEach((next , index)=>{
+                if(next != null && next.eow == true){
+                    const chCode = 'a'.charCodeAt(0)+index ;
+                    const ch = String.fromCharCode(chCode);
+                    temp = temp + ch ;
+                    if(temp.length > res.length){
+                        res = temp ;
+                    }
+                    longestUtil(next);
+                    temp = temp.slice(0 , temp.length-1);
+                }
+            })
+
+        }
+
+        longestUtil(this.root);
+        return res ;
+    }
+}
+
+// Approach 3 : Super Cool , Super Easy , Super Fast .
+//Just sort the words array , and keep checking which one is longest and lexicographical order . In sorting , it will always sort in lexicographical order .
+//Like : 'a' , 'ap, 'app' , 'appl' , 'apple' , 'z' , 'zo' , 'zoo' .
+//Now just need to check from start . If length of word is 1 , then just store in set , . In second case if prefix from 0-n-1 exists then store . Very Simple Algorithm . 
+/**
+ * @param {string[]} words
+ * @return {string}
+ */
+var longestWord = function(words) {
+
+    words.sort();
+    let set = new Set();
+    let res = "";
+    words.forEach((word)=>{
+        if(word.length == 1 || set.has(word.slice(0,-1))){
+            set.add(word);
+            if(word.length > res.length){
+                res = word ;
+            }
+        }
+    })
+    return res ;
+};
+
+
+
+
+
+
+
+
 
 
 
