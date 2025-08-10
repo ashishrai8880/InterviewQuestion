@@ -442,8 +442,205 @@ var longestWord = function(words) {
 };
 
 
+// ==============================================4. Max XOR in a Array  =====================================================
+/*
+To Solve this , first go through Bit Manipulation in Basic.js inside Trie folder . 
+Leetcode link : https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/
+Logic is very simple : Just insert every number in array in binary digit of 32 character format . 
+Now to find max xor , we just need to find completely opposite of binary digit . Because in xor opposite digit will give 
+1 . For example if n is 11001 , then to maximize its xor we need to find something which have binary digit as 00110 , and its 
+xor will give 11111 . So traverse trie for each element , and find if there is opposite binary digit exists for that particular
+binary digit . If exists then very good , otherwise need to compromise , and then what available . 
+*/
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findMaximumXOR = function(arr) {
+    
+    let res = 0;
+    let t = new Trie();
+
+    t.insert(arr[0]);
+
+    for (let i = 1; i < arr.length; i++) {
+        res = Math.max(t.findXOR(arr[i]), res);
+        t.insert(arr[i]);
+    }
+    return res;
+    
+};
+
+class Node {
+    constructor() {
+        this.one = null;
+        this.zero = null;
+    }
+}
+
+class Trie {
+    constructor() {
+        this.root = new Node();
+    }
+    insert(n) {
+        let curr = this.root;
+        for (let i = 31; i >= 0; i--) {
+            let bit = (n >> i) & 1;
+
+            if (bit === 0) {
+                if (!curr.zero) {
+                    curr.zero = new Node();
+                }
+                curr = curr.zero;
+            }
+            else {
+                if (!curr.one) {
+                    curr.one = new Node();
+                }
+                curr = curr.one;
+            }
+        }
+    }
+
+    findXOR(n) {
+        let curr = this.root;
+        let res = 0;
+
+        for (let i = 31; i >= 0; i--) {
+            let bit = (n >> i) & 1;
+
+            if (bit === 0) {
+
+                if (curr.one) {
+                    curr = curr.one;
+                    res += (1 << i);
+                }
+                else {
+                    curr = curr.zero;
+                }
+            }
+
+            else {
+
+                if (curr.zero) {
+                    curr = curr.zero;
+                    res += (1 << i);
+                }
+                else {
+                    curr = curr.one;
+                }
+            }
+        }
+        return res;
+    }
+}
 
 
+// ===================================== 5. Maximum XOR With an Element From Array ========================================
+/* 
+Leetcode : https://leetcode.com/problems/maximum-xor-with-an-element-from-array/description/ .
+Problem Statement : You are given an array nums consisting of non-negative integers. You are also given a queries array, where queries[i] = [xi, mi].
+
+The answer to the ith query is the maximum bitwise XOR value of xi and any element of nums that does not exceed mi. In other words, the answer is max(nums[j] XOR xi) for
+all j such that nums[j] <= mi. If all elements in nums are larger than mi, then the answer is -1.
+
+Return an integer array answer where answer.length == queries.length and answer[i] is the answer to the ith query.
+
+LOGIC :::::::: Similar to previous one , but logic is to just sort nums and queries array , and insert in a trie in order .
+*/
+
+
+var maximizeXor = function(nums, queries) {
+    const prevQuery = [...queries];
+    const t = new Trie();
+
+    nums.sort((a,b) => a - b);
+    queries.sort((a,b) => a[1] - b[1]);
+
+    let ans = [];
+    let obj = {};
+    let j = 0;
+
+    for (let i = 0; i < queries.length; i++) {
+        const n = queries[i][0];
+        const upto = queries[i][1];
+
+        // Insert all nums <= upto
+        while (j < nums.length && nums[j] <= upto) {
+            t.insert(nums[j]);
+            j++;
+        }
+
+        let res;
+        if (j === 0) {
+            res = -1; // No numbers inserted
+        } else {
+            res = t.maximumXor(n);
+        }
+
+        const key = `${n}_${upto}`;
+        obj[key] = res;
+    }
+
+    prevQuery.forEach(([n, upto]) => {
+        const key = `${n}_${upto}`;
+        ans.push(obj[key]);
+    });
+
+    return ans;
+};
+
+class Node {
+    constructor() {
+        this.zero = null;
+        this.one = null;
+    }
+}
+
+class Trie {
+    constructor() {
+        this.root = new Node();
+    }
+
+    insert(n) {
+        let curr = this.root;
+        for (let i = 31; i >= 0; i--) {
+            const bit = (n >> i) & 1;
+            if (bit) {
+                if (!curr.one) curr.one = new Node();
+                curr = curr.one;
+            } else {
+                if (!curr.zero) curr.zero = new Node();
+                curr = curr.zero;
+            }
+        }
+    }
+
+    maximumXor(n) {
+        let curr = this.root;
+        let val = 0;
+        for (let i = 31; i >= 0; i--) {
+            const bit = (n >> i) & 1;
+            if (curr === null) break;
+            if (bit === 0) {
+                if (curr.one) {
+                    val = val + (1 << i); // Use bitwise OR
+                    curr = curr.one;
+                } else {
+                    curr = curr.zero;
+                }
+            } else {
+                if (curr.zero) {
+                    val = val + (1 << i);
+                    curr = curr.zero;
+                } else {
+                    curr = curr.one;
+                }
+            }
+        }
+        return val;
+    }
+}
 
 
 
