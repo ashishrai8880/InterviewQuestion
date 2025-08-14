@@ -91,3 +91,43 @@ var myPow = function(x, n, base) {
     if (n % 2 === 0) return myPow(x * x, n / 2);
     return x * myPow(x, n - 1);
 };
+
+
+// =============================================================4. Print 1 to n using recursion ====================================================================
+// GFG : https://www.geeksforgeeks.org/problems/print-1-to-n-without-using-loops-1587115620/1&selectedLang=python3
+printNos(n) {
+        let arr = [];
+        const printUtil = (a) => {
+            if(a==0){
+                return ;
+            }
+            printUtil(a-1);
+            arr.push(a);
+        }
+        printUtil(n);
+        console.log(arr.join(' '));
+    }
+
+// ========================================================5. Print reverse of string using recursion ===============================================================
+// GFG : https://www.geeksforgeeks.org/problems/reverse-a-string/1 . 
+// Logice : 'Geeks' -> reverse('eeks') + 'G' ->  reverse('eks') + 'e'  -> reverse('ks') + 'e'  ->  reverse('k') + 's'  ->  reverse('s') + '' ;
+class Solution {
+    reverseString(s) {
+        if(s.length == 0){
+            return s ;
+        }
+        return this.reverseString(s.slice(1)) + s[0];
+    }
+}
+
+// When there is array , Problem statement at : Leetcode : https://leetcode.com/problems/reverse-string/
+var reverseString = function(s) {
+    const reverseUtil = (i , j)=>{
+        if(i >= j){
+            return ;
+        }
+        [s[i] , s[j]] = [s[j],s[i]];
+        reverseUtil(i+1 , j-1);
+    }
+    reverseUtil(0 , s.length-1 );
+};
