@@ -28,6 +28,7 @@ class Solution {
 }
 
 // =============================================================3. Power of a Number ==============================================================================
+// Leetcode : https://leetcode.com/problems/powx-n/
 // Brute force Recursion . It can be little bit optimized by just by modulos by Infinity for a large number .
 class Solution {
    power(n , pow)   {
@@ -58,3 +59,35 @@ class Solution {
 	       return x * power( x , n-1 );
    }
 }
+
+// If power is in negative number and x can also be in negative . My Sollution . 
+var myPow = function(x, p) {
+
+    const powUtil = (x , n) => {
+        if(n==0){
+            return 1 ;
+        }
+        if(n == 1){
+            return x;
+        }
+        if(n%2 ==0){
+            const r = powUtil(x , n/2);
+            return r * r ;
+        }
+        else{
+            const r = powUtil(x , Math.floor((n-1)/2)) ;
+            return r*r*x ;
+        }
+    }
+    const n = Math.abs(p);
+    const res = powUtil(x , n)
+    return p >= 0 ? res : 1/res ;
+};
+
+// Shortest code 
+var myPow = function(x, n, base) {
+    if (n === 0) return 1;
+    if (n < 0) return 1 / myPow(x, -n);
+    if (n % 2 === 0) return myPow(x * x, n / 2);
+    return x * myPow(x, n - 1);
+};
