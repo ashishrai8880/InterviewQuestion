@@ -131,3 +131,16 @@ var reverseString = function(s) {
     }
     reverseUtil(0 , s.length-1 );
 };
+
+
+// ===============================================================6. Largest Element in an array ==================================================================
+
+largest(arr) {
+	const largestUtil = (n)=>{
+		if(n == 1) return arr[0];
+		return Math.max( largestUtil(n-1) , arr[n-1]  )
+	}
+	return largestUtil(arr.length)
+}
+
+
