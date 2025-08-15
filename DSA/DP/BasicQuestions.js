@@ -183,6 +183,40 @@ class Solution {
     }
 }
 
+//================================================================9. Tower of Hanoi ===========================================================================
+// GFG : https://www.geeksforgeeks.org/problems/tower-of-hanoi-1587115621/1
+// Logic : Its formulae is 2^n - 1 . It is breaking down into small problem . 
+towerOfHanoi(n, from, to, aux) {
+        let count = 0 ;
+        const toi = (num , source , target , helper)=>{
+            if(num == 1 ){
+                count = count + 1 ;
+                return  ;
+            }
+            toi(num-1 , source , helper , target )
+            count = count + 1 ;
+            toi(num-1 , helper , target , source)
+        }
+
+        toi(n , from , to , aux);
+        return count ;  
+}
+
+// More clear and optimized code 
+towerOfHanoi(n, from, to, aux) {
+        let count = 0 ;
+        const toi = (num , source , target , helper)=>{
+            if(num > 0 ){
+                toi(num-1 , source , helper , target )
+	            count = count + 1 ;
+	            toi(num-1 , helper , target , source)
+            }
+        }
+
+        toi(n , from , to , aux);
+        return count ;  
+}
+
 
 
 
