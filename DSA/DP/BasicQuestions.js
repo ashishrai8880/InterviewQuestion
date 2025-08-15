@@ -218,6 +218,23 @@ towerOfHanoi(n, from, to, aux) {
 }
 
 
+// ==============================================================10. Climbing Stairs ================================================================================
+// Leetcode  :  https://leetcode.com/problems/climbing-stairs/
+var climbStairs = function(num) {
+    let dp = Array.from({length : num},()=>null);
+    const util = (n) => {
+        if(n<=2){
+            dp[n] = n ;
+            return n ;
+        }
+        if(dp[n] != null){
+            return dp[n];
+        }
+        return dp[n] = util(n-1) + util(n-2);
+    }
+    return util(num);
+};
+
 
 
 
