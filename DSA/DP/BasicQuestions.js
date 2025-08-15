@@ -374,6 +374,26 @@ class Solution {
     }
 }
 
+//======================================================================13. Divisor Game ===================================================================================
+// Leetcode : https://leetcode.com/problems/divisor-game/   GFG : https://www.geeksforgeeks.org/problems/divisor-game-1664432414/1
+class Solution {
+    divisorGame(n) {
+        if(n <= 1){
+            return false ;
+        }
+        for(let i = 1 ; i<n ; i++){
+            if(n%2 == 0){
+                return !this.divisorGame(n-i);
+            }
+        }
+        return false ;
+    }
+
+	// Optimized way . Just check whether n is even or odd . If n is even then Alice will win otherwise he will loose . Whoever got even number first will win .
+	divisorGame(n) {
+        return n%2 == 0 ;
+    }
+}
 
 
 
