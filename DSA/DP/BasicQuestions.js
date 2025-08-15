@@ -263,6 +263,67 @@ function countWays(n) {
 }
 
 
+// =====================================================================11. Stock Buy Sell ============================================================================
+// Very Brute force
+class Solution {
+	// Brute force 
+    maximumProfit(prices) {
+        
+        const len = prices.length ;
+        let right = Array.from({length : len+1},()=>0);
+        
+        for(let i = len-1 ; i>=0 ; i-- ){
+            right[i] = Math.max(prices[i] , right[i+1]) ;
+        }
+        
+        let ans = -Infinity ;
+        
+        for(let i = 0 ; i<len ; i++){
+            ans = Math.max(right[i]-prices[i] , ans);
+        }
+        return ans ;
+    }
+// By 2 Pointer
+	maximumProfitBy2Pointer(prices) {
+        const len = prices.length ;
+        let ans = -Infinity ;
+        let i = 0 ;
+        let j = 0 ;
+        
+        while(j < len){
+            if(prices[j] < prices[i]){
+                i = j ;
+            }
+            ans = Math.max(ans , prices[j] - prices[i]);
+            j++ ;
+        }
+        return ans ;
+    }
+// By Recursion
+	maximumProfitByRecursion(arr) {
+        const len = arr.length ;
+        let ans = 0 ;
+        
+        const util = (n)=>{
+            if(n == len-1){
+                return arr[n];
+            }
+            const largest = util(n+1) ;
+            ans = Math.max(ans , largest-arr[n]);
+            return Math.max(largest , arr[n]);  
+        }
+        util(0)
+        return ans ;
+    }
+}
+
+
+
+
+
+
+
+
 
 
 
