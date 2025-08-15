@@ -318,6 +318,62 @@ class Solution {
 }
 
 
+// ============================================================12. Min Cost Climbing Stairs =========================================================================
+// Leetcode : https://leetcode.com/problems/min-cost-climbing-stairs/description/  GFG : https://www.geeksforgeeks.org/problems/min-cost-climbing-stairs/1
+class Solution {
+	// Recursive Solution with DP
+    minCostClimbingStairs(cost) {
+        const len = cost.length ;
+        let dp = Array.from({length: len+1},()=>null);
+        
+        const util = (n)=>{
+            if(n ==1){
+                return 0;
+            }
+            if(n == 2){
+                return Math.min(cost[0] , cost[1]);
+            }
+            if(dp[n]!=null) return dp[n];
+            
+            dp[n] = Math.min(util(n-2)+cost[n-2] , util(n-1) + cost[n-1]);
+            return dp[n];
+        }
+        
+        return util(len);
+    }
+
+	// Iterative Solution 
+	minCostClimbingStairsIterative(cost) {
+        const len = cost.length ;
+        let dp = Array.from({length : len} , ()=>0);
+        
+        dp[0] = cost[0];
+        dp[1] = cost[1];
+        
+        for(let i=2 ; i<len ; i++){
+            dp[i] = Math.min(dp[i-1] , dp[i-2]) + cost[i];
+        }
+        
+        return Math.min(dp[len-1] , dp[len-2]);
+    }
+
+	minCostClimbingStairsOptimized(cost) {
+        // Write your code here
+        const len = cost.length ;
+        
+        let prev1 = cost[1];
+        let prev2 = cost[0];
+        
+        for(let i=2 ; i<len ; i++){
+            const t = Math.min(prev1 , prev2) + cost[i];
+            prev2 = prev1 ;
+            prev1 = t ;
+        }
+        
+        return Math.min(prev1 , prev2);
+    }
+}
+
 
 
 
