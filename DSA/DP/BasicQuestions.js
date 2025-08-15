@@ -396,6 +396,37 @@ class Solution {
 }
 
 
+// =====================================================================14. Decode ways ==================================================================================
+// Leetcode : https://leetcode.com/problems/decode-ways/     GFG : https://www.geeksforgeeks.org/problems/total-decoding-messages1235/1
+class Solution {
+    countWays(digits) {
+        const n = digits.length ;
+        let dp = Array.from({length : n},()=>null);
+        
+        const util = (pos)=>{
+            
+            if(pos >= n){
+                return 1 ;
+            }
+            if(digits[pos] == '0'){
+                return 0 ;
+            }
+            if(dp[pos] != null){
+                return dp[pos];
+            }
+            const count1 = util(pos+1);
+            let count2 = 0 ;
+            if(pos+2 <= n && digits.slice(pos , pos+2) < '27'){
+                count2 = util(pos+2);
+            }
+            
+            dp[pos] = count1 + count2 ;
+            return dp[pos];
+        }
+        
+        return util(0);
+    }
+}
 
 
 
