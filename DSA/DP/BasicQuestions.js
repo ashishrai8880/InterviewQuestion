@@ -162,6 +162,27 @@ var fib = function(num) {
     return fibUtil(num);
 };
 
+//=========================================================8. Delete Middle element of stack ===========================================================================
+// GFG : https://www.geeksforgeeks.org/problems/delete-middle-element-of-a-stack/1
+class Solution {
+
+    deleteMid(s) {
+        let mid = Math.ceil((s.length)/2) ;
+        
+        const deleteUtil = (i)=>{
+            if( i+1 == mid){
+                s.pop();
+                return ;
+            }
+            let top = s.pop();
+            deleteUtil(i-1);
+            s.push(top);
+        }
+        deleteUtil(s.length-1);
+        return s; 
+    }
+}
+
 
 
 
