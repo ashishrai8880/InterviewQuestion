@@ -144,3 +144,26 @@ largest(arr) {
 }
 
 
+// ==============================================================7. Nth Fibonacci Number ============================================================================
+// Leetcode : https://leetcode.com/problems/fibonacci-number/
+var fib = function(num) {
+    let dp =  Array.from({length : num}, ()=>null);
+    const fibUtil = (n)=>{
+        if(n <=1){
+            dp[n] = n ;
+            return n ;
+        }
+        if( dp[n] != null){
+            return dp[n];
+        }
+        dp[n] = fibUtil(n-1)  + fibUtil(n-2)  ;
+        return dp[n];
+    }
+    return fibUtil(num);
+};
+
+
+
+
+
+
