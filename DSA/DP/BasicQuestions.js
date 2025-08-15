@@ -219,7 +219,7 @@ towerOfHanoi(n, from, to, aux) {
 
 
 // ==============================================================10. Climbing Stairs ================================================================================
-// Leetcode  :  https://leetcode.com/problems/climbing-stairs/
+// Leetcode  :  https://leetcode.com/problems/climbing-stairs/  . TC - O(n)  ans space complexity is also linear O(n)
 var climbStairs = function(num) {
     let dp = Array.from({length : num},()=>null);
     const util = (n) => {
@@ -234,6 +234,33 @@ var climbStairs = function(num) {
     }
     return util(num);
 };
+
+// Optimized way where space complexity would be O(1) and TC - O(n)
+function countWays(n) {
+    const dp = new Array(n + 1).fill(0);
+    // Base cases
+    dp[0] = 1;
+    dp[1] = 1;
+    for (let i = 2; i <= n; i++)
+        dp[i] = dp[i - 1] + dp[i - 2]; 
+  
+    return dp[n];
+}
+
+// We just need last 2 count , so we can remove dp array too by just maintain last 2 variable . This problem is like fibonacci sequence , but in this fib(0) is 1 instead of 0.
+function countWays(n) {
+    // Base cases
+    let prev1 = 1;  // for 0
+    let prev2 = 1;   // for 1
+
+    for (let i = 2; i <= n; i++){
+		const t = prev1 + prev2;
+		prev2 = prev1 ;
+		prev1 = t ;	
+	}
+
+	return prev1 ;
+}
 
 
 
