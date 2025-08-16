@@ -453,6 +453,22 @@ class Solution {
         }
         return util(len-1);
     }
+
+	findMaxHouseRobberTabulation(arr) {
+        const n = arr.length;
+  
+	    const dp = new Array(n + 1).fill(0);
+	
+	    // Base cases
+	    dp[0] = 0;
+	    dp[1] = arr[0];
+	
+	    // Fill the dp array using the bottom-up approach
+	    for (let i = 2; i <= n; i++) 
+	        dp[i] = Math.max(arr[i - 1] + dp[i - 2], dp[i - 1]);
+	
+	    return dp[n];
+    }
 }
 
 
