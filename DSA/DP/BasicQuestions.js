@@ -472,6 +472,37 @@ class Solution {
 }
 
 
+// =======================================================================16. Perfect Square ===========================================================================
+// Leetcode : https://leetcode.com/problems/perfect-squares/description/     GFG : https://www.geeksforgeeks.org/problems/get-minimum-squares0538/1
+
+/**
+ 	Just check for each element from i 1 to n ; 
+ */
+
+class Solution {
+    MinSquares(num) {
+        let dp = Array.from({length : num} , ()=>null)
+        const util = (n)=>{
+            
+            if(n<=1){
+                return n ;
+            }
+            if(dp[n]!= null){
+                return dp[n];
+            }
+            let ans = Infinity ;
+            for(let i = 1 ; i*i <=n ; i++){
+                const square = i*i ;
+                const count = 1 + util(n-square);
+                ans = Math.min(count , ans);
+                dp[n] = ans ;
+            }
+            return ans ;
+        }
+        return util(num);
+    }
+}
+
 
 
 
