@@ -398,6 +398,7 @@ class Solution {
 
 // =====================================================================14. Decode ways ==================================================================================
 // Leetcode : https://leetcode.com/problems/decode-ways/     GFG : https://www.geeksforgeeks.org/problems/total-decoding-messages1235/1
+// Logic : start from 0 location , if it is not 0 then send remaning substring to magical function . For 2 character , need to check whethere it is small than '27' . 
 class Solution {
     countWays(digits) {
         const n = digits.length ;
@@ -428,6 +429,31 @@ class Solution {
     }
 }
 
+//========================================================================15. House Robber 1 ============================================================================
+// Leetcode : https://leetcode.com/problems/house-robber/    GFG : https://www.geeksforgeeks.org/problems/stickler-theif-1587115621/1
+// Logic : There can be 2 option , either consider house or not . If consider , then find for n-2 house and add with arr[n] money , otherwise find for n-1 house . And return
+// maximum of above 2 . 
+class Solution {
+    findMaxHouseRobber(arr) {
+        // code here
+        const len = arr.length ;
+        let dp = Array.from({length : len} , ()=>null);
+        const util = (n)=>{
+            if(dp[n] != null){
+                return dp[n];
+            }
+            if(n == 0){
+                return arr[0];
+            }
+            if(n < 0){
+                return 0 ;
+            }
+            dp[n] = Math.max( util(n-1) ,  util(n-2) + arr[n] );
+            return dp[n];
+        }
+        return util(len-1);
+    }
+}
 
 
 
