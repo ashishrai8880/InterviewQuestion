@@ -504,6 +504,209 @@ class Solution {
 }
 
 
+// ================================================================ 0/1 Knapsack Problem ==============================================================================
+/*
+Given n items where each item has some weight and profit associated with it and also given a bag with capacity W, [i.e., the bag can hold at most W weight in it].
+The task is to put the items into the bag such that the sum of profits associated with them is the maximum possible. 
+
+Note: The constraint here is we can either put an item completely into the bag or cannot put it at all [It is not possible to put a part of an item into the bag].
+Input:  W = 4, profit[] = [1, 2, 3], weight[] = [4, 5, 1]
+Output: 3
+Explanation: There are two items which have weight less than or equal to 4. If we select the item with weight 4, the possible profit is 1. And if we select the item with weight 1, the possible profit is 3. So the maximum possible profit is 3. Note that we cannot put both the items with weight 4 and 1 together as the capacity of the bag is 4.
+
+Input: W = 3, profit[] = [1, 2, 3], weight[] = [4, 5, 6]
+Output: 0
+
+1. [Naive Approach] Using Recursion O(2^n) Time and O(n) Space
+A simple solution is to consider all subsets of items and calculate the total weight and value of all subsets. Consider the only subsets whose total weight is smaller than W. From all such subsets, pick the subset with maximum value.
+
+Optimal Substructure: To consider all subsets of items, there can be two cases for every item. 
+
+Case 1: The item is included in the optimal subset.
+Case 2: The item is not included in the optimal set.
+
+
+Follow the below steps to solve the problem:
+
+The maximum value obtained from 'n' items is the max of the following two values. 
+
+Case 1 (pick the nth item): Value of the nth item + maximum value obtained by remaining (n-1) items and  weight i.e. (W + weight of the nth item).
+Case 2 (don't pick the nth item): Maximum value obtained by (n-1) items and W weight.
+If the weight of the 'nth' item is greater than 'W', then the nth item cannot be included and Case 2 is the only possibility.
+
+*/
+
+
+class Solution {
+    knapsack(W, profit, weight) {
+        // code here
+        const len = profit.length ;
+        let dp = Array.from({length : len+1} , ()=>{
+            return Array.from({length : W+1},()=>null)
+        })
+        
+        const util = ( n , currWeight) =>{
+           
+            if(n <0){
+                return 0 ;
+            }
+            if(dp[n][currWeight] != null){
+                return dp[n][currWeight];
+            }
+            
+            let pick =  0 ;
+            if(W >=  currWeight + weight[n]){
+                pick = profit[n] + util(n-1  , currWeight+weight[n] );
+            }
+            
+            let notPick = util(n-1 , currWeight);
+            
+            dp[n][currWeight] = Math.max(pick , notPick) ;
+            return dp[n][currWeight] ;
+            
+        }
+        
+        return util(len-1 , 0);
+        
+    }
+
+	knapsackTabulation(W, profit, weight) {
+        // code here
+        const n = profit.length ;
+        let dp = Array.from({length : n+1} , ()=>{
+            return Array.from({length : W+1},()=>0)
+        })
+        
+        for (let i = 1; i <= n; i++) {
+            for (let w = 0; w <= W; w++) {
+                let pick = 0;
+
+                if (weight[i - 1] <= w) {
+                    pick = profit[i - 1] + dp[i - 1][w - weight[i - 1]];
+                }
+                
+                const notPick = dp[i - 1][w];
+                dp[i][w] = Math.max(pick, notPick);
+            }
+        }
+
+        return dp[n][W];
+        
+    }
+}
+
+
+// =================================================================== 17. Subset Sum Problem ==================================================================
+// Leetcode :         GFG : https://www.geeksforgeeks.org/problems/subset-sum-problem-1611555638/1
+
+class Solution {
+    isSubsetSum(arr, sum) {
+        // code here
+        
+        const len = arr.length;
+        let dp = Array.from({length: len + 1}, () => Array(sum + 1).fill(undefined));
+        
+        const util = (n, currSum) => {
+            if (currSum === sum) return true;
+            if (n < 0 || currSum > sum) return false;
+            if (dp[n][currSum] !== undefined) return dp[n][currSum];
+            
+            const pick = util(n - 1, currSum + arr[n]);
+            const notPick = util(n - 1, currSum);
+            
+            dp[n][currSum] = pick || notPick;
+            return dp[n][currSum];
+        };
+        return util(len - 1, 0);
+        
+    }
+
+	// Clean Code . TC - O(n*sum)
+	isSubsetSumclean(arr, sum) {
+        // code here
+        
+        const len = arr.length;
+        let dp = Array.from({length: len + 1}, () => Array(sum + 1).fill(undefined));
+        
+        const util = (n, s) => {
+            if(s===0) return true ;
+            if(n < 0 || s<0) return false ;
+            
+            if(dp[n][s] != undefined) return dp[n][s];
+            
+            const pick = util(n-1 , s-arr[n]);
+            const notPick = util(n-1 , s);
+            dp[n][s] = pick || notPick ;
+            return dp[n][s];
+        };
+        return util(len - 1, sum);
+        
+    }
+// Looks good . 2nd one is more clean code
+	isSubsetSumAnotherOne(arr, sum) {
+        const len = arr.length;
+        let dp = Array.from({length: len + 1}, () => Array(sum + 1).fill(undefined));
+        
+        const util = (n, s) => {
+            if(s===0) return true ;
+            if(n < 0 || s<0) return false ;
+            
+            if(dp[n][s] != undefined) return dp[n][s];
+            
+            if(arr[n] > s){
+                return util(n-1 , s);
+            }
+            else{
+                const pick = util(n-1 , s-arr[n]);
+                const notPick = util(n-1 , s);
+                dp[n][s] = pick || notPick ;
+                return dp[n][s];
+            }
+        };
+        return util(len - 1, sum);
+    }
+}
+
+
+// ================================================================18. Partition of Equal Subset Sum ====================================================================
+// Leetcode : https://leetcode.com/problems/partition-equal-subset-sum/description/    GFG : https://www.geeksforgeeks.org/problems/subset-sum-problem2014/1
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var canPartition = function(nums) {
+    
+    let len = nums.length ;
+    let sum = 0 ;
+    nums.forEach((e)=>{sum += e}) ;
+    if(sum%2 != 0 ) return false ;
+    const halfSum = sum/2 ;
+    
+    let dp = Array.from({length:len+1}, ()=>{
+        return Array.from({length : halfSum+1} , ()=>undefined);
+    })
+
+    const util = (n , s)=>{
+        if(s==0) return true ;
+        if(n<0 || s<0) return false ;
+
+        if(dp[n][s] != undefined) return dp[n][s];
+
+        const pick = util(n-1 , s-nums[n]);
+        const notPick = util(n-1 , s);
+        dp[n][s] = pick || notPick ;
+        return dp[n][s];
+    }
+
+    return util(len-1 , halfSum);
+
+};
+
+
+
+
+
+
 
 
 
