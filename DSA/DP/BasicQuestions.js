@@ -703,6 +703,36 @@ var canPartition = function(nums) {
 };
 
 
+// ===========================================================================================19 . Target Sum =======================================================================================================
+// Leetcode : https://leetcode.com/problems/target-sum/
+var findTargetSumWays = function(nums, target) {
+    
+    const util = (n, s) => {
+        if (n === 0) return s === 0 ? 1 : 0;
+
+        const idx = s + totalSum;
+
+        if (idx < 0 || idx > 2 * totalSum) return 0;
+
+        if (dp[n][idx] !== -1) return dp[n][idx];
+
+        const add = util(n - 1, s - nums[n - 1]);
+        const sub = util(n - 1, s + nums[n - 1]);
+
+        dp[n][idx] = add + sub;
+        return dp[n][idx];
+    };
+
+    const len = nums.length ;
+
+    const totalSum = nums.reduce((a, b) => a + Math.abs(b), 0);
+
+    const dp = Array.from({ length: len + 1 }, () =>
+        Array(2 * totalSum + 1).fill(-1)
+    );
+    return util(len , target);
+};
+
 
 
 
