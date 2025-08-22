@@ -733,6 +733,55 @@ var findTargetSumWays = function(nums, target) {
     return util(len , target);
 };
 
+// Easy approach . Example [1,1,1,1,1] and Targetsum =3 . Now lets take pair 1 P1 (1,1,1,1) of ADD and pair 2 (-1) of subtract . Any random choice . So P1 - P2 = targetSum . bcause +1+1+1+1-1 => +(1+1+1+1) - (1) => P1 - P2 ;
+// And also if we add element of both pair , it should be equal to sum of all element of array which is SUM . P1 + P2 = sum. Now solve these 2 linear equation . this will give me 2P1 = sum + targetSum . which can be P1 = (targetSum + sum)/2 ;
+// Now above problem is breakdown into find number of subset which have sum equal to (targetSum+sum)/2 . 
+var findTargetSumWays = function(nums, target) {
+    
+    const len = nums.length;
+    const totalSum = nums.reduce((a, b) => a + b, 0);
+
+    const sumWithTarget = totalSum + target;
+    if (Math.abs(target) > totalSum || sumWithTarget % 2 !== 0) {
+        return 0;
+    }
+
+    const subsetSum = sumWithTarget / 2;
+
+    const dp = Array.from({ length: len + 1 }, () =>
+        Array(subsetSum + 1).fill(-1)
+    );
+
+    const util = (n, s) => {
+        if (n === 0) {
+            if (s === 0 && nums[0] === 0) return 2; // two ways: +0 and -0
+            if (s === 0 || s === nums[0]) return 1;
+            return 0;
+        }
+
+        if (s < 0) return 0;
+        if (dp[n][s] !== -1) return dp[n][s];
+
+        const notPick = util(n - 1, s);
+        const pick =  util(n - 1, s - nums[n]) ;
+
+        dp[n][s] = pick + notPick;
+        return dp[n][s];
+    };
+
+    return util(len - 1, subsetSum);
+};
+
+
+
+
+
+
+
+
+
+
+
 
 
 
