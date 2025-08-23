@@ -40,3 +40,47 @@ class Solution {
         
     }
 }
+
+
+// ==================================================================2. Generate All Valid Parenthesis =====================================================================
+/**
+Leetcode : https://leetcode.com/problems/generate-parentheses/              GFG : https://www.geeksforgeeks.org/problems/generate-all-possible-parentheses/1
+Problem Statement : Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+Example 1:
+
+Input: n = 3
+Output: ["((()))","(()())","(())()","()(())","()()()"]
+Example 2:
+
+Input: n = 1
+Output: ["()"]
+ */
+var generateParenthesis = function(n) {
+    
+    const util = (curr , open , close )=>{
+        if(curr.length == 2*n){
+            ans.push(curr);
+            return ;
+        }
+
+        if( open < n ){
+            util(curr+'(' , open+1 , close);
+        }
+
+        if( close < open ){
+            util(curr+')' , open , close+1);
+        }
+    }
+
+    let ans = [];
+    util("" , 0 , 0);
+    return ans ;
+};
+
+
+
+
+
+
+
+
