@@ -193,7 +193,47 @@ var combinationSum = function(arr, target) {
 };
 
 
-// =======================================================================5. Subset Sum 1 =================================================================================
+// ======================================================================= 5. Combination Sum 2 ============================================================================
+/**
+Leetcode : https://leetcode.com/problems/combination-sum-ii/
+Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target.
+Each number in candidates may only be used once in the combination.
+Note: The solution set must not contain duplicate combinations.
+
+Example 1:
+Input: candidates = [10,1,2,7,6,1,5], target = 8
+Output: [ [1,1,6], [1,2,5], [1,7], [2,6]]
+
+Example 2:
+Input: candidates = [2,5,2,1,2], target = 5
+Output: [[1,2,2],[5]]
+ */
+var combinationSum2 = function(candidates, target) {
+    candidates.sort((a, b) => a - b);
+    const res = [];
+
+    const backtrack = (start, path, target) => {
+        if (target === 0) {
+            res.push([...path]);
+            return;
+        }
+        for (let i = start; i < candidates.length; i++) {
+            if (i > start && candidates[i] === candidates[i - 1]) continue;
+
+            if (candidates[i] > target) break;
+
+            path.push(candidates[i]);
+            backtrack(i + 1, path, target - candidates[i]); 
+            path.pop(); 
+        }
+    };
+
+    backtrack(0, [], target);
+    return res;
+};
+
+
+// =======================================================================6. Subset Sum 1 =================================================================================
 /**
 GFG : https://www.geeksforgeeks.org/problems/subset-sums2234/1&selectedLang=python3
 Given a array arr of integers, return the sums of all subsets in the list.  Return the sums in any order.
@@ -227,6 +267,73 @@ class Solution {
 }
 
 
+// ====================================================================== 7. Subset Sum 2 ===================================================================================
+/**
+Leetcode : https://leetcode.com/problems/subsets-ii/
+Given an integer array nums that may contain duplicates, return all possible subsets (the power set).
+
+The solution set must not contain duplicate subsets. Return the solution in any order.
+
+Example 1:
+Input: nums = [1,2,2]
+Output: [[],[1],[1,2],[1,2,2],[2],[2,2]]
+Example 2:
+
+Input: nums = [0]
+Output: [[],[0]]
+ */  // Naive Approach .
+var subsetsWithDup = function(nums) {
+    
+    const n = nums.length ;
+    nums.sort();
+
+    const util = (i , subset)=>{
+
+        if(i == n){
+            res.add(JSON.stringify(subset));
+            return ;
+        }
+
+        subset.push(nums[i]);
+        util(i+1 , subset);
+        subset.pop();
+        util(i+1 , subset);
+
+    }
+
+    let res  = new Set();
+    util(0 , []);
+    let ans = [...res] ;
+    return ans.map((e)=>JSON.parse(e));
+
+};
+
+// Easy Approach : If next number is same as previous number then don't do anything just continue .
+
+var subsetsWithDup = function(nums) {
+    
+    const n = nums.length ;
+    nums.sort();
+
+    const util = (start , subset)=>{
+
+        res.push( [...subset] );
+        
+        for(let i=start ; i<n ; i++){
+            if( i != start && nums[i] == nums[i-1] ){
+                continue ;
+            }
+            subset.push(nums[i]);
+            util(i+1 , subset);
+            subset.pop();
+        }
+    }
+
+    let res  = [];
+    util(0 , []);
+    return res ;
+
+};
 
 
 
