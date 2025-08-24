@@ -109,8 +109,88 @@ var subsets = function(nums) {
 
 };
 
+// Easy Approach : By Bit Manipulation . If there is string 'abc' , then it can have total subsequence equal to 8 which is 2^3 (3 is size of string ) . Now when I calculate
+// Binary number of 0 to 7 it will give like 
+/*
+7  :  111  :  abc
+6  :  110  :  ab
+5  :  101  :  ac
+4  :  100  :  a
+3  :  011  :  bc
+2  :  010  :  b
+1  :  001  :  c
+0  :  000  :  ""
+*/
+class Solution {
+
+    AllPossibleStrings(s) {
+        
+        let res = [];
+        const len = s.length ;
+        let n = Math.pow(2,len)-1 ;
+        
+        while(n>=0){
+            const b = n.toString(2).padStart(len , '0');
+            let subSeq = "";
+            for(let i=0 ; i<b.length ; i++){
+                if(b[i] == '1'){
+                    subSeq = subSeq + s[i] ;
+                }
+            }
+            n = n - 1 ;
+            res.push(subSeq); 
+        }
+        return res.sort() ;
+    }
+}
 
 
+// ========================================================================= 4. Combination Sum ============================================================================
+/**
+Leetcode : https://leetcode.com/problems/combination-sum/description/ 
+
+Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. You may return the combinations in any order.
+The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the frequency of at least one of the chosen numbers is different.
+
+The test cases are generated such that the number of unique combinations that sum up to target is less than 150 combinations for the given input.
+ 
+Example 1:
+
+Input: candidates = [2,3,6,7], target = 7
+Output: [[2,2,3],[7]]
+Explanation:
+2 and 3 are candidates, and 2 + 2 + 3 = 7. Note that 2 can be used multiple times.
+7 is a candidate, and 7 = 7.
+These are the only two combinations.
+
+Example 2:
+Input: candidates = [2,3,5], target = 8
+Output: [[2,2,2,2],[2,3,3],[3,5]]
+ */
+var combinationSum = function(arr, target) {
+    
+    const util = (n , sum , combo)=>{
+
+        if(sum == 0){
+            res.push([...combo]) ;
+            return ;
+        }
+
+        if(sum < 0 || n < 0) return ;
+
+        combo.push(arr[n]);
+        const pick = util(n , sum - arr[n] , combo )
+
+        combo.pop();
+        const notPick = util(n-1 , sum , combo);
+
+    }
+    let res = [];
+    let subset = [] ;
+    const len = arr.length ;
+    util(len -1 , target , subset);
+    return res ;
+};
 
 
 
