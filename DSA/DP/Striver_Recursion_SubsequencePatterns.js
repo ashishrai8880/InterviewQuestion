@@ -443,7 +443,101 @@ var letterCombinations = function(digits) {
 };
 
 
+// ================================================================10. Palindrome Partitioning ==========================================================================
+/** Leetcode : https://leetcode.com/problems/palindrome-partitioning/description/
+Given a string s, partition s such that every substring of the partition is a palindrome. Return all possible palindrome partitioning of s.
 
+Example 1:
+Input: s = "aab"
+Output: [["a","a","b"],["aa","b"]]
+Example 2:
+
+Input: s = "a"
+Output: [["a"]]
+
+First Method : Try To Cut at every place , and then check if first part is palindrome , if it is , then move forward .
+ */
+var partition = function(s) {
+    
+    const isPalindrome = (st)=>{
+        let i = 0 ; 
+        let j = st.length -1 ;
+        while(i <= j){
+            if(st[i] != st[j]){
+                return false ;
+            }
+            i=i+1 ;
+            j = j-1 ;
+        }
+        return true ;
+    }
+
+    const util = (index , path)=>{
+        if(index == len){
+            res.push([...path]);
+            return ;
+        }
+
+        for(let i=index ; i<s.length ; i++){
+            const firstPart = s.slice(index , i+1)
+            if(isPalindrome(firstPart)){
+                path.push(firstPart);
+                util(i+1 , path);
+                path.pop();
+            }
+        }
+
+    }
+
+    const len = s.length ;
+    let res = [];
+    util(0 , []);
+    return res ;
+
+};
+
+// Second Part : Clean approach , logic is same as first one , but more readable and understandable 
+/**
+ * @param {string} s
+ * @return {string[][]}
+ */
+var partition = function(s) {
+    
+    const isPalindrome = (st)=>{
+        let i = 0 ; 
+        let j = st.length -1 ;
+        while(i <= j){
+            if(st[i] != st[j]){
+                return false ;
+            }
+            i=i+1 ;
+            j = j-1 ;
+        }
+        return true ;
+    }
+
+    const util = (str , path)=>{
+        if(str.length == 0){
+            res.push([...path]);
+            return ;
+        }
+
+        for(let i=0 ; i<str.length ; i++){
+            const firstPart = str.slice(0 , i+1);
+            const secondPart = str.slice(i+1)
+            if(isPalindrome(firstPart)){
+                path.push(firstPart);
+                util(secondPart , path);
+                path.pop();
+            }
+        }
+    }
+
+    let res = [];
+    util(s , []);
+    return res ;
+
+};
 
 
 
