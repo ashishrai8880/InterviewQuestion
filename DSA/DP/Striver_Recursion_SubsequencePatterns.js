@@ -540,6 +540,144 @@ var partition = function(s) {
 };
 
 
+// ========================================================================11. Word Search =================================================================================================
+O(M∗N∗4 
+L
+ )
+/**
+Leetcode : https://leetcode.com/problems/word-search/
+Time Complexity : O ( M * N * (4^L))  Space Complexity : O (M * N)
+Given an m x n grid of characters board and a string word, return true if word exists in the grid.
+The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.
+
+Example 1:
+Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"
+Output: true
+
+Example 2:
+Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"
+Output: true
+
+Example 3:
+Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"
+Output: false
+ */
+var exist = function(board, word) {
+    
+    const isValid = (i , j)=>{
+        if(i>=0 && i<row && j>=0 && j<col ){
+            return true ;
+        }
+        return false ;
+    }
+
+    const util = (i , j , charIdx)=>{
+
+        if(charIdx >= word.length){
+            return true ;
+        }
+
+        if(isValid(i+1 ,j) && word[charIdx] == board[i+1][j] ){
+            const temp = board[i+1][j];
+            board[i+1][j] = '-1' ;
+            const res = util(i+1 , j , charIdx+1);
+            board[i+1][j] = temp ;
+            if(res) return true ;
+        }
+
+        if(isValid(i-1 ,j) && word[charIdx] == board[i-1][j] ){
+            const temp = board[i-1][j];
+            board[i-1][j] = '-1' ;
+            const res =  util(i-1 , j , charIdx+1);
+            board[i-1][j] = temp ;
+            if(res) return true ;
+        }
+
+        if(isValid(i ,j+1) && word[charIdx] == board[i][j+1] ){
+            const temp = board[i][j+1];
+            board[i][j+1] = '-1' ;
+            const res =  util(i , j+1 , charIdx+1);
+            board[i][j+1] = temp ;
+            if(res) return true ;
+        }
+
+        if(isValid(i ,j-1) && word[charIdx] == board[i][j-1] ){
+            const temp = board[i][j-1];
+            board[i][j-1] = '-1' ;
+            const res =  util(i , j-1 , charIdx+1);
+            board[i][j-1] = temp ;
+            if(res) return true ;
+        }
+
+        return false ;
+
+    }
+
+    const firstChar = word[0];
+    const row = board.length ;
+    const col = board[0].length ;
+    
+    for(let i = 0 ; i<row ; i++){
+        for(let j = 0 ; j<col ; j++){
+            if(board[i][j] == firstChar){
+                const temp = board[i][j];
+                board[i][j] = '-1';
+                if(util(i,j , 1) ) {
+                    return true ;
+                };
+                board[i][j] = temp ;
+                
+            }
+        }
+    }
+
+    return false ;
+
+};
+
+// Easy Approach : Clear and Clean Code
+var exist = function(board, word) {
+
+    const util = (i , j , charIdx)=>{
+
+        if(charIdx >= word.length){
+            return true ;
+        }
+
+        if(i<0 || j<0 || i>=row || j>=col || board[i][j] == '-1' || board[i][j] != word[charIdx]){
+            return false ;
+        }
+
+        const temp = board[i][j];
+        board[i][j] = '-1';
+
+        const top = util(i+1 , j , charIdx+1);
+        const bottom = util(i-1 , j , charIdx+1);
+        const right = util(i , j+1 , charIdx+1);
+        const left = util(i, j-1 , charIdx+1);
+
+        board[i][j]= temp ;
+
+        return top || bottom || right || left ;
+    }
+
+    const firstChar = word[0];
+    const row = board.length ;
+    const col = board[0].length ;
+    
+    for(let i = 0 ; i<row ; i++){
+        for(let j = 0 ; j<col ; j++){
+            if(board[i][j] == firstChar){
+                if(util(i,j , 0) ) {
+                    return true ;
+                };
+            }
+        }
+    }
+
+    return false ;
+
+};
 
 
 
