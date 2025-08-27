@@ -684,6 +684,205 @@ var exist = function(board, word) {
 };
 
 
+// ======================================================================================== 12. N Queens ===============================================================================================
+/**
+Leetcode : https://leetcode.com/problems/n-queens/   
+The n-queens puzzle is the problem of placing n queens on an n x n chessboard such that no two queens attack each other.
+Given an integer n, return all distinct solutions to the n-queens puzzle. You may return the answer in any order.
+Each solution contains a distinct board configuration of the n-queens' placement, where 'Q' and '.' both indicate a queen and an empty space, respectively.
+
+Example 1:
+Input: n = 4
+Output: [[".Q..","...Q","Q...","..Q."],["..Q.","Q...","...Q",".Q.."]]
+Explanation: There exist two distinct solutions to the 4-queens puzzle as shown above
+
+Example 2:
+Input: n = 1
+Output: [["Q"]]
+ */
+var solveNQueens = function(n) {
+   
+    const addSolution = ()=>{
+
+        let temp = [];
+        let str = "";
+
+        for(let i=0 ; i<n ; i++){ 
+            str = "" ;
+            for(let j=0 ; j< n ; j++){
+                if(mat[i][j] == 'Q'){
+                    str += 'Q';
+                }else{
+                    str += '.';
+                }
+            }
+            temp.push(str);
+        }
+        res.push([...temp])
+
+    }
+
+    const isSafe = ( row , col ) => {
+
+        // checking column , if already queeen exist or not
+        let k = 0 ;
+        while(k < n){
+            if(mat[k][col] == 'Q'){
+                return false ;
+            }
+            k = k+1 ;
+        }
+
+        // diagonal check 
+        // top left
+        let p = row ;
+        let q = col ;
+        while(p>=0 && q >= 0){
+            if(mat[p][q] == 'Q'){
+                return false ;
+            }
+            p = p -1 ;
+            q = q -1 ;
+        }
+
+        // top right
+        p = row ;
+        q = col ;
+        while(p >= 0 && q < n){
+            if(mat[p][q] == 'Q'){
+                return false ;
+            }
+            p = p - 1 ;
+            q = q + 1 ;
+        }
+
+        return true ;
+    }
+
+    const util = (rowNum)=>{
+        
+        if(rowNum == n){
+            addSolution();
+            return ;
+        }
+
+        for(let i=0 ; i< n ; i++){
+
+            if( isSafe( rowNum , i )){
+                mat[rowNum][i] = 'Q';
+                util(rowNum+1);
+                mat[rowNum][i] = '0';
+            }
+
+        }
+        
+    }
+
+    let mat = Array.from({length : n},()=>{
+        return Array.from({length : n},()=>'0')
+    })
+
+    let res = [];
+    util(0 , 0);
+    return res ;
+
+};
+
+// Optimized Approach . Instead of check at every place O(n) for all diagonal , straight check , we can do the same in O(1) by using hash map . In straigh check , we can store column number in key which tells 
+// there is already store some queen at particular column .
+// For Diagonal Check there is 2 case , FIRST CASE : if you are checking toward top right , then sum of row and column will be unique for each diagonal . So we can take key as row + col and then store some boolean value which 
+// tells that , there might be some queen already stored in that diagonal .  SECOND CASE : formulae is n+(col-row) will always unique when you traverse left top diagonal . Formulae is nothing but , when you do col - row or 
+// row - col , it will always give same value in top left diagonal , now value can go into negative number , that's why we are adding n to it , although we can add any number to it , just to make unique and positive .
+/**
+ * @param {number} n
+ * @return {string[][]}
+ */
+var solveNQueens = function(n) {
+   
+    const addSolution = ()=>{
+
+        let temp = [];
+        let str = "";
+
+        for(let i=0 ; i<n ; i++){ 
+            str = "" ;
+            for(let j=0 ; j< n ; j++){
+                if(mat[i][j] == 'Q'){
+                    str += 'Q';
+                }else{
+                    str += '.';
+                }
+            }
+            temp.push(str);
+        }
+        res.push([...temp])
+
+    }
+
+    const isSafe = ( row , col ) => {
+
+        // checking column , if already queeen exist or not
+        if( straightCheck[col] == true){
+            return false ;
+        }
+
+        if(topLeftDiagonal[n+(col-row)] == true){
+            return false ;
+        }
+
+        if(topRightDiagonal[row+col] == true){
+            return false ;
+        }
+
+        return true ;
+    }
+
+    const util = (rowNum)=>{
+        
+        if(rowNum == n){
+            addSolution();
+            return ;
+        }
+
+        for(let i=0 ; i< n ; i++){
+
+            if( isSafe( rowNum , i )){
+                mat[rowNum][i] = 'Q';
+                straightCheck[i] = true ;
+                topRightDiagonal[rowNum + i] = true ;
+                topLeftDiagonal[ n + (i - rowNum) ] = true ;
+                util(rowNum+1);
+                mat[rowNum][i] = '0';
+                straightCheck[i] = false ;
+                topRightDiagonal[rowNum + i] = false ;
+                topLeftDiagonal[ n + (i - rowNum) ] = false ;
+            }
+
+        }
+        
+    }
+
+    let mat = Array.from({length : n},()=>{
+        return Array.from({length : n},()=>'0')
+    })
+
+    let res = [];
+    let straightCheck = {} ;
+    let topRightDiagonal = {};
+    let topLeftDiagonal = {};
+    util(0 , 0);
+    return res ;
+
+};
+
+
+
+
+
+
+
+
+
 
 
 
