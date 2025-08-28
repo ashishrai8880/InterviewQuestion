@@ -965,6 +965,45 @@ class Solution {
 }
 
 
+// =============================================================================14. Word Break =================================================================================================
+/**
+Leetcode : https://leetcode.com/problems/word-break/ 
+Time Complexity : O (N^3) . 
+ */
+var wordBreak = function(s, wordDict) {
+   
+    const util = (i ) =>{
+        if(i >= len) return true ;
+
+        if(dp[s.slice(i , len)] != undefined) return dp[s.slice(i , len)] ;
+
+        let k = i ;
+        for( ; k < len ; k++){
+
+            const leftPart = s.slice(i , k+1) ;
+            const secondPart = s.slice(k+1);
+            if( obj[leftPart] == true ){
+                const res = util(k+1 , s) ;
+                dp[secondPart] = res ;
+                if(res) return true ;
+            }
+
+        }
+
+        if(k>=len) return false ;
+
+    }
+
+    // To Overcome from TLE , little optimization
+    let obj = {};
+    let dp = {};
+    const len = s.length ;
+    wordDict.forEach((e)=>obj[e]=true);
+    return util(0,s)
+
+};
+
+
 
 
 
