@@ -1004,6 +1004,76 @@ var wordBreak = function(s, wordDict) {
 };
 
 
+// =====================================================================15. M Coloring Graph ==================================================================================================
+// GFG : https://www.geeksforgeeks.org/problems/m-coloring-problem-1587115620/1
+// User function Template for javascript
+// Time Complexity: O( N^M) (n raised to m)
+// Space Complexity: O(N)
+// You are given an undirected graph consisting of V vertices and E edges represented by a list edges[][], along with an integer m. Your task is to determine whether it is possible to color the graph using at most m different colors such that no two adjacent vertices share the same color. Return true if the graph can be colored with at most m colors, otherwise return false.
+
+// Note: The graph is indexed with 0-based indexing.
+
+// Examples:
+
+// Input: V = 4, edges[][] = [[0, 1], [1, 3], [2, 3], [3, 0], [0, 2]], m = 3
+// Output: true
+// Explanation: It is possible to color the given graph using 3 colors, for example, one of the possible ways vertices can be colored as follows:
+
+// Vertex 0: Color 1
+// Vertex 1: Color 2
+// Vertex 2: Color 2
+// Vertex 3: Color 3
+// Input: V = 3, edges[][] = [[0, 1], [1, 2], [0, 2]], m = 2
+// Output: false
+// Explanation: It is not possible to color the given graph using only 2 colors because vertices 0, 1, and 2 form a triangle.
+
+class Solution {
+    graphColoring(V, edges, m) {
+        // code here
+        
+        let graph = Array.from({length : V} , ()=>[]) ;
+        
+        edges.forEach(([src,dest])=>{
+            graph[src].push(dest);
+            graph[dest].push(src);
+        })
+        
+        let color = Array.from({length : m} , ()=>0);
+        
+        const isSafe = (node , clr)=>{
+            
+            // adjacent node
+            const neighbours = graph[node] ;
+            for(let i=0 ; i<neighbours.length ; i++){
+                const nbr = neighbours[i];
+                if(color[nbr] == clr){
+                    return false ;
+                } 
+            }
+            return true ;
+        }
+        
+        const util = (node)=>{
+            if(node >= V) return true ;
+            
+            for(let i=1 ; i<=m ; i++){
+                if(isSafe(node , i)){
+                    color[node] = i ;
+                    if(util(node+1) == true){
+                        return true ;
+                    }
+                    color[node] = 0 ;
+                }
+            }
+            
+            return false ;
+        }
+        
+        return util(0);
+        
+    }
+}
+
 
 
 
