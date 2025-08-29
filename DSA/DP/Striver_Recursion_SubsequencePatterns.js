@@ -1075,7 +1075,82 @@ class Solution {
 }
 
 
+// ==============================================================================16. Sudoku Solver ====================================================================================================
+/**
+ Leetcode : https://leetcode.com/problems/sudoku-solver/
+ Time Complexity : O ( 9 ^ M ) ;
+ Space Complexity : O ( 9 * 9 ) => O (1) .
 
+ Just check every blank cell by putting number from 1 to 9 , and then then move to next cell . If any cell is unable to fit any value from 1 to 9 , then backtrack , and fill +1 or <=9 any suitable value in previous cell . 
+ Before filling , check every time , is it safe number to fill , by checking current row and current column . We have to check current grid also , when you divide any row or col , it will give me current grid . After getting multiply
+ with 3 to get first cell of current grid . In recursion check , if it is returning false from any cell , then only backtrack , if it is returning true , then just return true . 
+ */
+var solveSudoku = function(board) {
+    
+    const isSafe = (i , j , num)=>{
+
+        // row traversal
+        let k = 0 ;
+        while(k<9){
+            if(board[i][k] == num) return false ;
+            if(board[k][j] == num) return false ;
+            k++ ;
+        }
+
+        // 3 X 3 grid traversal
+
+        const boxRow = 3 * Math.floor(i/3);
+        const boxCol = 3 * Math.floor(j/3)
+
+        for(let row =0 ; row < 3 ; row++){
+
+            for(let col = 0; col < 3 ; col++){
+
+                const rx = boxRow + row;
+                const cx = boxCol + col;
+                if (board[rx][cx] == num) return false;
+
+            }
+        }
+        return true ;
+    }
+
+    const util = ( row , col )=>{
+
+        for(let i = row ; i<9 ; i++){
+            for( let j = (i === row ? col : 0); j < 9; j++ ){ // for same row , col will be col , but if row is changing then it should start from column 0
+                if(board[i][j] == "."){
+                    let n = 1
+                    for( ; n <=9 ; n++){
+                        if(  isSafe( i , j , `${n}` )){
+
+                            let nextRow = i ; 
+                            let nextCol = j+1 ;
+                            if(nextCol==9){   // if control is at last column of row , then move to next row 
+                                nextRow = i + 1 ;
+                                nextCol = 0 ;
+                            }
+
+                            board[i][j] = `${n}` ;
+                            const r = util( nextRow , nextCol );
+                            if(r== true) return true ;
+                            
+                            board[i][j] = "." ; //backtrack
+                            
+                        }
+                    }
+                    
+                    return false ;  // No Valid number found . Also can check , if n>9 then return false ;
+                }
+            }
+        }
+        return true ;
+    }
+
+    util(0 , 0);
+    return board ;
+
+};
 
 
 
