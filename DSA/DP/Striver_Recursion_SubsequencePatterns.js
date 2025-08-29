@@ -1078,8 +1078,8 @@ class Solution {
 // ==============================================================================16. Sudoku Solver ====================================================================================================
 /**
  Leetcode : https://leetcode.com/problems/sudoku-solver/
- Time Complexity : O ( 9 ^ M ) ;
- Space Complexity : O ( 9 * 9 ) => O (1) .
+ Time Complexity: O(9(n ^ 2)), in the worst case, for each cell in the n2 board, we have 9 possible numbers.
+ Space Complexity: O(1), since we are refilling the given board itself, there is no extra space required, so constant space complexity.
 
  Just check every blank cell by putting number from 1 to 9 , and then then move to next cell . If any cell is unable to fit any value from 1 to 9 , then backtrack , and fill +1 or <=9 any suitable value in previous cell . 
  Before filling , check every time , is it safe number to fill , by checking current row and current column . We have to check current grid also , when you divide any row or col , it will give me current grid . After getting multiply
@@ -1152,6 +1152,50 @@ var solveSudoku = function(board) {
 
 };
 
+// Easy Approach : Super Cool
+var solveSudoku = function(board) {
+    
+    const isSafe = (i , j , num)=>{
+        const boxRow = 3 * Math.floor(i/3);
+        const boxCol = 3 * Math.floor(j/3)
+
+        let k = 0 ;
+        while(k<9){
+            if(board[i][k] == num || board[k][j] == num) return false ;
+
+            const rx = boxRow + Math.floor(k/3);
+            const ry = boxCol + (k%3);
+            if( board[rx][ry] == num ) return false 
+
+            k++ ;
+        }
+        return true ;
+    }
+
+    const util = (  )=>{
+
+        for(let i = 0 ; i<9 ; i++){
+            for( let j = 0 ; j < 9; j++ ){ 
+                if(board[i][j] == "."){
+                    let n = 1
+                    for( ; n <=9 ; n++){
+                        if(  isSafe( i , j , `${n}` )){
+                            board[i][j] = `${n}` ;
+                            const r = util( );
+                            if(r== true) return true ;
+                            board[i][j] = "." ; 
+                        }
+                    }
+                    return false ; 
+                }
+            }
+        }
+        return true ;
+    }
+
+    util();
+    return board ;
+};
 
 
 
