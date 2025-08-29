@@ -1078,7 +1078,7 @@ class Solution {
 // ==============================================================================16. Sudoku Solver ====================================================================================================
 /**
  Leetcode : https://leetcode.com/problems/sudoku-solver/
- Time Complexity: O(9(n ^ 2)), in the worst case, for each cell in the n2 board, we have 9 possible numbers.
+ Time Complexity: O(9^(n ^ 2)), in the worst case, for each cell in the n2 board, we have 9 possible numbers.
  Space Complexity: O(1), since we are refilling the given board itself, there is no extra space required, so constant space complexity.
 
  Just check every blank cell by putting number from 1 to 9 , and then then move to next cell . If any cell is unable to fit any value from 1 to 9 , then backtrack , and fill +1 or <=9 any suitable value in previous cell . 
