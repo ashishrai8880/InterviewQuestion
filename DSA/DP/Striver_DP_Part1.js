@@ -231,3 +231,43 @@ var robTabulation = function(arr) {
     return prev1;
 };
 
+
+// ==========================================================4. House Robber 2 ==============================================================================
+
+/**
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed. All houses at this place are arranged in a circle. 
+That means the first house is the neighbor of the last one. Meanwhile, adjacent houses have a security system connected, and it will automatically contact the police if
+two adjacent houses were broken into on the same night.
+
+Given an integer array nums representing the amount of money of each house, return the maximum amount of money you can rob tonight without alerting the police.
+ */
+var rob = function(nums) {
+    
+    const util = (i , arr)=>{
+
+        if(i >= arr.length) return 0 ;
+
+        if(dp[i] != -1) return dp[i];
+
+        const pick = arr[i] + util(i+2 , arr);
+        const notPick = util(i+1 , arr);
+
+        return dp[i] = Math.max(pick , notPick);
+
+    }
+
+    const len = nums.length ;
+    if(len==1) return nums[0];
+    let dp = Array.from({length : len},()=>-1);
+    
+    const leaveFirst = util(0 , nums.slice(1) );
+    dp.fill(-1);
+    const leaveLast = util(0 , nums.slice(0 , len-1));
+    return Math.max(leaveFirst , leaveLast) ;
+
+};
+
+
+
+
+
