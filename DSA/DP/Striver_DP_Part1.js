@@ -521,8 +521,161 @@ var minimumTotal = function(triangle) {
 
 };
 
+// Tabulation Approach
+var minimumTotal = function(triangle) {
+    
+    const row = triangle.length ;
+    const col = triangle[row-1].length ;
+    let dp = Array.from({length : row} , ()=>{
+        return Array.from({length : col} , ()=>Infinity);
+    })
+
+    dp[0][0] = triangle[0][0];
+
+    for(let i=1 ;i<row ; i++){
+
+        for(let j=0 ; j<triangle[i].length ; j++){
+
+            // going down
+            const down = triangle[i][j] + dp[i-1][j];
+
+            // going right bottom
+            let rightBottom = Infinity ;
+            if(j-1 >= 0){
+                rightBottom = triangle[i][j] + dp[i-1][j-1];
+            }
+
+            dp[i][j] = Math.min(down , rightBottom);
+        }
+    }
+
+    let ans = Infinity ;
+    for(let j=0 ; j<col ; j++){
+        ans = Math.min(dp[row-1][j] , ans);
+    }
+    return ans ;
+};
+
+// Tabulation + Space Optimization
+/**
+ * @param {number[][]} triangle
+ * @return {number}
+ */
+var minimumTotal = function(triangle) {
+    
+    const row = triangle.length ;
+    
+    let prev = Array.from({length : row} , ()=>0);
+    prev[0] = triangle[0][0];
+    let curr = Array.from({length : row} , ()=>0);
+
+    for(let i=1 ;i<row ; i++){
+        for(let j=0 ; j<= i ; j++){
+            // going down
+            let down = j < i ? triangle[i][j] + prev[j] : Infinity;
+            
+            // going right bottom
+            let rightBottom = j-1 >= 0 ? triangle[i][j] + prev[j-1] : Infinity ;
+            curr[j] = Math.min(down, rightBottom);
+        }
+        prev = [...curr];
+    }
+    return Math.min(...prev.slice(0, row));
+};
 
 
+// ============================================================ 10. Minimum Falling Path Sum 931 =========================================================================
+/**
+Leetcode : https://leetcode.com/problems/minimum-falling-path-sum/
+
+Time Complexity: O(N*N) Reason: At max, there will be M*N calls of recursion to solve a new problem,
+Space Complexity: O(N) + O(N*M) Reason: We are using a recursion stack space: O(N), where N is the path length and an external DP Array of size ‘N*M’.
+
+Given an n x n array of integers matrix, return the minimum sum of any falling path through matrix.
+A falling path starts at any element in the first row and chooses the element in the next row that is either directly below or diagonally left/right. 
+Specifically, the next element from position (row, col) will be (row + 1, col - 1), (row + 1, col), or (row + 1, col + 1).
+ */
+var minFallingPathSum = function(mat) {
+    
+    const util = (currRow , prev)=>{
+
+        if(currRow >= row ) return 0 ;
+
+        if(prev != -1 && dp[currRow][prev] != -1) return dp[currRow][prev];
+
+        let min = Infinity ;
+        for(let i=0 ; i<col ; i++){
+            if( prev!= -1 && ( i==prev-1 || i==prev || i==prev+1)){
+                const r = mat[currRow][i] + util(currRow+1 , i);
+                min = Math.min(min , r);
+            }
+            if( prev ==-1){
+                const r = mat[currRow][i] + util(currRow+1 , i);
+                min = Math.min(min , r);
+            }
+        }
+        return dp[currRow][prev] = min ;
+    }
+
+    const row = mat.length ;
+    const col = mat[0].length ;
+    let dp = Array.from({length : row},()=>{
+        return Array.from({length : col},()=>-1)
+    })
+    return util(0,-1);
+
+};
+
+// Tabulation Approach
+/**
+ * @param {number[][]} matrix
+ * @return {number}
+ */
+var minFallingPathSum = function(mat) {
+    
+    const row = mat.length ;
+    const col = mat[0].length ;
+    let dp = Array.from({length : row+1},()=>{
+        return Array.from({length : col+1},()=>-1)
+    })
+
+    for(let j=0 ; j<col ; j++){
+        dp[0][j] = mat[0][j];
+    }
+
+    for(let i=1 ; i< row ; i++){
+
+        for(let j=0 ; j<col ; j++){
+
+            // going down 
+            const top = mat[i][j] + dp[i-1][j];
+
+            // going left bottom
+            let leftBottom = Infinity ;
+            if(j-1>=0 ){
+                leftBottom = mat[i][j] +  dp[i-1][j-1];
+            }
+
+            // going right bottom
+            let rightBottom = Infinity ;
+            if(j+1<col){
+                rightBottom = mat[i][j] + dp[i-1][j+1];
+            }
+
+            dp[i][j] = Math.min( top , Math.min(leftBottom , rightBottom) );
+        }
+
+    }
+
+    // finding final answer in last row of dp
+    let ans = Infinity ;
+    for(let i=0 ; i<col ; i++){
+        ans = Math.min( dp[row-1][i] , ans );
+    }
+
+    return ans ;
+
+};
 
 
 
