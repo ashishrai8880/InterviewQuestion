@@ -470,9 +470,56 @@ var minPathSum = function(grid) {
 };
 
 
+// ========================================================================== 9.  Triangle 62 ==============================================================================
+/**
+Leetcode : https://leetcode.com/problems/triangle/
+Time Complexity: O(N*N) Reason: There are two nested loops
+Space Complexity: O(N*N) Reason: We are using an external array of size ‘N*N’. The stack space will be eliminated.
 
+Given a triangle array, return the minimum path sum from top to bottom.
+For each step, you may move to an adjacent number of the row below. More formally, if you are on index i on the current row, you may move to either index i or index i + 1 on the next row.
 
+Example 1:
+Input: triangle = [[2],[3,4],[6,5,7],[4,1,8,3]]
+Output: 11
+Explanation: The triangle looks like:
+   2
+  3 4
+ 6 5 7
+4 1 8 3
+The minimum path sum from top to bottom is 2 + 3 + 5 + 1 = 11 (underlined above).
+Example 2:
+Input: triangle = [[-10]]
+Output: -10
 
+ */
+var minimumTotal = function(triangle) {
+    
+    const util = (currRow , prev ) =>{
+
+        if( dp[currRow][prev] !== -1){
+            return dp[currRow][prev];
+        }
+
+        if( currRow >= row){
+            return 0 ;
+        }
+
+        const left = triangle[currRow][prev] + util(currRow+1 , prev);
+        const right = triangle[currRow][prev] + util(currRow+1 , prev+1);
+
+        dp[currRow][prev] = Math.min(left , right) ;
+        return dp[currRow][prev] ;
+    }
+
+    const row = triangle.length ;
+    const col = triangle[row-1].length ;
+    let dp = Array.from({length : row+1 },(_,i)=>{
+        return Array.from({length : i+1 } , ()=>-1)
+    })
+    return util(0 , 0);
+
+};
 
 
 
