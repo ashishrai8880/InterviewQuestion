@@ -423,3 +423,60 @@ var uniquePathsWithObstacles = function(grid) {
 };
 
 
+// ========================================================================== 8. Minimum Path Sum ==============================================================================
+/**
+Leetcode : https://leetcode.com/problems/minimum-path-sum/
+Time Complexity: O(N*M) Reason: At max, there will be N*M calls of recursion.
+Space Complexity: O((M-1)+(N-1)) + O(N*M) Reason: We are using a recursion stack space: O((M-1)+(N-1)), here (M-1)+(N-1) is the path length and an external DP Array of size ‘N*M’.
+
+Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path.
+Note: You can only move either down or right at any point in time.
+
+Example 1:
+Input: grid = [[1,3,1],[1,5,1],[4,2,1]]
+Output: 7
+Explanation: Because the path 1 → 3 → 1 → 1 → 1 minimizes the sum.
+
+Example 2:
+Input: grid = [[1,2,3],[4,5,6]]
+Output: 12
+ */
+var minPathSum = function(grid) {
+    
+    const util = (i,j)=>{
+
+        if(i == row-1 && j == col-1){
+            return grid[i][j];
+        }
+
+        if( i>=row ||  j>=col ) return Infinity ;
+
+        if(dp[i][j] != -1) return dp[i][j];
+
+        const right = grid[i][j] + util(i , j+1);
+        const down = grid[i][j] + util(i+1 , j);
+        
+        return dp[i][j] = Math.min(right , down);
+    }
+
+    const row = grid.length ;
+    const col = grid[0].length ;
+    let dp  = Array.from({length : row+1},()=>{
+        return Array.from({length : col+1},()=>-1)
+    })
+
+    return util(0,0);
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
