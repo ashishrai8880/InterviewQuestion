@@ -678,5 +678,76 @@ var minFallingPathSum = function(mat) {
 };
 
 
+// ============================================================================= 11. Cherry Pick 2 =======================================================================================
+/**
+Leetcode : https://leetcode.com/problems/cherry-pickup-ii/description/
+TC : Without DP : 3^(m*n) * 3*(m*n)
+Time Complexity: O(N*M*M) * 9 Reason: At max, there will be N*M*M calls of recursion to solve a new problem and in every call, two nested loops together run for 9 times.
+Space Complexity: O(N) + O(N*M*M) Reason: We are using a recursion stack space: O(N), where N is the path length and an external DP Array of size ‘N*M*M’.
+
+You are given a rows x cols matrix grid representing a field of cherries where grid[i][j] represents the number of cherries that you can collect from the (i, j) cell.
+You have two robots that can collect cherries for you:
+
+Robot #1 is located at the top-left corner (0, 0), and
+Robot #2 is located at the top-right corner (0, cols - 1).
+Return the maximum number of cherries collection using both robots by following the rules below:
+
+From a cell (i, j), robots can move to cell (i + 1, j - 1), (i + 1, j), or (i + 1, j + 1).
+When any robot passes through a cell, It picks up all cherries, and the cell becomes an empty cell.
+When both robots stay in the same cell, only one takes the cherries.
+Both robots cannot move outside of the grid at any moment.
+Both robots should reach the bottom row in grid.
+ */
+var cherryPickup = function(grid) {
+    
+    const util = ( currRow , alicePos , bobPos )=>{
+        if(alicePos <0 || alicePos>=col || bobPos < 0 || bobPos>=col){
+            return -Infinity ;
+        }
+
+        if(currRow == row-1){
+            if(alicePos == bobPos){
+                return grid[currRow][alicePos];
+            }
+            else{
+                return grid[currRow][alicePos] + grid[currRow][bobPos];
+            }
+        }
+
+        if(dp[currRow][alicePos][bobPos] != -1){
+            return dp[currRow][alicePos][bobPos] ;
+        }
+
+        let max = -Infinity ;
+        for(let i=-1 ; i<=1 ; i++){
+
+            for(let j=-1 ; j<=1 ; j++){
+                let value = 0 ;
+                if(alicePos == bobPos) {
+                    value = grid[currRow][alicePos] ;
+                }
+                else{
+                    value = grid[currRow][alicePos] + grid[currRow][bobPos];
+                }
+                value = value + util(currRow+1 , alicePos+i , bobPos+j);
+                max = Math.max(max , value);
+            }
+        }
+
+        dp[currRow][alicePos][bobPos] = max ;
+
+        return max ;
+    }
+
+    const row = grid.length ;
+    const col = grid[0].length ;
+    const dp = new Array(row).fill(null).map(() =>
+        new Array(col).fill(null).map(() =>
+        new Array(col).fill(-1)
+        )
+    );
+    return util(0 , 0 , col-1)
+
+};
 
 
