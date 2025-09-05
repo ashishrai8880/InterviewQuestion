@@ -29,3 +29,82 @@ var maxPathSum = function(root) {
     return ans ;
 
 };
+
+
+// ================================================================== 2. Same/Identical Tree ========================================================================================
+/**
+Leetcode : https://leetcode.com/problems/same-tree/
+Given the roots of two binary trees p and q, write a function to check if they are the same or not.
+Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.
+ */
+var isSameTree = function(p, q) {
+    
+    const preOrderTraversal = (ptr , arr)=>{
+        if(ptr == null) {
+            return ;
+        }
+
+        arr.push(ptr.val)  ;
+
+        if(ptr.left != null){
+            preOrderTraversal(ptr.left , arr);
+        }
+        else{
+            arr.push(null);
+        }
+
+        if(ptr.right != null){
+            preOrderTraversal(ptr.right , arr);
+        }
+        else{
+            arr.push(null);
+        }
+    }
+
+    let arr1 = [];
+    preOrderTraversal(p , arr1) ;
+    let arr2 = [];
+    preOrderTraversal(q , arr2);
+
+    if(arr1.length != arr2.length) return false ;
+
+    for(let i=0 ; i<arr1.length ; i++){
+        if(arr1[i] != arr2[i]) return false ;
+    }
+
+    return true ;
+
+};
+
+
+/**
+Second Approach , Super Easy , Super Cool
+ */
+var isSameTree = function(p, q) {
+    
+    if(p == null && q == null) return true ;
+
+    if(p == null || q == null) return false ;
+
+    if(p.val != q.val) return false ;
+
+    return isSameTree(p.left , q.left) && isSameTree(p.right , q.right);
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
