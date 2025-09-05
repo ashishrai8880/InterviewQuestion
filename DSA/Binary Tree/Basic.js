@@ -260,6 +260,69 @@ var maxDepth = function(root) {
 };
 
 
+// ====================================================================================== Is Balanced Binary Tree =========================================================================================
+/**
+Leetcode : https://leetcode.com/problems/balanced-binary-tree/description/
+ */
+var isBalanced = function(root) {
+    
+    const util = (ptr)=>{
+        if(ptr == null) return 0 ;
+
+        const left = 1 + util(ptr.left);
+        const right = 1 + util(ptr.right);
+
+        if(Math.abs(left - right) > 1 ){
+            ans = false ;
+        }
+
+        return Math.max(left , right)
+    }
+
+    let ans = true ;
+    util(root);
+    return ans ;
+
+};
+
+// Easy Approach
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+var isBalanced = function(root) {
+
+    const util = (ptr) => {
+        if(ptr == null) return [ 0 , true ] ; // height , isBalance
+
+        const [leftHeight , leftBalance] = util(ptr.left);
+        const [rightHeight , rightBalance] = util(ptr.right);
+
+        const heightSoFar = 1 + Math.max(leftHeight , rightHeight);
+
+        const diff = Math.abs(leftHeight - rightHeight) ;
+
+        if(diff <= 1 && leftBalance  && rightBalance ){
+            return [heightSoFar , true ] ;
+        }
+
+        return [heightSoFar , false ] ;
+    }
+
+    const [height , balance ] = util(root);
+
+    return balance ;
+};
+
+
 
 
 
