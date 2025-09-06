@@ -94,7 +94,50 @@ var isSameTree = function(p, q) {
 
 
 
+// ============================================ 3. Zigzag Level Order Traversal============================================
+/**
+Leetcode : https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
+ */
+var zigzagLevelOrder = function(root) {
+   
+    if(root == null) return [];
 
+    let ans = [];
+    let q = [];
+    q.push(root);
+    let level = 1 ;
+
+    while(q.length != 0){
+        let temp = [];
+        let qLen = q.length ;
+
+        while(qLen-- > 0){
+            const curr = q[0];
+            q = q.slice(1)
+
+            if(curr && curr.val != undefined){
+                temp.push(curr.val);
+            }
+
+            if(curr && curr.left){
+                q.push(curr.left);
+            }
+
+            if(curr && curr.right){
+                q.push(curr.right);
+            }
+        }
+        if(level % 2 == 0){
+            ans.push([...temp.reverse()]);
+        }else{
+            ans.push([...temp])
+        }
+        level += 1 ;
+    }
+
+    return ans ;
+
+};
 
 
 
