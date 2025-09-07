@@ -235,7 +235,38 @@ class Solution {
 }
 
 
+// ========================================= 5. Bottom Left Tree Value =================================================
+/**
+Leetcode : https://leetcode.com/problems/find-bottom-left-tree-value/description/
+ */
+var findBottomLeftValue = function(root) {
+    
+    let q = [];
+    q.push(root);
+    let ans = 0 ;
 
+    while( q.length != 0  ){
+
+        let qLen = q.length ;
+
+        ans = q[0].val ;
+
+        while(qLen -- > 0){
+            const curr = q[0];
+            q.shift();
+
+            if(curr && curr.left){
+                q.push(curr.left);
+            }
+            if(curr && curr.right){
+                q.push(curr.right);
+            }
+        }
+    }
+
+    return ans ;
+
+};
 
 
 
