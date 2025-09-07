@@ -140,8 +140,99 @@ var zigzagLevelOrder = function(root) {
 };
 
 
+//============================================= 4. Boundary Traversal =====================================================
+/*
+https://www.geeksforgeeks.org/problems/boundary-traversal-of-binary-tree/1
+First Left Traversal , and then check for leaf node by any DFS traversal and then right traversal (reverse answer of right)
+ */
 
-
+class Solution {
+    boundaryTraversal(root) {
+        // code here
+        
+        const isLeaf = (ptr)=>{
+            if(ptr && ptr.left == null && ptr.right == null) return true ;
+            return false ;
+        }
+        
+        const leftBoundaryTraversal = (curr)=>{
+            let ptr = curr ;
+            let temp = [];
+            
+            while(ptr){
+                if(!isLeaf(ptr)){
+                    temp.push(ptr.data)
+                }
+                
+                if(ptr.left){
+                    ptr = ptr.left ;
+                }else{
+                    ptr = ptr.right ;
+                } 
+            }
+            // res.push(...temp)
+            return temp ;
+        }
+        
+        const rightBoundaryTraversal = (curr)=>{
+            let ptr = curr ;
+            let temp = [];
+            
+            while(ptr){
+                if(!isLeaf(ptr)){
+                    temp.push(ptr.data)
+                }
+                
+                if(ptr.right){
+                        ptr = ptr.right ;
+                }
+                else{
+                    ptr = ptr.left ;
+                }
+            }
+            
+           
+            return temp.reverse();
+        }
+    
+    
+        
+        const leafNodeTraversal = (ptr)=>{
+            
+            if(ptr == null) return ;
+            
+            if( isLeaf(ptr) ){
+                res.push(ptr.data);
+            }
+            
+            leafNodeTraversal(ptr.left);
+            leafNodeTraversal(ptr.right);
+            
+        }
+        
+        let res = [];
+        if(root == null) return res ;
+        
+        if(isLeaf(root)) return [root.data];
+        
+        res.push(root.data);
+        
+        if(root.left){
+            const left = leftBoundaryTraversal(root.left );
+            res.push(...left)
+        }
+        
+        leafNodeTraversal(root);
+        
+        if(root.right){
+            const right = rightBoundaryTraversal(root.right );
+            res.push(...right);
+        }
+        
+        return res ;
+        
+    }
+}
 
 
 
