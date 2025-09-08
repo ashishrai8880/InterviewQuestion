@@ -269,6 +269,49 @@ var findBottomLeftValue = function(root) {
 };
 
 
+// ======================================================================== 6. Right View Of Binary Tree =============================================================================================
+/**
+Leetcode : https://leetcode.com/problems/binary-tree-right-side-view/description/
+ */
+var rightSideView = function(root) {
+    
+    if(root == null) return [];
+
+    if( !root.left && !root.right ) return [root.val]
+
+    let q = [];
+    let ans = [];
+    let ptr = root ;
+    q.push(ptr);
+
+    while(q.length != 0){
+
+        let qLen = q.length ;
+
+        for (let i = 0; i < qLen; i++) {
+            const curr = q.shift();
+
+            if (i === 0) {
+                ans.push(curr.val);
+            }
+            
+            if (curr.right) q.push(curr.right);
+            if (curr.left) q.push(curr.left);
+        }
+
+    }
+
+    return ans ;
+
+};
+
+
+
+
+
+
+
+
 
 
 
