@@ -306,7 +306,29 @@ var rightSideView = function(root) {
 };
 
 
+// ============================================== 7. Check Symmetri of Binary Tree ======================================
+/**
+Leetcode : https://leetcode.com/problems/symmetric-tree/
+Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).
 
+ */
+var isSymmetric = function(root) {
+    
+    const util = (root1 , root2)=>{
+        if(root1 == null && root2 == null)return true ;
+
+        if(root1 == null || root2 == null) return false ;
+
+        if(root1.val != root2.val) return false ;
+
+        return util(root1.left , root2.right) && util(root1.right , root2.left)
+        
+    }
+
+    if(root == null  || (root.left == null && root.right == null)  ) return true ;
+
+    return util(root.left , root.right)
+};
 
 
 
