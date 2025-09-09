@@ -331,6 +331,65 @@ var isSymmetric = function(root) {
 };
 
 
+// ===================================== 8. Vertical Order Traversal of Binary Tree =======================================
+
+/**
+Leetcode : https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/ 
+Simple BFS or Level Order Traversal Apply 
+Just maintained horizonal distance from root node . Take root node hd as 0 , if you are going left then subtract 1 from its parent
+node hd , and add if going right . 
+Just take one map , and store all hd as key , and node value coming under its horizontal value . 
+ */
+var verticalTraversal = function(root) {
+    
+    let q = [];
+    
+    q.push({node : root , hd : 0 , row : 0});
+    let obj = {};
+
+    while(q.length != 0){
+
+        const curr = q.shift();
+        const {node , hd , row} = curr ;
+
+        // setting values into map
+        if(  !obj[hd] ){
+            obj[hd] = [ ];
+        }
+        
+        // if(node.val != null || node.val != undefined){
+            obj[hd].push([row+1 , node.val ])
+        // }
+        
+
+        if(node && node.left){
+            q.push({node : node.left , hd : hd - 1 , row : row + 1 });
+        }
+
+        if(node && node.right){
+            q.push({node : node.right , hd : hd + 1 , row : row + 1 });
+        }
+    }
+
+    const sortedKeys = Object.keys(obj).map(Number).sort((a,b)=>a-b) ;
+
+    const result = [];
+
+    for(const key of sortedKeys){
+        const arr = obj[key];
+        // Sort by row, then by value
+        arr.sort((a, b) => {
+            if (a[0] === b[0]) return a[1] - b[1];
+            return a[0] - b[0];
+        });
+        result.push(arr.map(item => item[1]));
+    }
+
+    return result ;
+
+
+};
+
 
 
 
