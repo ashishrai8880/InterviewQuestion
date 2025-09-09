@@ -431,8 +431,95 @@ topView(root) {
     }
 
 
+// ======================================= 10. Bottom View of Binary Tree =================================================
+/*
+GFG : https://www.geeksforgeeks.org/problems/bottom-view-of-binary-tree/1
+LOGIC : Just easy one , apply BFS , then just save last node at any horizontal distance . 
+Below Logic might throw TLE because in sorting it is taking O(nlogn) TC which is not under constraints , so need to optimize it little bit .
+*/
+
+class Solution {
+    // Function to return a list containing the bottom view of the given tree.
+    bottomView(root) {
+        // your code here
+        
+        let q = [];
+        q.push({node : root , hd : 0});
+        let res = [];
+        let map = {} ;
+        
+        while(q.length != 0){
+            
+            const {node , hd} = q.shift();
+            
+            map[hd] = node.data;
+            
+            if(node.left){
+                q.push({node : node.left , hd : hd-1});
+            }
+            
+            if(node.right){
+                q.push({node : node.right , hd : hd + 1});
+            }
+            
+        }
+        
+        const sortedKeys = Object.keys(map).map(Number).sort((a,b)=>a-b);
+        
+        for(const key of sortedKeys){
+            
+            res.push(map[key]);
+        }
+        
+        return res ;
+        
+    }
+}
 
 
+// Optimized way of bottom view , just maintain minHD and maxHD , and at last run loop from minHD to maxHD , and increase by 1 
+
+class Solution {
+    // Function to return a list containing the bottom view of the given tree.
+    bottomView(root) {
+        // your code here
+        
+        if (!root) return [];
+
+        let q = [];
+        q.push({ node: root, hd: 0 });
+
+        let map = {}; // hd -> node.data
+        let minHD = 0, maxHD = 0;
+
+        while (q.length !== 0) {
+            const { node, hd } = q.shift();
+
+            // Overwrite value for bottom view
+            map[hd] = node.data;
+
+            // Track horizontal distance bounds
+            if (hd < minHD) minHD = hd;
+            if (hd > maxHD) maxHD = hd;
+
+            if (node.left) {
+                q.push({ node: node.left, hd: hd - 1 });
+            }
+
+            if (node.right) {
+                q.push({ node: node.right, hd: hd + 1 });
+            }
+        }
+
+        const res = [];
+        for (let hd = minHD; hd <= maxHD; hd++) {
+            res.push(map[hd]);
+        }
+
+        return res;
+      
+    }
+}
 
 
 
