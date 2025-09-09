@@ -386,9 +386,49 @@ var verticalTraversal = function(root) {
     }
 
     return result ;
-
-
 };
+
+
+// ======================================== 9. Top View of Binary Tree =================================================
+// GFG : https://www.geeksforgeeks.org/problems/top-view-of-binary-tree/1
+// Just stored first coming horizontal distance value
+topView(root) {
+        // code here
+        
+        let q = [];
+        let map = {} ;
+        q.push({node : root , hd : 0});
+        let res = [];
+        
+        
+        while(q.length !== 0){
+            
+            const { node , hd } = q.shift();
+            
+            if(!map[hd]){
+                map[hd] = [node.data];
+                
+            }
+            // map[hd].push(node.data) ;
+            
+            if(node.left){
+                q.push({node : node.left , hd : hd-1})
+            }
+            
+            if(node.right){
+                q.push({node : node.right , hd : hd+1})
+            }
+        }
+        
+        const sortedKeys = Object.keys(map).map(Number).sort((a,b)=>a-b)
+        
+        for(const key of sortedKeys){
+            res.push(map[key])
+        }
+        
+        return res ;
+        
+    }
 
 
 
