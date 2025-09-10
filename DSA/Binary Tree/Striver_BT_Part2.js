@@ -126,7 +126,59 @@ var lowestCommonAncestor = function(root, p, q) {
 };
 
 
+// ================================================================== 3. Maximum Width of a Binary Tree ===========================================================================
+/**
+Leetcode : https://leetcode.com/problems/maximum-width-of-binary-tree/
+Given the root of a binary tree, return the maximum width of the given tree.
 
+The maximum width of a tree is the maximum width among all levels.
+
+The width of one level is defined as the length between the end-nodes (the leftmost and rightmost non-null nodes), where the null nodes between the end-nodes that would be present in a complete
+binary tree extending down to that level are also counted into the length calculation.
+
+It is guaranteed that the answer will in the range of a 32-bit signed integer.
+
+LOGIC : Just require normal BFS , and at each level need to find difference of index between last node and first node . 
+It is working on CBT index Complete Binary Tree Index . First node index is 0 and next index could be 2*0+1 and 2*0+2 for left and right child respectively . 
+
+ 
+ */
+
+var widthOfBinaryTree = function(root) {
+    
+    let q = [];
+    q.push({node : root , i : 0});
+    let ans = 0 ;
+
+    while(q.length != 0){
+
+        let qlen = q.length ;
+        const firstNodeCBTIndex = q[0].i ;
+        const r = q.at(-1).i - q[0].i + 1;
+        ans = Math.max(r , ans);
+
+        while(qlen-- > 0){
+
+            const {node , i } = q.shift();
+            const normalisedIndex = i - firstNodeCBTIndex ;
+
+            if(node.left){
+                q.push({node : node.left , i : (2*normalisedIndex) + 1}) ;
+            }
+
+            if(node.right){
+                q.push({node : node.right , i : (2*normalisedIndex) + 2}) ;
+            }
+
+        }
+
+    }
+
+    return ans ;
+
+
+
+};
 
 
 
