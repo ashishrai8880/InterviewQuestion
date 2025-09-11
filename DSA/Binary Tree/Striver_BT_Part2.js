@@ -251,6 +251,43 @@ var distanceK = function(root, target, k) {
 };
 
 
+// ===================================================================== 5. Check Children Sum Property ===========================================================================================
+/**
+GFG : https://www.geeksforgeeks.org/problems/children-sum-parent/1
+Given the root of a binary tree, determine whether the tree satisfies the Children Sum Property. In this property, each non-leaf node must have a value equal to the sum of its left and right children's values. A NULL child is considered to have a value of 0, and all leaf nodes are considered valid by default.
+Return true if every node in the tree satisfies this condition, otherwise return false.
+ */
+
+class Solution {
+    isSumProperty(root) {
+        //  code here
+        
+        const util = (ptr)=>{
+            
+            
+            if(ptr == null) return 0 ;
+            
+            if( ptr.left == null && ptr.right == null) return ptr.data;
+            
+            const leftVal =  util(ptr.left) ;
+            const rightVal =  util(ptr.right) ;
+            
+            if( ptr.data != leftVal + rightVal){
+                ans = false ;
+            }
+            
+            return ptr.data ;
+            
+        }
+        
+        let ans = true ;
+        util(root);
+        return ans ;
+        
+    }
+}
+
+
 
 
 
