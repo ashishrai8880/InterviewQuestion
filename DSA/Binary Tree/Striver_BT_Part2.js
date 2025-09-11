@@ -181,11 +181,74 @@ var widthOfBinaryTree = function(root) {
 };
 
 
+// ================================================================== 4. All Nodes from k distance from Target Node ==========================================================================
+/**
+Leetcode : https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/
+There can be two case . 
+1. But suppose if i got target node , then all node below then target node , i will just find where k == 0 , in every recursion call , i will subtract by 1 . 
+2. For Ancestor case , I will return some value , which indicates how above the ancestor is , if i am just returning from target node , then i will send 1 , for 2  above ancestor 
+I will send 2 , so just adding 1 everytime going above in ancestor call . After reaching at ancestor node , I have to check two cases , if current k is 0 , it means this 
+ancestor node should also be added in ans array . Otherwise , i will call function findNode for right subtree . 
+If target node is at left subtree , then call for right subtree and if target node is at right subtree then will call for left subtree . 
+ */
 
+var distanceK = function(root, target, k) {
+    // console.log({target})
+    
+    const findNode = ( ptr , rk )=>{
+        if(ptr == null) return ;
 
+        if(rk == 0){
+            ans.push(ptr.val);
+        }
 
+        findNode(ptr.left , rk-1);
+        findNode(ptr.right , rk -1);
 
+    }
 
+    const forAncestorTraversal = (ptr , rk ) =>{
+
+        if(ptr == null) return -1 ;
+
+        if(ptr == target){
+            findNode(ptr , rk);
+            return 1 ;
+        }
+
+        const left = forAncestorTraversal(ptr.left , rk)
+
+        if(left != -1){
+            if(rk-left == 0){
+                ans.push(ptr.val);
+            }
+            else{
+                findNode(ptr.right , rk-left-1);
+            }
+            return left+1 ;
+        }
+
+        const right = forAncestorTraversal(ptr.right , rk)
+
+        if(right != -1){
+            if(rk-right == 0){
+                ans.push(ptr.val);
+            }
+            else{
+                findNode(ptr.left , rk-right-1);
+            }
+            return right+1 ;
+        }
+
+        return -1 ;
+
+    }
+
+    let ans = [];
+    forAncestorTraversal(root , k)
+    return ans ;
+
+};
 
 
 
