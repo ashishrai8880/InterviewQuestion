@@ -288,8 +288,30 @@ class Solution {
 }
 
 
+// =========================================================== 6. Count Nodes in Binary Tree ========================================
+// Leetcode : https://leetcode.com/problems/count-complete-tree-nodes/
 
+var countNodes = function(root) {
+    
+    if(root == null) return 0 ;
 
+    let count = 0 ;
+    let q = [];
+    q.push(root);
+
+    while(q.length != 0){
+        const curr = q.shift();
+        count +=  1;
+
+        if(curr && curr.left){
+            q.push(curr.left);
+        }
+        if(curr && curr.right){
+            q.push(curr.right);
+        }
+    }
+    return count ;
+};
 
 
 
