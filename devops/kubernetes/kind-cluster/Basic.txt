@@ -1,0 +1,11 @@
+1. First make file with any name like 'kind_install.sh' by writing command 
+
+vim kind_install.sh
+
+and then paste entire command till step 3 in file and then save the file . 
+
+->  Docker might not get installed , for this need to install docker seperately 
+sudo apt-get install -y docker.io .
+docker ps -> this might give permission denied error 
+
+ sudo usermod -aG docker $USER && newgrp docker -> this command will solve permission denied issue . 
