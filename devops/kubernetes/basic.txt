@@ -1,1 +1,84 @@
-Started Kubernetest
+Started Kubernetes
+
+-> In 2014 Google started it and named as Borg and then its name converted into Kubernetes K8s .
+
+-> Works in Slave Master Architecture 
+-> Containers and application cluster is actual working on Worker or Slave Node . It is manage by Master Node .
+
+Kubernetes Architecture in Simple Terms
+
+Think of Kubernetes like a control system for managing your applications in a distributed environment (like a data center or cloud). It helps deploy, scale, and manage containerized applications (like Docker containers).
+
+Here are the main parts of Kubernetes architecture:
+
+1. Master Node (Control Plane)
+
+The Master Node is like the brain or control center of the Kubernetes cluster. It makes all the important decisions, such as:
+Scheduling when and where containers should run.
+Managing the overall health of the cluster.
+Handling scaling, networking, and other management tasks.
+
+Components of the Master Node:
+
+1. API Server: The front door to communicate with Kubernetes. Everything goes through this. It handles requests and updates the state of the system.
+
+2. Controller Manager: Keeps the system running smoothly. It makes sure everything is as it should be, for example, if a pod goes down, it will try to start a new one.
+
+3. Scheduler: Decides which node should run which pod based on resources, constraints, and other factors.
+
+4. etcd: A key-value store that stores all the configuration data and the current state of the Kubernetes cluster (like a memory of the entire system).
+
+=>2. Worker Nodes (Node)
+
+These are the machines (physical or virtual) that run the containers. Worker nodes are where your actual applications run.
+
+Components of Worker Nodes:
+
+1. Kubelet: An agent that runs on each worker node. It makes sure that the containers are running in the desired state.
+
+2. Kube Proxy: It handles networking on the node, ensuring that traffic is routed correctly to the containers.
+
+3. Container Runtime: This is the software (like Docker or containerd) that actually runs and manages the containers.
+
+=>3. Pods
+
+A Pod is the smallest and simplest unit in Kubernetes. It’s a group of one or more containers that are tightly coupled and share storage, networking, and resources. Typically, a pod contains only one container, but you can have more if needed.
+
+How the Components Work Together
+
+API Server receives a request (e.g., "deploy a new app").
+Scheduler places the app (in the form of a pod) on one of the worker nodes based on available resources.
+Kubelet on the worker node starts the container and makes sure it’s healthy.
+Kube Proxy ensures networking between containers and exposes services to the outside world.
+
+
+
+                    +---------------------+
+                    |     Master Node     |
+                    |---------------------|
+                    |  API Server         |
+                    |  Scheduler          |
+                    |  Controller Manager |
+                    |  etcd               |
+                    +---------------------+
+                             |
+                             |
+           +----------------------------------+
+           |        Worker Node 1            |
+           |----------------------------------|
+           |  Kubelet   Kube Proxy   Runtime |
+           |  +---------------------------+  |
+           |  |     Pod (Container)        |  |
+           |  +---------------------------+  |
+           +----------------------------------+
+                             |
+                             |
+           +----------------------------------+
+           |        Worker Node 2            |
+           |----------------------------------|
+           |  Kubelet   Kube Proxy   Runtime |
+           |  +---------------------------+  |
+           |  |     Pod (Container)        |  |
+           |  +---------------------------+  |
+           +----------------------------------+
+
