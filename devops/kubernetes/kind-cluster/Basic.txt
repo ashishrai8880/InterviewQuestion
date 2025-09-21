@@ -9,3 +9,31 @@ sudo apt-get install -y docker.io .
 docker ps -> this might give permission denied error 
 
  sudo usermod -aG docker $USER && newgrp docker -> this command will solve permission denied issue .  
+
+------------------------------------------------------------------------------------------------------------------------
+
+1. After download -> Make config file by vim config.yml and then write yml file code which is below : 
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  image: kindest/node:v1.31.2
+- role: worker
+  image: kindest/node:v1.31.2
+- role: worker
+  image: kindest/node:v1.31.2
+- role: worker
+  image: kindest/node:v1.31.2
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    protocol: TCP
+
+2. Then Run command kind create cluster --name=ashish-cluster --config=config.yml
+
+3. Second command will create kind-cluster . 
+
+4. Then you can run kubectl get nodes or kubectl get info . 
