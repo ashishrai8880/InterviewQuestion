@@ -1,0 +1,32 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: local-pv
+  namespace: nginx
+  labels:
+    app: local
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  hostPath:
+    path: /mnt/data
+
+
+
+# Persistent Volume Claim Code 
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: local-pvc
+  namespace: nginx
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Mi
+  storageClassName: local-storage
