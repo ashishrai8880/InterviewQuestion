@@ -169,3 +169,57 @@ The labels to match and select the Pods.
 The rolling update strategy (for seamless updates).
 This file is important because it allows Kubernetes to know how to deploy and manage your application.
 
+
+-------------------------------------------------------- My OWN Notes ----------------------------------------------------------------------------
+1. Replica Set : Ye bas replica bana deta hai pods k , isme rolling update , scaling pods ye sab feature nahi hai .  jitne replicas mention honge utne bana dega bas . 
+2. Daemon Set : Ye ensure karta hai ki , has nodes/worker pe atleast 1 pod chal rha ho . 
+3. Deployment Set : Sabse badhiya hai , isme rolling update hota hai , scaling kar sakte hai . Rolling update means , agar version update kar rhe hai to , saare pods
+ka ek saath version update nahi hoga , 1-1 karke hoga , jisse downtime nahi rahega . Deployment me hum kabhi bhi number of pods scale kar sakte hai . 
+4. Stateful Set : Ye PODS ki state maintain karke rakhta hai . 
+
+Replica Set ki yml file: 
+kind: ReplicaSet
+apiVersion: apps/v1
+metadata:
+  name: nginx-replicaset
+  namespace: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      name: nginx-rep-pod
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+Daemon Set ki yml file ----------------------
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: nginx-daemonset
+  namespace: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      name: nginx-daemon-pod
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+
