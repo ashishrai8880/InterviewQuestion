@@ -8,4 +8,4 @@ and then paste entire command till step 3 in file and then save the file .
 sudo apt-get install -y docker.io .
 docker ps -> this might give permission denied error 
 
- sudo usermod -aG docker $USER && newgrp docker -> this command will solve permission denied issue . 
+ sudo usermod -aG docker $USER && newgrp docker -> this command will solve permission denied issue .  
