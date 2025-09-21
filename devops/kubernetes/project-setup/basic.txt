@@ -79,6 +79,7 @@ spec:
 // --------- ENDS
 
 COMMAND : kubectl apply -f deployment.yml . 
+kubectl scale deployment/nginx-deployment -n nginx --replicas = 5   -> This command will automatically create 5 POD
 
 -------------------------------------------------------------------------- Theory -----------------------------------------------------------------------------
 
