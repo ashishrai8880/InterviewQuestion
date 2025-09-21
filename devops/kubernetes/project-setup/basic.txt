@@ -1,0 +1,170 @@
+
+
+Group or Namespaces -> It basically seperate every groups or enviroment . 
+
+Namespace ---->    Nginx(or any docker image)  ->  POD  ->  Deployment  -> Service  ->  User . 
+
+Commands to create above resource 
+
+1. kubectl get namespace or kubectl get ns
+2. kubectl get pods
+3. kubectl get pods -n <namespace-name>   -> it will give all pods inside namespace 
+4. kubectl create namespace/ns nginx     ->  it will create namespace
+5. kubectl run nginx --image=nginx     -> it will run nginx , it will pull from docker hub . by default it always create pods inside default namespace
+6. kubectl run nginx --image=nginx -n nginx -> it will create and run pod inside namespace nginx
+7. kubectl delete pod nginx -n nginx
+8. kubectl delete ns nginx 
+
+--------------------------------------------------------- Creating resource by manifest files -------------------------------------------------------------------
+namespace.yml file 
+
+vim namespace.yml
+// ----------STARTS
+
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: nginx
+
+// -------ENDS
+
+COMMAND : kubectl apply -f namespace.yml 
+
+2. pod.yml
+vim pod.yml
+// ----------------- STARTS
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: nginx-pod
+  namespace: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+
+// ---------- ENDS
+
+COMMAND : kubectl apply -f pod.yml
+
+3. deployment.yml file
+
+// ----------- STARTS
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nginx-deployment
+  namespace: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      name: nginx-dep-pod
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+// --------- ENDS
+
+COMMAND : kubectl apply -f deployment.yml . 
+
+-------------------------------------------------------------------------- Theory -----------------------------------------------------------------------------
+
+1. What is a Deployment?
+
+In Kubernetes, a Deployment is a higher-level abstraction that manages the lifecycle of your application. It allows you to:
+Deploy applications and ensure they are running correctly.
+Scale your application easily by adjusting the number of replicas (copies of your application).
+Roll out updates to your application in a controlled and predictable manner (e.g., upgrading your app without downtime).
+Rollback to a previous version in case something goes wrong with an update.
+When you use a Deployment, Kubernetes ensures that your application is always running the right number of replicas and that any changes to the app
+(e.g., rolling updates or rollbacks) happen smoothly.
+
+What Does the deployment.yml File Do?
+
+Your deployment.yml file defines the configuration for your Kubernetes Deployment. Here’s a breakdown of each part:
+
+kind: Deployment          # Specifies the type of object you are creating. "Deployment" in this case.
+apiVersion: apps/v1       # This defines the API version for the Deployment object.
+metadata:
+  name: nginx-deployment  # The name of the deployment.
+  namespace: nginx        # The namespace in which the deployment will live. Here it's set to 'nginx'.
+spec:
+  replicas: 2             # Number of pod replicas (instances) you want to run. Kubernetes will maintain this count.
+  selector:
+    matchLabels:
+      app: nginx          # A label selector that determines which pods belong to this Deployment.
+  template:
+    metadata:
+      labels:
+        app: nginx        # These labels are applied to the pods created by the deployment.
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest  # The Docker image to use for the container. In this case, it’s Nginx.
+        ports:
+        - containerPort: 80  # Exposes port 80 on the container to be accessible.
+
+Explaining Key Concepts
+1. Deployment vs Pod
+
+Pod: A Pod is the smallest unit of execution in Kubernetes. It can run one or more containers that share the same network and storage. However, Pods are not 
+self-healing, meaning if a pod fails, it won't be automatically restarted or replaced.
+
+Deployment: A Deployment is a higher-level object that manages Pods. It ensures that the specified number of Pods are always running and can handle tasks like 
+scaling, rolling updates, and rollbacks. If a Pod goes down, the Deployment will automatically create a new one to maintain the desired state.
+
+In short: A Deployment manages Pods and ensures that they are running properly.
+
+2. Why Use a Deployment Instead of a Pod?
+Scalability: With a Deployment, you can easily scale the number of Pods up or down (by changing the replicas field). This is much harder to do with just a single Pod.
+High Availability: If a Pod in a Deployment crashes, Kubernetes will automatically recreate it to maintain the desired number of replicas.
+Rollouts: A Deployment allows for rolling updates, meaning you can update your app with minimal downtime.
+
+ReplicaSet and StatefulSet
+Before jumping into ReplicaSets and StatefulSets, let's define them:
+
+ReplicaSet
+Definition: A ReplicaSet is a lower-level object in Kubernetes that ensures a specified number of identical Pods are running at any given time.
+Purpose: It manages the scaling of Pods and ensures there is always the right number of replicas running, but it does not handle updates or version control.
+ReplicaSets are usually managed by a Deployment.
+
+Key Use Case: If you need to maintain a certain number of Pods (for example, if one Pod crashes), a ReplicaSet ensures that the Pods are recreated.
+In practice, you rarely create ReplicaSets directly; instead, Deployments manage ReplicaSets for you. When you define a Deployment, Kubernetes automatically 
+creates a ReplicaSet behind the scenes.
+
+StatefulSet
+Definition: A StatefulSet is like a Deployment but specifically designed for managing stateful applications.
+
+Purpose: StatefulSets are used when your Pods need persistent storage (e.g., databases) or a unique identity. It helps with scaling, upgrading, and maintaining 
+the order of Pods.
+Key Use Case: For applications like databases (e.g., MySQL, MongoDB), where each Pod should have its own persistent storage and should maintain its identity across restarts.
+
+Summary of Key Components
+Deployment: A higher-level object that manages Pods, ensures replicas are running, and handles updates/rollbacks.
+ReplicaSet: Ensures a specific number of Pods are running but doesn't manage updates/rollouts. Usually managed by Deployments.
+StatefulSet: Similar to Deployment, but for stateful applications that require unique identities or persistent storage.
+
+Why Do We Need deployment.yml?
+A deployment.yml file is used to declare the configuration for your app's deployment, including:
+
+The number of Pod replicas.
+
+The Docker image used for the application.
+The ports to expose.
+The labels to match and select the Pods.
+The rolling update strategy (for seamless updates).
+This file is important because it allows Kubernetes to know how to deploy and manage your application.
+
