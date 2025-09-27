@@ -813,6 +813,9 @@ To Test It we can use load-generator . For this we have busybox tool where we ca
 
  Now you can check in other terminal that number of pods is automatically scaled . 
 
+  kubectl top nodes     // to get nods details which is consuming cpu and storage
+kubectl top pods // to get pods details which is consuming cpu and storage
+
 
 
 
