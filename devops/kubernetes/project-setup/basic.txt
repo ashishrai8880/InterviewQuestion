@@ -564,3 +564,73 @@ kubectl port-forward service/nginx-service -n nginx 80:80 --address=0.0.0.0
 
 If not work then run above command with sudo -E . 
 
+
+==========================================================================================================================
+================================================ Ingress =================================================================
+
+🧠 What is Ingress?
+
+Ingress is a Kubernetes object that manages external access to services inside your cluster—typically HTTP or HTTPS traffic.
+Think of it like a smart gate to your Kubernetes cluster that decides:
+
+Who can come in
+Where their request should go
+How traffic is handled (e.g. HTTPS, redirects, rules)
+
+🎯 Real-life Analogy
+
+Imagine you run a mall (your Kubernetes cluster) with many shops (your services).
+Each shop has its own back door (ClusterIP/Service)
+But customers can't go to those directly.
+So, you build a main entrance with a receptionist (Ingress)
+The receptionist reads the signs (rules) and sends people to the right shop based on what they ask.
+
+🧩 Components Involved
+
+Ingress Resource
+A YAML config where you define rules like:
+"If the request is for example.com/shop1, send it to service A"
+"Use HTTPS with this certificate"
+
+Ingress Controller
+The software that actually reads the Ingress resource and does the routing . Examples: NGINX, Traefik, HAProxy, AWS ALB Controller .
+
+// STEPS to apply ingress
+There is multiple source/way to apply ingress . One is through nginx ingress controller . Just search on web 
+kind cluster nginx ingress controller , and go to official website , from there , you can copy command to get ingress
+controller from web . 
+
+URL : https://kind.sigs.k8s.io/docs/user/ingress
+Command : kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/usage.yaml
+
+After this command , you can run , kubectl get ns .
+There will new namespace will be created in the name of ingress-nginx . 
+
+when you run kubectl get service -n ingress-nginx , there is seperate service file present . 
+Now just you need to create ingress.yml file . Content of this file , can be copied from basic-file folder ingress.yml file . 
+
+then run command kubectl apply -f ingress.yml . 
+
+All service should be in same namespace to redirect traffic . 
+
+then run command .  
+sudo -E kubectl port-forward service/ingress-nginx-controller -n ingress-nginx 8080:80 --address=0.0.0.0 .
+
+because now all will be controll by ingress controller , that's why we need to run service file of ingress-nginx . 
+
+You can get service file from kubectl get service -n ingress-nginx .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
