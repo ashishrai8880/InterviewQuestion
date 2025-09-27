@@ -817,7 +817,18 @@ To Test It we can use load-generator . For this we have busybox tool where we ca
 kubectl top pods // to get pods details which is consuming cpu and storage
 
 
+================================================== VPA vertical pod autoscaler =======================================
+======================================================================================================================
+VPA (Vertical Pod Autoscaler) automatically adjusts the CPU and memory requests/limits of your pods based on their actual usage — so your pods get just the right amount of resources they need (not too little, not too much).
 
+💡 In simple terms:
+While HPA scales out (adds/removes pods),
+VPA scales up/down the resources inside the pod (CPU/memory).
+
+🧠 Why use VPA?
+Prevent under-provisioning (app crashes due to low resources).
+Prevent over-provisioning (wasting cluster resources).
+Ideal for batch jobs or workloads that can’t be horizontally scaled.
 
 
 
