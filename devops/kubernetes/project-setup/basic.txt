@@ -675,10 +675,117 @@ ConfigMap: For non-sensitive configuration data (e.g., URLs, flags, settings).
 Secret: For sensitive data that you want to protect (e.g., passwords, API keys).
 
 
+================================================= Resource and limits =================================================
+🔧 Requests:
+The minimum amount of CPU or memory (RAM) a container needs to run.
+Kubernetes uses this to decide where to schedule the pod (which node has enough resources).
+If a pod asks for 200Mi of memory, it will be placed on a node with at least that much available.
+
+🚫 Limits:
+The maximum amount of CPU or memory a container is allowed to use.
+If the container tries to use more than the limit:
+For memory: It gets killed (OOM – Out Of Memory).
+For CPU: It gets throttled (slowed down).
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "500m"     # 0.5 CPU core
+  limits:
+    memory: "512Mi"
+    cpu: "1"         # 1 CPU core
 
 
+====================================================== Probes ===========================================================
+=========================================================================================================================
+
+🔍 What Are Probes in Kubernetes?
+
+Probes are how Kubernetes checks the health of your application inside a pod.
+They help Kubernetes decide:
+
+Is the app running properly?
+Is the app ready to handle requests?
+Should the app be restarted if it's not healthy?
+
+🧪 Types of Probes
+Kubernetes has three types of probes:
+
+1. ✅ Liveness Probe
+Checks: "Is the container alive?"
+If this probe fails, Kubernetes restarts the container.
+Used to detect stuck or crashed applications.
+🧠 Think of it like:
+"If the app is frozen or dead, restart it."
+
+2. 🕐 Readiness Probe
+Checks: "Is the container ready to serve traffic?"
+If this probe fails, Kubernetes removes the pod from the service endpoint (stops sending traffic to it).
+No restart — just temporarily stops traffic.
+🧠 Think of it like:
+"If the app isn’t ready yet (e.g., still loading), don’t send requests to it."
+
+3. 🛡️ Startup Probe
+Checks: "Is the app still starting up?"
+Used for slow-starting apps.
+It gives the container more time to start before liveness and readiness probes kick in.
+If startup probe is defined, liveness & readiness are disabled until startup completes.
+🧠 Think of it like:
+"Let the app take its time to start. Don’t restart it too soon."
+
+⚙️ How Probes Work
+You can configure probes to check your app in 3 ways:
+HTTP: Send an HTTP request to a path (e.g., /healthz) and expect a 200 OK.
+TCP: Try to open a TCP connection on a port.
+Exec: Run a command inside the container and check the exit code.
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 10
 
 
+Kubernetes waits 5 seconds after the pod starts, then checks /health every 10 seconds.
+If the check fails repeatedly, the pod is restarted.
+
+
+==================================================== Taints and Tolerance ===============================================
+=========================================================================================================================
+🧱 What are Taints?
+A taint is something you put on a node to say:
+“Only specific pods are allowed to run here.”
+It’s a way to repel pods unless they have special permission (a toleration).
+
+🛡️ What are Tolerations?
+A toleration is something you add to a pod to say:
+“I’m allowed to run on nodes with this taint.”
+It lets a pod tolerate a taint and get scheduled on that node.
+
+🔁 How They Work Together:
+Taint on Node → blocks all pods unless they have the matching toleration.
+Toleration on Pod → allows that pod to run on tainted nodes.
+
+📦 Real-World Analogy:
+Imagine nodes are like rooms with a “Do Not Enter” sign (taint).
+Only people (pods) with a special badge (toleration) can enter.
+
+⚙️ Example
+Add a taint to a node:
+kubectl taint nodes node1 key=value:NoSchedule
+This means:
+"Don’t schedule any pod on node1 unless it tolerates key=value."
+
+Add a matching toleration to a pod:
+tolerations:
+- key: "key"
+  operator: "Equal"
+  value: "value"
+  effect: "NoSchedule"
+
+
+This pod can now run on node1, because it tolerates the taint.
 
 
 
