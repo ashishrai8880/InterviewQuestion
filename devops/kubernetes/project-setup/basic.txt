@@ -788,6 +788,43 @@ tolerations:
 This pod can now run on node1, because it tolerates the taint.
 
 
+========================================================== HPA Horizontal POD Autoscaller ==================================
+HPA (Horizontal Pod Autoscaler) in Kubernetes automatically scales the number of pods in a deployment (or replicaset/statefulset) based on observed metrics, such as:
+
+CPU usage
+Memory usage (from custom metrics)
+Custom metrics (like request rate)
+
+How it works:
+You define an HPA object targeting a deployment.
+Set a metric threshold (e.g., keep CPU at 50%).
+The HPA controller watches metrics via the Metrics Server.
+If usage exceeds the threshold, it adds pods; if below, it removes pods.
+
+kubectl apply -f hpa.yml . 
+
+To Test It we can use load-generator . For this we have busybox tool where we can write script to hit service .
+
+ kubectl run -i --tty load-generator --image=busybox -n apache /bin/sh
+
+  Above command will open command prompt . Write below command to execute script . 
+
+  while true ; do wget -q -O- http://apache-service.apache.svc.cluster.local; done 
+
+ Now you can check in other terminal that number of pods is automatically scaled . 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
