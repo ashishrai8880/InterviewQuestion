@@ -831,9 +831,41 @@ Prevent over-provisioning (wasting cluster resources).
 Ideal for batch jobs or workloads that can’t be horizontally scaled.
 
 
+===================================================== Node Affinity ======================================================
+==========================================================================================================================
+Node Affinity is a set of rules used to control which nodes your pods can be scheduled on, based on node labels. It's similar to taints and tolerations, but instead of preventing a pod from being scheduled on certain nodes, Node Affinity ensures that a pod can only be scheduled on nodes that meet certain criteria.
+
+Node Affinity is defined in the pod specification under affinity.nodeAffinity and can be categorized into two types:
+
+RequiredDuringSchedulingIgnoredDuringExecution: This means that the pod must be scheduled on a node that matches the affinity rules. If no suitable node is found, the pod won't be scheduled.
+
+PreferredDuringSchedulingIgnoredDuringExecution: This is a "soft" requirement. Kubernetes will try to schedule the pod on a node that matches the affinity rules, but if no matching nodes are available, it will still schedule the pod on another node.
+
+Node Affinity uses labels on nodes to determine which nodes are suitable for scheduling the pod. For example, if you have nodes with different hardware configurations, you could use Node Affinity to make sure your pod is scheduled on the node with the necessary resources (like a GPU).
 
 
+==================================================== RBAC Role Based Access Control =======================================
+RBAC (Role-Based Access Control) in Kubernetes is a method to control who can access resources in a Kubernetes cluster, what actions they can perform on those resources, and where they can do so (which namespaces or clusters). It helps manage user permissions and restrict access to sensitive resources, making Kubernetes more secure.
 
+Key Concepts in RBAC:
+Role: Defines a set of permissions within a namespace. A Role specifies which actions (e.g., get, list, create, delete) a user or service account can perform on Kubernetes resources (e.g., Pods, Services, Deployments).
+
+Example: A Role might allow a user to view and list pods but not create or delete them.
+
+ClusterRole: Similar to a Role, but it applies to the entire cluster, not just a specific namespace. ClusterRoles allow permissions for cluster-wide resources like nodes or persistent volumes.
+
+RoleBinding: Associates a Role with a set of users or service accounts, granting them the permissions defined in that role within a namespace.
+
+ClusterRoleBinding: Similar to RoleBinding, but it associates a ClusterRole with users/service accounts across the entire cluster.
+
+How RBAC Works:
+Roles define what actions are allowed.
+RoleBindings assign those roles to users or service accounts within a specific namespace or cluster.
+ClusterRoles define permissions across the whole cluster.
+ClusterRoleBindings assign ClusterRoles to users or service accounts for the whole cluster.
+
+kubectl auth can-i get pods    // yes or no
+kubectl auth can-i delete pods  // yes or no
 
 
 
