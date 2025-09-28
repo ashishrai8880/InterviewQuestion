@@ -1,0 +1,91 @@
+Commands 
+
+1. helm create apache-helm
+2. helm package apache-helm
+3. helm install dev-apache apache-helm -n apache --create-namespace : dev-apache would be environment , and apache-helm is chart
+4. helm uninstall dev-apache
+5. helm upgrade prod-apache apache-helm -n prod-apache --create-namespace
+6. helm package apache-helm
+7. helm upgrade prod-apache ./apache-helm -n prod-apache 
+
+
+
+🧭 What is Helm?
+
+Helm is a package manager for Kubernetes, just like apt for Ubuntu or yum for CentOS. It helps you define, install, and 
+manage Kubernetes applications using something called Helm charts.
+
+🧱 What is a Helm Chart?
+
+A Helm chart is a collection of YAML files that describe a set of Kubernetes resources (like Deployments, Services, Ingress, etc.).
+Think of a Helm chart as a template for a Kubernetes application, which can be installed and customized using variables.
+
+🔁 Why Use Helm?
+Without Helm:
+You manually write and apply multiple YAML files.
+
+With Helm:
+You define templates once, and just install/upgrade them with simple commands. It's easier to:
+
+Install complex apps (e.g., NGINX, Prometheus, Kafka)
+Use version control
+Re-use templates across environments
+Roll back to previous versions
+Parametrize deployments with values.yaml
+
+⚙️ Key Helm Commands
+Command	Purpose
+helm create <name>	Scaffold a new Helm chart
+helm install <release> <chart>	Install a chart into the cluster
+helm upgrade <release> <chart>	Upgrade a release
+helm uninstall <release>	Remove a release
+helm list	List all releases
+helm repo add	Add a Helm chart repository
+helm search repo <name>	Search charts in added repos
+helm template	Render chart templates locally
+
+📁 Helm Chart Structure (after helm create mychart)
+mychart/
+├── charts/               # Dependent charts
+├── templates/            # YAML templates for K8s resources
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   └── _helpers.tpl
+├── values.yaml           # Default configuration values
+├── Chart.yaml            # Chart metadata (name, version, etc.)
+└── README.md             # Optional documentation
+
+📦 Example: Installing a Chart
+
+Install a chart from a public repo (e.g., NGINX):
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install my-nginx bitnami/nginx
+
+
+This installs NGINX with default settings. You can override those using a custom values.yaml.
+
+📊 Real-World Use Cases
+Installing prometheus, grafana, nginx, jenkins, etc.
+Automating complex deployments with reusable templates
+Managing dev, staging, and prod environments
+Integrating with CI/CD pipelines
+
+🧠 Summary
+
+Helm = Kubernetes package manager
+Helm Chart = Reusable Kubernetes app template
+Helm helps automate, customize, and manage app deployments on Kubernetes
+
+
+
+
+
+
+
+
+
+
+
+
+
