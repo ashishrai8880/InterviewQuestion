@@ -127,3 +127,65 @@ var deserialize = function(data) {
  * Your functions will be called as such:
  * deserialize(serialize(root));
  */
+
+
+
+// =========================================================================================================================
+//========================================== 3. Build Binary Tree from inorder and preorder traversal =======================
+/**
+Leetcode : https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+Logic : Just easy question , preOrder first element will always contains root node , 
+then try to find index of rootVal in inOrder array . All the element at left of that rootVal in inOrder will be 
+in left subtree and other one will be in right subtree . This is recursion question . 
+Do same thing in every recursion , just break inorder into 2 small array for left and right subtree . 
+Same breaking for preOrder array , if there is 4 element at the left of rootVal in inOrder , then it means 4 element in 
+left subtree , so take 4 element from start from preOrder array for next iteration . 
+
+Example : Inorder : [ 40 , 20 , 50 , 10 , 60 , 30  ]
+          PostOrder : [ 10 , 20 , 40 , 50 , 30 , 60 ] ;
+*/
+
+
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {number[]} preorder
+ * @param {number[]} inorder
+ * @return {TreeNode}
+ */
+var buildTree = function(preorder, inorder) {
+    
+    const util = ( preStart , preEnd , inStart , inEnd  )=>{
+
+        if(preStart > preEnd || inStart > inEnd){
+            return null ;
+        }
+
+        const rootVal = preorder[preStart];
+        const rootIndex = map[rootVal];
+        const leftCount = rootIndex - inStart ;
+        const root = new TreeNode(rootVal);
+
+        root.left = util(preStart +1 , preStart+leftCount , inStart , rootIndex-1) ;
+
+        root.right = util(preStart+leftCount+1 , preEnd , rootIndex +1 , inEnd)
+
+        return root ;
+
+    }
+
+    let map = {};
+    inorder.forEach((e , i)=> map[e]=i);
+
+    return util(0 , preorder.length-1 , 0 , inorder.length-1 );
+
+};
+
+
