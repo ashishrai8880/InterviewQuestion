@@ -189,3 +189,43 @@ var buildTree = function(preorder, inorder) {
 };
 
 
+// ====================================== 4. Convert from Inorder and Postorder into Binary Tree =========================
+// Leetcode : https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+// Easy Logic Explanation at Striver Notes : https://takeuforward.org/data-structure/construct-binary-tree-from-inorder-and-postorder-traversal/
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {number[]} inorder
+ * @param {number[]} postorder
+ * @return {TreeNode}
+ */
+var buildTree = function(inorder, postorder) {
+    
+    const util = (postStart , postEnd , inStart , inEnd)=>{
+        
+        if(postStart > postEnd || inStart > inEnd){
+            return null ;
+        }
+
+        const rootVal = postorder[postEnd];
+        const root = new TreeNode(rootVal , undefined , undefined);
+        const rootPos = map[rootVal];
+        const rightCount = inEnd - rootPos ;
+
+        root.right = util(postEnd-rightCount , postEnd-1 , rootPos+1 , inEnd);
+        root.left = util(postStart , postEnd-rightCount-1 , inStart , rootPos-1);
+
+        return root ;
+    }
+
+    let map = {};
+    inorder.map((e ,i)=>map[e]=i);
+    return util(0 , postorder.length-1 , 0 , inorder.length-1);
+};
