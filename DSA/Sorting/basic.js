@@ -43,3 +43,6 @@ const insertionSort = (arr)=>{
     
     return arr ;
 }
+
+
+// Merge Sort
