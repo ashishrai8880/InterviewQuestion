@@ -229,3 +229,88 @@ var buildTree = function(inorder, postorder) {
     inorder.map((e ,i)=>map[e]=i);
     return util(0 , postorder.length-1 , 0 , inorder.length-1);
 };
+
+
+// ================================================= 5. Minimum time to burn Binary Tree ==================================
+// Leetcode : https://leetcode.com/problems/amount-of-time-for-binary-tree-to-be-infected/
+// Logic : First convert Binary tree into bidirectional edge of graph . Then simply applly bfs over it to calculate time .
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @param {number} start
+ * @return {number}
+ */
+var amountOfTime = function(root, start) {
+    if(root == null) return 0 ;
+    
+    const buildGraph = (pRoot , parent)=>{
+        if(pRoot == null) return ;
+
+        if(parent){
+
+            // parent neighbour update
+            let parentNbr = graph.get(parent.val) || [] ;
+            parentNbr.push(pRoot.val) ;
+            graph.set(parent.val , parentNbr);
+
+            // child neighbout update
+            let childNbr = graph.get(pRoot.val) || [];
+            childNbr.push(parent.val);
+            graph.set(pRoot.val , childNbr); 
+        }
+
+        buildGraph(pRoot.left , pRoot);
+        buildGraph(pRoot.right , pRoot);
+    }
+
+    let graph = new Map();
+    buildGraph(root , null);
+
+    if(graph.size <1) return 0 ;
+
+    // bfs on graph to calculate time
+    let visited = {};
+    visited[start] = true ;
+    let time = 0 ;
+    let q = [];
+    q.push(start);
+
+    while(q.length > 0){
+
+        let qSize = q.length ;
+
+        let burned = false ;
+        while(qSize-- > 0){
+
+            const curr = q.shift();
+            const neighbours = graph.get(curr);
+
+            // visit all neighbours of node
+            for(let i=0 ; i<neighbours.length ; i++){
+                const n = neighbours[i];
+
+                if(visited[n] == undefined){
+                    visited[n] = true ;
+                    q.push(n);
+                    burned = true ;
+                }
+            }
+
+        }
+        if(burned){
+            time = time + 1 ;
+        }
+
+    }
+
+    return time ;
+
+};
