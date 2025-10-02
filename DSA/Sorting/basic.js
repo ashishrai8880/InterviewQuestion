@@ -94,3 +94,55 @@ var sortArray = function(arr) {
     mergeSort(0 , arr.length-1)
     return arr ;
 };
+
+
+// ===================================== Quick Sort =========================================================
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var sortArray = function(arr) {
+    
+    const partition = (start , end)=>{
+
+        const pivot = arr[start];
+        let left = start ;
+        let right = end ;
+
+        while(left < right){
+
+            while( left <= end-1 &&  pivot >= arr[left]){
+                left++ ;
+            }
+
+            while( right >=start+1 && pivot < arr[right]  ){
+                right-- ;
+            }
+
+            if(left < right){
+                // swap
+                const temp = arr[left];
+                arr[left] = arr[right];
+                arr[right] = temp ;
+            }
+        }
+
+        const temp = arr[start];
+        arr[start] = arr[right] ;
+        arr[right] = temp ;
+        return right ;
+
+    }
+
+    const quickSort = (start , end)=>{
+        if(start < end){
+            const pivotIndex = partition(start , end);
+            quickSort(start , pivotIndex-1);
+            quickSort(pivotIndex + 1 , end);
+        }
+    }
+
+    quickSort( 0 , arr.length-1 );
+    return arr ;
+
+};
