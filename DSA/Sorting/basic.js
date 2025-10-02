@@ -45,4 +45,52 @@ const insertionSort = (arr)=>{
 }
 
 
-// Merge Sort
+// ======================================== Merge Sort =============================================================
+/**
+Leetcode : https://leetcode.com/problems/sort-an-array/
+ */
+var sortArray = function(arr) {
+    
+    const merge = (low , mid , high)=>{
+        let left = low ;
+        let right = mid+1 ;
+        let temp = [];
+
+        while(left <= mid && right <= high){
+            if(arr[left] < arr[right]){
+                temp.push(arr[left]);
+                left++ ;
+            }
+            else{
+                temp.push(arr[right]);
+                right++ ;
+            }
+        }
+
+        while(left <= mid){
+            temp.push(arr[left]);
+            left++ ;
+        }
+
+        while(right <= high){
+            temp.push(arr[right]);
+            right++ ;
+        }
+        
+        for(let i=low ; i<=high ; i++){
+            arr[i] = temp[i-low];
+        }
+
+    }
+
+    const mergeSort = (low , high)=>{
+        if(low>= high) return ;
+        const mid = Math.floor( (low+high)/2 );
+        mergeSort(low , mid);
+        mergeSort(mid+1 , high);
+        merge(low , mid , high);
+    }
+
+    mergeSort(0 , arr.length-1)
+    return arr ;
+};
