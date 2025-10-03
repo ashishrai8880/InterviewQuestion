@@ -137,6 +137,159 @@ var removeNodes = function(head) {
 };
 
 
+// ================================================== 6. Find Middle Element of List ====================================================================================
+/**
+Leetcode : https://leetcode.com/problems/middle-of-the-linked-list/
+Brute Force : Just count how many elements in list , and then search for middle element . 
+ */
+
+var middleNode = function(head) {
+    let count = 0 ;
+    let ptr = head ;
+    while(ptr){
+        count++ ;
+        ptr = ptr.next ;
+    }
+
+    let midIndex = Math.floor(count/2);
+    let i=0 ;
+    ptr = head ;
+    while( i != midIndex && ptr != null ){
+        if(i==midIndex){
+            return ptr ;
+        }
+        ptr = ptr.next ;
+        i++ ;
+    }
+    return ptr ;
+};
+
+// Optimize approach : Use hare and tortoise algorithm . Increament hare by 2 and tortoise by 1 ;
+var middleNodeOptimize = function(head) {
+    
+    let hare = head ;
+    let tortoise = head ;
+    while( hare && hare.next != null ){
+        hare =  hare.next.next ;
+        tortoise = tortoise.next ;
+    }
+
+    return tortoise ;
+};
+
+
+// ====================================================================== 7. Reverse a linked list ====================================================================
+/**
+Leetcode : https://leetcode.com/problems/reverse-linked-list/
+Brute Force : Using a stack , store data and then traverse stack and put data 
+ */
+
+var reverseList = function(head) {
+    
+    let stack = [];
+    let ptr = head ;
+    while(ptr){
+        stack.push(ptr.val) ;
+        ptr = ptr.next ;
+    }
+
+    ptr = head ;
+    while(stack.length != 0){
+        ptr.val = stack.pop();
+        ptr = ptr.next ;
+    }
+
+    return head ;
+
+};
+
+/**
+Optimize Approach : Using Recursion 
+*/
+var reverseList = function(head) {
+    
+    const util = (ptr) =>{
+        if(ptr == null || ptr.next == null) return ptr ;
+
+        const reversed = util(ptr.next);
+
+        ptr.next.next = ptr ;
+        ptr.next = null ;
+        return reversed ;
+    }
+    return util(head);
+};
+
+
+// =================================================================== 8. Cycle Detection in Linked List =================================================================
+/**
+Leetcode : https://leetcode.com/problems/linked-list-cycle/ 
+Logic : Just store "visited" string after visiting node , and then on revisiting just return true , and at last just return false ;
+*/
+var hasCycle = function(head) {
+    if(head == null || head.next == null) return false ;
+    let ptr = head ;
+
+    while(ptr != null){
+        if( ptr.val == "visited"){
+            return true ;
+        }
+        ptr.val = "visited" ;
+        ptr = ptr.next ;
+    }
+    return false ;
+};
+
+
+// Hare and tortoise algorithm 
+var hasCycle = function(head) {
+    if(head == null || head.next == null) return false ;
+    let ptr = head ;
+
+    let hare = head ;
+    let tortoise = head ;
+    while(hare && hare.next != null){
+        hare = hare.next.next ;
+        tortoise = tortoise.next ;
+        if(hare == tortoise){
+            return true ;
+        }
+    }
+    return false ;
+};
+
+
+// ============================================================ Return Node from where cycle starts =======================================================
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val) {
+ *     this.val = val;
+ *     this.next = null;
+ * }
+ */
+
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var detectCycle = function(head) {
+    if(head == null || head.next == null) return null ;
+    let ptr = head ;
+    while(ptr){
+        if(ptr.val == 'visited'){
+            return ptr ;
+        }
+        ptr.val = 'visited';
+        ptr = ptr.next ;
+    }
+    return null ;
+};
+
+
+
+
+
 
 
 
