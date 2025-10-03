@@ -293,6 +293,47 @@ function printList(head) {
     console.log();
 }
 
+// Function to reverse a doubly linked list
+function reverseDLL(head) {
+    // Check if the list is empty
+    // or has only one node
+    if (head === null || head.next === null) {
+        // No change is needed;
+        // return the current head
+        return head;
+    }
+    
+    // Initialize a pointer to
+    // the previous node
+    let prev = null; 
+    
+    // Initialize a pointer
+    // to the current node
+    let current = head; 
+
+    // Traverse the linked list
+    while (current !== null) {
+        // Store a reference to
+        // the previous node
+        prev = current.prev;
+
+        // Swap the previous
+        // and next pointers
+        current.prev = current.next;
+        
+         // This step reverses the links
+        current.next = prev;
+
+        // Move to the next node
+        // in the original list
+        current = current.prev; 
+    }
+
+    // The final node in the original
+    // list becomes the new head after reversal
+    return prev.prev;
+}
+
 // Create a hardcoded doubly linked list:
 // 1 <-> 2 <-> 4
 let head = new Node(1);
