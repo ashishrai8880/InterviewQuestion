@@ -332,7 +332,119 @@ var isPalindrome = function(head) {
 };
 
 
+// ==================================================================== 12 . Odd Even Linked List ====================================================================
+/*
+Leetcode : https://leetcode.com/problems/odd-even-linked-list/
+Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list.
 
+The first node is considered odd, and the second node is even, and so on.
+
+Note that the relative order inside both the even and odd groups should remain as it was in the input.
+
+You must solve the problem in O(1) extra space complexity and O(n) time complexity.
+Brute Force is below 
+*/
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var oddEvenList = function(head) {
+    
+    if(head== null || head.next == null ) return head ;
+
+    let odd = head ;
+    let even = head.next ;
+    let oddPtr = head ;
+    let evenPtr = head.next ;
+
+    while(oddPtr != null && oddPtr.next != null && evenPtr != null && evenPtr.next != null){
+        oddPtr.next = oddPtr.next.next ;
+        oddPtr = oddPtr.next ;
+        evenPtr.next = evenPtr.next.next ;
+        evenPtr = evenPtr.next ;
+    }
+
+    oddPtr.next = even ;
+    return head ;
+
+};
+
+
+// ============================================================ 13 . Segrate Odd and Even number in Linked List =======================================================
+// GFG : https://www.geeksforgeeks.org/problems/segregate-even-and-odd-nodes-in-a-linked-list5035/1
+// User function Template for javascript
+
+/*LINKED LIST NODE
+class Node {
+  constructor(x){
+    this.data = x;
+    this.next = null;
+  }
+}
+*/
+
+/**
+ * @param {Node} head
+ * @return {Node}
+ */
+
+class Solution {
+    divide(head) {
+        // code here
+        
+        if(head == null || head.next == null) return head ;
+        
+        let odd = null ;
+        let oddPtr = null ;
+        let even = null ;
+        let evenPtr = null ;
+        let ptr = head ;
+        
+        while(ptr){
+            
+            if(ptr.data % 2 == 0){
+                if(even == null){
+                    even = ptr ;
+                    evenPtr = ptr ;
+                }
+                else{
+                    evenPtr.next = ptr ;
+                    evenPtr = ptr ;
+                }
+            }
+            else{
+                if(odd == null){
+                    odd = ptr ;
+                    oddPtr = ptr ;
+                }
+                else{
+                    oddPtr.next = ptr ;
+                    oddPtr = ptr ;
+                }
+            }
+            ptr = ptr.next ;
+            
+        }
+        
+        if (evenPtr) evenPtr.next = null;
+        if (oddPtr) oddPtr.next = null;
+        
+        if (even) {
+            evenPtr.next = odd;
+            return even;
+        } else {
+            return odd; // If no even nodes, return odd list
+        }
+        
+    }
+}
 
 
 
