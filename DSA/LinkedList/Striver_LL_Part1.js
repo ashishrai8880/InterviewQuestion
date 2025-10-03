@@ -448,4 +448,189 @@ class Solution {
 
 
 
+// ==================================================== 14. Delete nth Node from last ==============================================================================
+/**
+Leetcode : https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+Brute Force Approach , just count total number of nodes and then start counting from start .
+ */
+/**
+ * @param {ListNode} head
+ * @param {number} n
+ * @return {ListNode}
+ */
+var removeNthFromEnd = function(head, n) {
+    if(head == null || (head.next == null && n==1)){
+        return null ;
+    }
+    let count = 0 ;
+    let ptr = head ;
+    while(ptr){
+        count +=1 ;
+        ptr = ptr.next ;
+    }
+
+    let index = count - n ;
+    if(index == 0){
+        head = head.next ;
+        return head ;
+    }
+    console.log({index})
+    ptr = head ;
+    while(ptr){
+        if(index == 1){
+            ptr.next = ptr.next.next ;
+            return head ;
+        }
+        ptr = ptr.next ;
+        index -= 1 ;
+    }
+    return head ;
+};
+
+
+// Optimize Approach 
+var removeNthFromEnd = function(head, n) {
+    if(head == null || (head.next == null && n==1)){
+        return null ;
+    }
+
+    const util = (ptr)=>{
+        if(ptr == null){
+            return 0 ;
+        }
+        const count = 1 + util(ptr.next);
+
+        if(count == n+1){
+            ptr.next = ptr.next.next ;
+        }
+        return count ;
+    }
+    let count = util(head);
+    if(count == n ){
+        head = head.next ;
+    }
+    return head ;
+};
+
+
+// ========================================================= 15. Delete Middle Element from linked List ================================================================
+/**
+ Leetcode : https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/
+ */
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var deleteMiddle = function(head) {
+
+    if(head == null || head.next == null) return null ;
+    
+    let hare = head ;
+    let tortoise = head ;
+    let prev = null ;
+
+    while(hare && hare.next ){
+        hare = hare.next.next ;
+        prev = tortoise ;
+        tortoise = tortoise.next ;
+    }
+
+    prev.next = tortoise.next ;
+    return head ;
+};
+
+
+// ======================================================= Sort Linked List ======================================================================
+/**
+Leetcode : https://leetcode.com/problems/sort-list/
+ */
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var sortList = function(head) {
+    let arr = [];
+    let ptr = head ;
+    while(ptr){
+        arr.push(ptr.val) ;
+        ptr = ptr.next ;
+    }
+
+    arr.sort((a,b)=>a-b);
+    ptr = head ;
+    while(ptr){
+        ptr.val = arr.shift();
+        ptr = ptr.next ;
+    }
+    return head ;
+};
+
+// Optimize way : Use Merge Sort to sort linked list
+
+var sortList = function(head) {
+    
+    if(head == null || head.next == null) return head ;
+
+    const findMiddle = (ptr)=>{
+        if(ptr == null || ptr.next == null) return ptr ;
+        let fast = ptr.next ;
+        let slow = ptr ;
+        while(fast && fast.next){
+            fast = fast.next.next ;
+            slow = slow.next ;
+        }
+        return slow ;
+    }
+
+    const merge = (list1 , list2)=>{
+
+        let temp = new ListNode(-1);
+        const root = temp ;
+        while(list1 && list2){
+            if(list1.val <= list2.val){
+                temp.next = list1 ;
+                list1 = list1.next ;
+            }
+            else{
+                temp.next = list2 ;
+                list2 = list2.next ;
+            }
+            temp = temp.next ;
+        }
+
+        while(list1){
+            temp.next = list1 ;
+            list1 = list1.next ;
+            temp = temp.next ;
+        }
+
+        while(list2){
+            temp.next = list2 ;
+            list2 = list2.next ;
+            temp = temp.next ;
+        }
+
+        return root.next ;
+    }
+
+    const mergeSort = (ptr)=>{
+        if (ptr === null || ptr.next === null) {
+            return ptr;
+        }
+        const middle = findMiddle(ptr);
+        let left = ptr ; 
+        let right = middle.next ;
+        middle.next = null ;
+        left = mergeSort(left);
+        right = mergeSort(right);
+        return merge(left , right);
+    }
+
+    return mergeSort(head);
+
+};
+
+
+
+
 
