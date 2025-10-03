@@ -259,7 +259,7 @@ var hasCycle = function(head) {
 };
 
 
-// ============================================================ Return Node from where cycle starts =======================================================
+// ============================================================ 9. Return Node from where cycle starts =======================================================
 
 /**
  * Definition for singly-linked list.
@@ -286,6 +286,50 @@ var detectCycle = function(head) {
     return null ;
 };
 
+
+// ================================================================ 10. Count Nodes in Loop in Linked List =========================================================
+// GFG : https://www.geeksforgeeks.org/problems/find-length-of-loop/1
+class Solution {
+    lengthOfLoop(head) {
+        // code here
+        let ptr = head ;
+        let count = 0 ;
+        let flag = false ;
+        while(ptr){
+            if(ptr.data == 'visited'){
+                flag = true ;
+                break ;
+            }
+            ptr.data = 'visited';
+            ptr = ptr.next ;
+        }
+        console.log
+        if(flag ==false) return 0 ;
+        while(ptr){
+            if(ptr.data == 'counted'){
+                return count ;
+            }
+            ptr.data = 'counted'
+            count += 1 ;
+            ptr = ptr.next ;
+        }
+        return count ;
+    }
+}
+
+//==================================================================== 11 . Check Linked List Palindromic or not ==========================================================
+// Leetcode : https://leetcode.com/problems/palindrome-linked-list/
+var isPalindrome = function(head) {
+    let ptr = head ;
+    let str = "";
+    while(ptr){
+        str = str + ptr.val ;
+        ptr = ptr.next ;
+    }
+
+    if(str == str.split('').reverse().join('')) return true ;
+    return false ;
+};
 
 
 
