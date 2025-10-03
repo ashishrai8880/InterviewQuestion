@@ -78,6 +78,63 @@ var removeElements = function(head, val) {
 };
 
 
+// ============================================================== 5. Remove Node from Linked List ====================================================================
+/*
+Leetcode : https://leetcode.com/problems/remove-nodes-from-linked-list/ . 
+You are given the head of a linked list.
+
+Remove every node which has a node with a greater value anywhere to the right side of it.
+
+Return the head of the modified linked list.
+
+Example 1:
+
+Input: head = [5,2,13,3,8]
+Output: [13,8]
+Explanation: The nodes that should be removed are 5, 2 and 3.
+- Node 13 is to the right of node 5.
+- Node 13 is to the right of node 2.
+- Node 8 is to the right of node 3.
+
+Logic : Just store every node into a stack , so that , can traverse from back . 
+Also , while traversing , need to just check which element is greater than current max 
+*/
+
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var removeNodes = function(head) {
+    
+    if(head == null || head.next == null) return head ;
+
+    let stack = [];
+    let ptr = head ;
+    while(ptr){
+        stack.push(ptr);
+        ptr = ptr.next ;
+    }
+
+    // removing from stack and checking
+    
+    let newHead = stack.pop();
+    newHead.next = null ;
+    let maxVal = newHead.val 
+
+    while(stack.length > 0){
+        
+        const curr = stack.pop();
+        if(curr.val < maxVal){
+            curr.next = null ;
+            continue ;
+        }
+        curr.next = newHead ;
+        newHead = curr ;
+        maxVal = curr.val ;
+    }
+
+    return newHead ;
+};
 
 
 
