@@ -540,7 +540,7 @@ var deleteMiddle = function(head) {
 };
 
 
-// ======================================================= Sort Linked List ======================================================================
+// ======================================================= 16.  Sort Linked List ======================================================================
 /**
 Leetcode : https://leetcode.com/problems/sort-list/
  */
@@ -629,6 +629,173 @@ var sortList = function(head) {
     return mergeSort(head);
 
 };
+
+
+// =================================================================== 17. Add two number in linked list =============================================================
+// Leetcode : https://leetcode.com/problems/add-two-numbers/
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} l1
+ * @param {ListNode} l2
+ * @return {ListNode}
+ */
+var addTwoNumbers = function(l1, l2) {
+    
+    const root = new ListNode(-1);
+    let temp = root ;
+    let carry = 0 ;
+    while(l1 && l2){
+        let sum = 0 ;
+        
+        if(l1){
+            sum += l1.val ;
+            l1 = l1.next ;
+        }
+        if(l2){
+            sum += l2.val ;
+            l2 = l2.next ;
+        }
+        sum += carry ;
+        carry = Math.floor(sum/10);
+        const val = sum % 10 ;
+        const newNode = new ListNode(val);
+        temp.next = newNode ;
+        temp = temp.next ;
+    }
+
+    while(l1){
+        const sum = l1.val + carry ;
+        const val = sum % 10 ;
+        carry = Math.floor(sum /10);
+        const newNode = new ListNode(val);
+        temp.next = newNode ;
+        temp = temp.next ;
+        l1 = l1.next ;
+    }
+
+    while(l2){
+        const sum = l2.val + carry ;
+        const val = sum % 10 ;
+        carry = Math.floor(sum /10);
+        const newNode = new ListNode(val);
+        temp.next = newNode ;
+        temp = temp.next ;
+        l2 = l2.next ;
+    }
+
+    if(carry){
+        const newNode = new ListNode(carry);
+        temp.next = newNode ;
+    }
+
+    return root.next ;
+
+};
+
+
+// =========================================================== 18. Sort LL of 0 , 1 , 2==================================================================================
+// GFG : https://www.geeksforgeeks.org/dsa/sort-a-linked-list-of-0s-1s-or-2s/
+/*
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+    }
+} */
+
+/**
+ * @param {Node} head
+ * @returns {Node}
+ */
+
+class Solution {
+    segregate(head) {
+        // code here
+        let count = [0,0,0];
+        let ptr = head ;
+        while(ptr){
+            count[ptr.data] = count[ptr.data]+1 ;
+            ptr = ptr.next ;
+        } 
+        let idx = 0 ;
+        ptr = head ;
+        while(ptr){
+            if(count[idx] == 0){
+                idx +=1 ;
+            }
+            else{
+                ptr.data = idx ;
+                count[idx] = count[idx] - 1 ;
+                ptr = ptr.next ;
+            }      
+        }
+        return head ;
+    }
+}
+
+
+// ======================================================================== 19. Add Number 1 to Linked List =================================================================
+/**
+ GFG : https://www.geeksforgeeks.org/problems/add-1-to-a-number-represented-as-linked-list/1
+ */
+/*
+class Node{
+    constructor(data){
+        this.data = data;
+        this.next = null;
+    }
+}
+
+let head;
+This is method only submission.
+You only need to complete the below method.
+*/
+
+class Solution {
+    addOne(node) {
+        // your code here
+        
+        const util = (ptr)=>{
+            if(ptr == null) return 1 ;
+            
+            const carry = util(ptr.next);
+            
+            let sum = carry + ptr.data ;
+            let nextCarry = Math.floor(sum/10);
+            let val = sum % 10 ;
+            ptr.data = val ;
+            return nextCarry ;
+        }
+        
+        let p = node ;
+        const lastCarry = util(p);
+        if(lastCarry){
+            const newNode = new Node(lastCarry);
+            newNode.next = node ;
+            node = newNode ;
+        }
+        return node ;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
