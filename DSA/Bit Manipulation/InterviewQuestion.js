@@ -279,15 +279,15 @@ var countPrimes = function(n) {
 
 
 // Optimized way : Sieve of Eratosthenes 
-var countPrimesOptimized = function(n) {
+var countPrimes = function(n) {
     
     let arr = Array.from({length : n },()=> true);
     arr[0] = arr[1] = false ;
 
-    for(let i=2 ; i<= n ; i++){
+    for(let i=2 ; i*i<= n ; i++){
         if( arr[i] == true ){
 
-            for(let j=i+i ; j <= n ; j=j+i){
+            for(let j=i*i ; j <= n ; j=j+i){
                 arr[j] = false ;
             }
         }
