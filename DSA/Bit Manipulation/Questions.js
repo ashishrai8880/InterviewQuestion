@@ -86,7 +86,59 @@ var hammingWeightMoreOptimized = function(n) {
 };
 
 
+// ===================================================== 5. Set rightmost unset bits ================================================================
+function setRightmostUnsetBit(n) {
+    // OR with n+1 sets the rightmost 0 to 1
+    return n | (n + 1);
+}
 
+// ====================================================== 6. Swap two number =========================================================================
+// GFG : https://www.geeksforgeeks.org/problems/swap-two-numbers3844/1
+class Solution {
+    get(a, b) {
+        // code here
+        a= a ^ b ;
+        b = a ^ b ;
+        a = a ^ b ;
+        return [a,b]
+    }
+}
+
+
+// ===================================================== Divide two numbers =====================================================================
+/**
+Leetcode : https://leetcode.com/problems/divide-two-integers/
+ */
+var divide = function(dividend, divisor) {
+    
+        if (dividend === divisor) return 1;
+        if (dividend === -Math.pow(2, 31) && divisor === -1) return Math.pow(2, 31) - 1;
+        if (divisor === 1) return dividend;
+        
+        let isPositive = true;
+        
+        if (dividend >= 0 && divisor < 0) 
+            isPositive = false;
+        else if (dividend < 0 && divisor > 0)
+            isPositive = false;
+            
+        let n = Math.abs(dividend);
+        let d = Math.abs(divisor);
+        
+        let ans = 0, sum = 0;
+        
+        while (sum + d <= n) {
+            ans++;
+            sum += d;
+        }
+        
+        if (ans > 2147483647 && isPositive) 
+            return 2147483647;
+        if (ans > 2147483647 && !isPositive)
+            return -2147483648;
+        
+        return isPositive ? ans : -1 * ans;
+};
 
 
 
