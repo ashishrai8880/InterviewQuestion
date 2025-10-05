@@ -215,9 +215,149 @@ var rotate = function(arr , k) {
 }; 
 
 
+// ======================================= 8. Move all zeroes at end ==================================================
+/**
+ Leetcode : https://leetcode.com/problems/move-zeroes/
+ Extremely Brute force 
+ */
+var moveZeroes = function(nums) {
+    let res = [];
+    let j=0 ;
+    for(let i=0 ; i<nums.length ; i++){
+        if(nums[i] != 0){
+            res.push(nums[i]);
+        }
+    }
+    
+    while(j < nums.length){
+        res.push(0);
+        j += 1;
+    }
+
+    for(let i= 0 ; i<nums.length ; i++){
+        nums[i] = res[i];
+    }
+    return ; 
+};
 
 
+// Optimized Approach
 
+function moveZeros(n, a) {
+    let j = -1;
+    
+    // Place the pointer j
+    for (let i = 0; i < n; i++) {
+        if (a[i] === 0) {
+            j = i;
+            break;
+        }
+    }
+    
+    // No non-zero elements
+    if (j === -1) return a;
+    
+    // Move the pointers i and j and swap accordingly
+    for (let i = j + 1; i < n; i++) {
+        if (a[i] !== 0) {
+            [a[i], a[j]] = [a[j], a[i]];
+            j++;
+        }
+    }
+    
+    return a;
+}
+
+
+// =================================================== 9. Count Maximum Consecutive One =======================================================
+/**
+Leetcode : https://leetcode.com/problems/max-consecutive-ones/description/
+ */
+var findMaxConsecutiveOnes = function(nums) {
+    let max = 0 ;
+    let count = 0 ;
+
+    nums.forEach((e)=>{
+        if(e == 1){
+            count++ ;
+        }
+        else{
+            count = 0 ;
+        }
+        max = Math.max(max , count );
+    })
+    return max ;
+};
+
+
+// ====================================================== 10. Largest Subarray with given sum k ====================================================================
+// User function Template for javascript
+/*
+GFG : https://www.geeksforgeeks.org/problems/longest-sub-array-with-sum-k0809/1
+Leetcode : https://leetcode.com/problems/subarray-sum-equals-k/description/
+LOGIC : just use map , and store sumSoFar .
+*/
+/**
+ * @param {number[]} arr
+ * @param {number} k
+ * @returns {number}
+ */
+class Solution {
+    longestSubarray(arr, k) {
+        // code here
+        let map = new Map();
+        let sumSoFar = 0 ;
+        let len = arr.length ;
+        let maxLen = 0 ;
+        
+        for(let i=0 ; i<len ; i++){
+            sumSoFar += arr[i];
+            
+            if(sumSoFar == k){
+                maxLen = Math.max(maxLen , i+1);
+            }
+            
+            if(map.has(sumSoFar - k)){
+                maxLen = Math.max(maxLen , i - map.get(sumSoFar-k)  )
+            }
+            
+            if(!map.has(sumSoFar)){
+                map.set(sumSoFar , i);
+            }
+        }
+        return maxLen ;
+    }
+}
+
+
+// Count Subarray with given sum k . Slight variation of above problem
+/**
+Leetcode : https://leetcode.com/problems/subarray-sum-equals-k/description/
+ */
+var subarraySum = function(nums, k) {
+    
+    let count = 0 ;
+    const map = new Map();
+    let sumSoFar = 0 ;
+
+    for(const val of nums){
+        sumSoFar += val ;
+
+        if(map.has(sumSoFar - k)){
+            count += map.get(sumSoFar-k);
+        }
+
+        if(sumSoFar == k){
+            count +=1 ;
+        }
+
+        map.set(sumSoFar , ( map.get(sumSoFar) || 0) + 1  )
+    }
+
+    return count ;
+
+
+};
 
 
 
