@@ -1060,4 +1060,64 @@ var closedIsland = function(grid) {
 };
 
 
+// ============================================================ 13. Flood Fill Algorithm ====================================================================
+/**
+Leetcode : https://leetcode.com/problems/flood-fill/description/
+ */
+var floodFill = function(image, sr, sc, color) {
+    
+    const row = image.length ;
+    const col = image[0].length ;
+    floodFillUtil(sr , sc , row , col , image , color)
+    return image ;
+};
+
+const floodFillUtil= ( i , j ,row , col , image , color)=>{
+    
+    if(!isValid(i , j , row , col)){
+        return ;
+    }
+
+    if(image[i][j] == color){
+        return ;
+    }
+    const currValue = image[i][j] ;
+    image[i][j] = color ;
+    
+    
+    if( isValid(i+1 , j , row , col ) && currValue == image[i+1][j] ){
+        floodFillUtil( i+1 , j , row , col , image , color );
+    }
+    
+    if( isValid(i-1 , j , row , col ) && currValue == image[i-1][j] ){
+        floodFillUtil( i-1 , j , row , col , image , color );
+    }
+    
+    if( isValid(i , j+1 , row , col ) && currValue == image[i][j+1] ){
+        floodFillUtil( i , j+1 , row , col , image , color );
+    }
+    
+    if( isValid(i , j-1 , row , col ) && currValue == image[i][j-1] ){
+        floodFillUtil( i , j-1 , row , col , image , color );
+    }
+    
+}
+
+const isValid = ( i , j , row , col )=>{
+    if(i>=0 && i<row && j>=0 && j<col ){
+        return true ;
+    }
+    return false ;
+}
+
+
+
+
+
+
+
+
+
+
+
 
