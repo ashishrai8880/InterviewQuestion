@@ -259,6 +259,21 @@ g.createGraph();
 console.log("is cyclic updated : ",g.isCyclic());
 
 
+// ========================================== 4 Cycle Detection Undirected Graph ======================================
+
+    const cycleDetectionInUndirectedGraph = (node, parent) => {
+        visited.add(node);
+        for (let neighbor of graph.get(node)) {
+            if (!visited.has(neighbor)) {
+                if (cycleDetectionInUndirectedGraph(neighbor, node)) return true;
+            } else if (neighbor !== parent) {
+                // If visited and not parent, cycle detected
+                return true;
+            }
+        }
+        return false;
+    };
+
 
 // ========================================  3 Topological Sort ===========================================
 
