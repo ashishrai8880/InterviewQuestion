@@ -420,6 +420,50 @@ class Solution {
 // =====================================================================14. Decode ways ==================================================================================
 // Leetcode : https://leetcode.com/problems/decode-ways/     GFG : https://www.geeksforgeeks.org/problems/total-decoding-messages1235/1
 // Logic : start from 0 location , if it is not 0 then send remaning substring to magical function . For 2 character , need to check whethere it is small than '27' . 
+/*
+You have intercepted a secret message encoded as a string of numbers. The message is decoded via the following mapping:
+"1" -> 'A'
+"2" -> 'B'
+...
+
+"25" -> 'Y'
+"26" -> 'Z'
+
+However, while decoding the message, you realize that there are many different ways you can decode the message because
+some codes are contained in other codes ("2" and "5" vs "25").
+
+For example, "11106" can be decoded into:
+
+"AAJF" with the grouping (1, 1, 10, 6)
+"KJF" with the grouping (11, 10, 6)
+The grouping (1, 11, 06) is invalid because "06" is not a valid code (only "6" is valid).
+Note: there may be strings that are impossible to decode.
+
+Given a string s containing only digits, return the number of ways to decode it. If the entire string cannot be decoded 
+in any valid way, return 0.
+
+The test cases are generated so that the answer fits in a 32-bit integer.
+
+Example 1:
+Input: s = "12"
+Output: 2
+Explanation:
+"12" could be decoded as "AB" (1 2) or "L" (12).
+
+Example 2:
+Input: s = "226"
+Output: 3
+Explanation:
+"226" could be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).
+
+Example 3:
+Input: s = "06"
+Output: 0
+
+Explanation:
+"06" cannot be mapped to "F" because of the leading zero ("6" is different from "06"). In this case, the string is not 
+a valid encoding, so return 0.
+*/
 class Solution {
     countWays(digits) {
         const n = digits.length ;
@@ -498,6 +542,21 @@ class Solution {
 
 /**
  	Just check for each element from i 1 to n ; 
+	Given an integer n, return the least number of perfect square numbers that sum to n.
+
+A perfect square is an integer that is the square of an integer; in other words, it is the product of some integer 
+with itself. For example, 1, 4, 9, and 16 are perfect squares while 3 and 11 are not.
+
+Example 1:
+Input: n = 12
+Output: 3
+Explanation: 12 = 4 + 4 + 4.
+
+Example 2:
+Input: n = 13
+Output: 2
+Explanation: 13 = 4 + 9.
+ 
  */
 
 class Solution {
@@ -619,6 +678,23 @@ class Solution {
 
 // =================================================================== 17. Subset Sum Problem ==================================================================
 // Leetcode :         GFG : https://www.geeksforgeeks.org/problems/subset-sum-problem-1611555638/1
+/*
+Given an array of positive integers arr[] and a value sum, determine if there is a subset of arr[] with sum equal
+to given sum. 
+
+Examples:
+Input: arr[] = [3, 34, 4, 12, 5, 2], sum = 9
+Output: true 
+Explanation: Here there exists a subset with target sum = 9, 4+3+2 = 9.
+
+Input: arr[] = [3, 34, 4, 12, 5, 2], sum = 30
+Output: false
+Explanation: There is no subset with target sum 30.
+
+Input: arr[] = [1, 2, 3], sum = 6
+Output: true
+Explanation: The entire array can be taken as a subset, giving 1 + 2 + 3 = 6.
+*/
 
 class Solution {
     isSubsetSum(arr, sum) {
@@ -692,6 +768,18 @@ class Solution {
 // ================================================================18. Partition of Equal Subset Sum ====================================================================
 // Leetcode : https://leetcode.com/problems/partition-equal-subset-sum/description/    GFG : https://www.geeksforgeeks.org/problems/subset-sum-problem2014/1
 /**
+Given an integer array nums, return true if you can partition the array into two subsets such that the sum of the elements in both subsets is equal or false otherwise.
+
+Example 1:
+Input: nums = [1,5,11,5]
+Output: true
+Explanation: The array can be partitioned as [1, 5, 5] and [11].
+
+Example 2:
+Input: nums = [1,2,3,5]
+Output: false
+Explanation: The array cannot be partitioned into equal sum subsets.
+
  * @param {number[]} nums
  * @return {boolean}
  */
@@ -726,6 +814,27 @@ var canPartition = function(nums) {
 
 // ===========================================================================================19 . Target Sum =======================================================================================================
 // Leetcode : https://leetcode.com/problems/target-sum/
+/*
+You are given an integer array nums and an integer target.
+You want to build an expression out of nums by adding one of the symbols '+' and '-' before each integer in nums and then concatenate all the integers.
+For example, if nums = [2, 1], you can add a '+' before 2 and a '-' before 1 and concatenate them to build the expression "+2-1".
+Return the number of different expressions that you can build, which evaluates to target.
+
+Example 1:
+Input: nums = [1,1,1,1,1], target = 3
+Output: 5
+Explanation: There are 5 ways to assign symbols to make the sum of nums be target 3.
+-1 + 1 + 1 + 1 + 1 = 3
++1 - 1 + 1 + 1 + 1 = 3
++1 + 1 - 1 + 1 + 1 = 3
++1 + 1 + 1 - 1 + 1 = 3
++1 + 1 + 1 + 1 - 1 = 3
+
+Example 2:
+Input: nums = [1], target = 1
+Output: 1
+ 
+*/
 var findTargetSumWays = function(nums, target) {
     
     const util = (n, s) => {
@@ -754,8 +863,10 @@ var findTargetSumWays = function(nums, target) {
     return util(len , target);
 };
 
-// Easy approach . Example [1,1,1,1,1] and Targetsum =3 . Now lets take pair 1 P1 (1,1,1,1) of ADD and pair 2 (-1) of subtract . Any random choice . So P1 - P2 = targetSum . bcause +1+1+1+1-1 => +(1+1+1+1) - (1) => P1 - P2 ;
-// And also if we add element of both pair , it should be equal to sum of all element of array which is SUM . P1 + P2 = sum. Now solve these 2 linear equation . this will give me 2P1 = sum + targetSum . which can be P1 = (targetSum + sum)/2 ;
+// Easy approach . Example [1,1,1,1,1] and Targetsum =3 . Now lets take pair 1 P1 (1,1,1,1) of ADD and pair 2 (-1) of
+//subtract . Any random choice . So P1 - P2 = targetSum . bcause +1+1+1+1-1 => +(1+1+1+1) - (1) => P1 - P2 ;
+// And also if we add element of both pair , it should be equal to sum of all element of array which is SUM . P1 + P2 = sum. 
+//Now solve these 2 linear equation . this will give me 2P1 = sum + targetSum . which can be P1 = (targetSum + sum)/2 ;
 // Now above problem is breakdown into find number of subset which have sum equal to (targetSum+sum)/2 . 
 var findTargetSumWays = function(nums, target) {
     
