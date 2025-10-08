@@ -75,6 +75,81 @@ function fun() {
 
 Isme variable and function declration top me ho jaata hai lekin initialization nhi hota . Or ye bas var k sath hota hai , let const k sath nhi hota .
 
+// =================================================================================================================================================================
+============================================================  Temporal Dead Zone ===================================================================================
+Temporal Dead Zone in JavaScript
+
+The Temporal Dead Zone refers to the period between the entering of a scope and the actual declaration of a variable using let or const. During this period, 
+the variable is in an "uninitialized" state and accessing it will result in a ReferenceError.
+
+The TDZ starts from the beginning of the block until the variable is declared.
+Variables declared with let and const are hoisted but not initialized.
+Accessing the variable in the TDZ results in a ReferenceError.
+var declarations do not have a TDZ and are initialized as undefined.
+
+Understanding Variable Hoisting
+To grasp TDZ, it’s important to understand hoisting. Hoisting is JavaScript's behaviour of moving variable and function declarations to the top of their containing scope during compilation.
+
+var declarations are hoisted and initialized with undefined.
+let and const declarations are hoisted but not initialized, leading to the TDZ.
+Hoisting with var
+
+console.log(a); // undefined
+var a = 5;
+
+Output
+undefined
+Here, a is hoisted to the top of its scope and initialized with undefined, so accessing it before the declaration doesn’t throw an error.
+
+Temporal Dead Zone with let
+
+console.log(b); // ReferenceError: Cannot access 'b' before initialization
+let b = 10;
+In this case, b is hoisted but not initialized, so accessing it before the declaration results in a ReferenceError.
+
+Examples to Illustrate Temporal Dead Zone
+1. Accessing let and const Before Declaration
+
+function gfg() {
+    console.log(x); // ReferenceError
+    let x = 3;
+}
+gfg();
+
+2. Block Scope and TDZ
+
+{
+    console.log(y); // ReferenceError
+    const y = 7;
+}
+
+3. Variables Declared After a Condition
+
+if (true) {
+    console.log(z); // ReferenceError
+    let z = 9;
+}
+
+4. No Temporal Dead Zone with var
+{
+    console.log(a); // undefined
+    var a = 5;
+}
+Understanding the Flow of TDZ
+The Temporal Dead Zone works in the following manner
+
+Variable is declared with let or const: When the variable is hoisted at the top of its current scope but they are not initialized.
+Entering TDZ: From the hoisting till the variable initialization it will show the reference error if tried to access.
+Variable initialization: When the value is assigned to the variable from that point of time they exits no longer in the TDZ.
+Accessing the variable: The variables can be accessed normally after the initialization without any erros.
+
+Why Does Temporal Dead Zone Exist?
+In ES6 (ECMAScript 2015) the concept of the Temporal Dead was introduced to prevent the issues which was occurring during the variable hoisting.
+When the TDZ concept was not introduced at that time the variables declared with var was automatically set to undefined which was causing the bugs or the issues.
+To avoid such problems, Temporal Dead Zone ensures that only let and const variables are only accessible after being initialized.
+
+==================================================================================================================================================================================================================================================================================================================================
+
 4. What is first class function ?
 Ans .  A programming language is said to have First-class functions if functions in that language are treated like other variables. So the functions can be assigned to any other variable or passed as an argument or can be returned by another function. JavaScript treats function as a first-class citizen.
 
