@@ -1,3 +1,79 @@
+// ================================== Low Level Design and High Level Design ===========================================
+/*
+🔷 High-Level Design (HLD) — “The Big Picture”
+
+Think of this as designing the "blueprint" of a building.
+
+🔑 What it includes:
+Main components / modules of the system
+How components talk to each other (APIs, protocols, communication flows)
+Choice of technologies (e.g., use a SQL DB or NoSQL? Kafka or RabbitMQ?)
+Deployment architecture (load balancer, caching layer, database)
+Scalability, availability, and fault tolerance concerns
+
+💬 Describes:
+"What does the system look like overall, and how does the data flow between major parts?"
+
+🔷 Low-Level Design (LLD) — “The Details”
+Think of this as the detailed plumbing and wiring inside the building.
+
+🔑 What it includes:
+Class diagrams, interfaces, method-level design
+How data is structured and stored internally
+DB schema, object models, validation logic
+Function signatures, error handling
+Detailed algorithm and data structure choices
+
+💬 Describes:
+"How will each individual part/module be implemented internally?"
+
+🏢 Real-World Industry Example: Designing Uber
+Let’s say you're designing a simplified version of Uber.
+
+🔶 High-Level Design (HLD):
+System will have services like:
+User Service (register/login)
+Driver Service (track location)
+Ride Matching Service (match rider and driver)
+
+Payment Service
+Communication: Use REST APIs or gRPC between services
+Store data in:
+User info → SQL DB
+Ride location tracking → NoSQL or Redis
+Use Kafka for event-driven updates (e.g. driver status changes)
+Deploy behind a load balancer, and use caching for repeated queries (e.g. nearby drivers)
+
+💡 This gives you a clear view of how the system is structured, and how the components interact.
+
+🔶 Low-Level Design (LLD):
+Inside Ride Matching Service:
+Class: RideRequest with fields like userId, pickupLocation, destination
+Class: Driver with driverId, currentLocation, status
+Method: matchDriver(RideRequest request)
+Use a priority queue or quad-tree to find nearest available drivers
+
+Design DB table:
+
+CREATE TABLE RideRequest (
+    id INT PRIMARY KEY,
+    user_id INT,
+    pickup_lat FLOAT,
+    pickup_lng FLOAT,
+    destination_lat FLOAT,
+    destination_lng FLOAT,
+    status ENUM('pending', 'matched', 'completed')
+);
+
+
+💡 This gives implementation-level detail — how each component works internally.
+
+🧠 Quick Analogy:
+Design Level	Analogy
+HLD	Architect's building plan — shows rooms, floors, elevators
+LLD	Interior design — where each wire, pipe, switch goes
+*/
+
 
 // ========================================================== 1. Singleton Pattern ===================================
 /*
