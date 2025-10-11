@@ -257,10 +257,108 @@ var nextPermutation = function(nums) {
 };
 
 
+// ================================================= 7. Longest Contiguos Subarray with absolute difference less than limit =============================== 
+
+/**
+Leetcode : https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/
+Brute Force : Just check all subarray and find difference between maxValue and minValue of subarray . If it is below 
+limit and find its length of subarray . 
+Time Complexity : O(n2) . 
+
+Given an array of integers nums and an integer limit, return the size of the longest non-empty subarray such that the 
+absolute difference between any two elements of this subarray is less than or equal to limit.
+
+Example 1:
+
+Input: nums = [8,2,4,7], limit = 4
+Output: 2 
+Explanation: All subarrays are: 
+[8] with maximum absolute diff |8-8| = 0 <= 4.
+[8,2] with maximum absolute diff |8-2| = 6 > 4. 
+[8,2,4] with maximum absolute diff |8-2| = 6 > 4.
+[8,2,4,7] with maximum absolute diff |8-2| = 6 > 4.
+[2] with maximum absolute diff |2-2| = 0 <= 4.
+[2,4] with maximum absolute diff |2-4| = 2 <= 4.
+[2,4,7] with maximum absolute diff |2-7| = 5 > 4.
+[4] with maximum absolute diff |4-4| = 0 <= 4.
+[4,7] with maximum absolute diff |4-7| = 3 <= 4.
+[7] with maximum absolute diff |7-7| = 0 <= 4. 
+Therefore, the size of the longest subarray is 2.
+
+Example 2:
+Input: nums = [10,1,2,4,7,2], limit = 5
+Output: 4 
+Explanation: The subarray [2,4,7,2] is the longest since the maximum absolute diff is |2-7| = 5 <= 5.
+
+Example 3:
+Input: nums = [4,2,2,2,4,4,2,2], limit = 0
+Output: 3
+ */
+var longestSubarray = function(nums, limit) {
+    
+    let minValue = Infinity ;
+    let maxValue = -Infinity ;
+    let len = nums.length ;
+    let ans = 0 ;
+
+    for(let i=0 ; i < len ; i++){
+        minValue = Infinity ;
+        maxValue = -Infinity ;
+        for(let j=i ; j<len ; j++){
+            minValue = Math.min(nums[j] , minValue);
+            maxValue = Math.max(nums[j] , maxValue);
+
+            if(maxValue - minValue <= limit){
+                ans = Math.max(ans , j-i+1);
+            }
+        }
+    }
+
+    return ans ;
+
+};
 
 
+// Optimized Way : Use two queue : increment queue and decrement queue . inc q will store minimum element from starting
+/*
+and dec q will store maximum element at starting . 
+*/
 
+var longestSubarray = function(nums, limit) {
+    
+    let ans = 0 ;
+    let left = 0 ;
+    let right = 0 ;
+    let res = -Infinity ;
+    let inc = [];
+    let dec = [];
+    let len = nums.length ;
 
+    for( ; right < len ; right++){
+        while(inc.length > 0 && inc[inc.length-1] > nums[right] ){
+            inc.pop();
+        }
+
+        while(dec.length > 0 && dec[dec.length-1] < nums[right] ){
+            dec.pop();
+        }
+
+        inc.push(nums[right]);
+        dec.push(nums[right]);
+
+        while(dec[0] - inc[0] > limit){
+            if(dec[0] == nums[left]){
+                dec.shift();
+            }
+            if(inc[0] == nums[left]){
+                inc.shift();
+            }
+            left++ ;
+        }
+        res = Math.max(res , (right-left+1));
+    }
+    return res ;
+};
 
 
 
