@@ -181,7 +181,139 @@ var majorityElement = function(arr) {
 };
 
 
+// =================================================== 3. Three Sum ==================================================
+/**
+Leetcode : https://leetcode.com/problems/3sum/ 
 
+Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, 
+and nums[i] + nums[j] + nums[k] == 0.
+
+Notice that the solution set must not contain duplicate triplets.
+
+Example 1:
+Input: nums = [-1,0,1,2,-1,-4]
+Output: [[-1,-1,2],[-1,0,1]]
+Explanation: 
+nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0.
+nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0.
+nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0.
+The distinct triplets are [-1,0,1] and [-1,-1,2].
+Notice that the order of the output and the order of the triplets does not matter.
+
+Example 2:
+Input: nums = [0,1,1]
+Output: []
+Explanation: The only possible triplet does not sum up to 0.
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+
+// Extreme Brute Force : Just use 3 loops and then find triplets , For duplicate use set . 
+function triplet(n, arr) {
+    let st = new Set();
+    let ans = []
+
+    // check all possible triplets:
+    for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+            for (let k = j + 1; k < n; k++) {
+                if (arr[i] + arr[j] + arr[k] === 0) {
+                    let temp = [arr[i], arr[j], arr[k]];
+                    temp.sort((a, b) => a - b);
+                    ans.push(temp);
+                }
+            }
+        }
+    }
+
+    //store the set in the answer:
+    let set  = new Set(ans.map(JSON.stringify));
+    ans = Array.from(set).map(JSON.parse);
+    return ans;
+}
+
+// Better Approach : use concept a + b + c = 0 => c = -(a+b) . So first find a and b , and then check in map whether c exists or not
+// if exists ,then it could be a triplet . At last just push nums[j] into set .
+/*
+Time Complexity: O(N2 * log(no. of unique triplets)), where N = size of the array.
+Reason: Here, we are mainly using 3 nested loops. And inserting triplets into the set takes O(log(no. of unique triplets))
+time complexity. But we are not considering the time complexity of sorting as we are just sorting 3 elements every time.
+
+Space Complexity: O(2 * no. of the unique triplets) + O(N) as we are using a set data structure and a list to store the 
+triplets and extra O(N) for storing the array elements in another set.
+*/
+var threeSum = function(nums) {
+    
+    let set = new Set();
+    let len = nums.length ;
+    res = new Set();
+
+    for(let i = 0 ; i<len-1 ; i++){
+        set.clear();
+        for(let j= i+1 ; j<len ; j++){
+            const third = - (nums[i] + nums[j]);
+            if(set.has(third)){
+                let triplet = [nums[i] , nums[j] , third].sort((a,b)=>a-b)
+                res.add(triplet.toString());
+            }
+            set.add(nums[j]);
+        }
+    }
+
+    return [...res].map(str => str.split(',').map(Number));
+
+};
+
+// Most Optimized Approach 
+/**
+Just Sort it . Take 3 pointer , at i=0 , j=i+1 and k=len-1 . If sum < 0 , then increase j , if sum > 0 then decrease k
+since array is sorted now . If sum==0 , then store this triplet , and move j to j+1 till it is not equal to previos element
+. We did this , because we don't want duplicates , same we did for k , decrement it to k-1 , till it is not equal to next 
+element . 
+
+Time Complexity: O(NlogN)+O(N2), where N = size of the array.
+Reason: The pointer i, is running for approximately N times. And both the pointers j and k combined can run for 
+approximately N times including the operation of skipping duplicates. So the total time complexity will be O(N2). 
+
+Space Complexity: O(no. of quadruplets), This space is only used to store the answer. We are not using any extra space 
+to solve this problem. So, from that perspective, space complexity can be written as O(1).
+ */
+var threeSum = function(nums) {
+    
+    let res = [];
+    nums.sort((a,b)=>a-b);
+    let len = nums.length ;
+
+    for(let i = 0 ; i<len ; i++){
+        if(i>0 && nums[i] == nums[i-1]) continue ;
+
+        let j = i+1 ;
+        let k = len-1 ;
+
+        while(j < k){
+            const sum  = nums[i] + nums[j] + nums[k];
+
+            if(sum < 0){
+                j++ ;
+            }
+
+            else if(sum > 0){
+                k-- ;
+            }
+
+            else{
+                let triplet = [nums[i] , nums[j] , nums[k]];
+                res.push(triplet);
+                j++ ;
+                k-- ;
+
+                while(j<len && nums[j] == nums[j-1]) j++ ;
+                while(k>=0 && nums[k] == nums[k+1]) k-- ;
+            }
+        }
+    }
+    return res ;
+};
 
 
 
