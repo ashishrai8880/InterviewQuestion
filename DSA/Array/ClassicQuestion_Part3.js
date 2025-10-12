@@ -316,7 +316,65 @@ var threeSum = function(nums) {
 };
 
 
+// ================================================= 4. 4 Sum ===================================================
+/**
+Leetcode : https://leetcode.com/problems/4sum/
 
+Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] 
+such that:
+
+0 <= a, b, c, d < n
+a, b, c, and d are distinct.
+nums[a] + nums[b] + nums[c] + nums[d] == target
+You may return the answer in any order.
+
+Example 1:
+
+Input: nums = [1,0,-1,0,-2,2], target = 0
+Output: [[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[][]}
+ */
+var fourSum = function(nums, target) {
+   
+    nums.sort((a, b) => a - b);
+    let res = [];
+    let len = nums.length;
+
+    for (let i = 0; i < len; i++) {
+        if (i > 0 && nums[i] === nums[i - 1]) continue;
+
+        for (let j = i + 1; j < len; j++) {
+            if (j > i + 1 && nums[j] === nums[j - 1]) continue;
+
+            let k = j + 1;
+            let l = len - 1;
+
+            while (k < l) {
+                let sum = nums[i] + nums[j] + nums[k] + nums[l];
+
+                if (sum < target) {
+                    k++;
+                } else if (sum > target) {
+                    l--;
+                } else {
+                    res.push([nums[i], nums[j], nums[k], nums[l]]);
+                    k++;
+                    l--;
+
+                    // Skip duplicates after moving k and l
+                    while (k < l && nums[k] === nums[k - 1]) k++;
+                    while (k < l && nums[l] === nums[l + 1]) l--;
+                }
+            }
+        }
+    }
+
+    return res;
+
+};
 
 
 
