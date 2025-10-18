@@ -411,8 +411,220 @@ function maxLen(A, n) {
 }
 
 
-// =============================================================
+// ==================================================== 6. Merge Intervals =============================================
+/**
+Leetcode : https://leetcode.com/problems/merge-intervals/
 
+Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+
+Example 1:
+Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].
+
+Example 2:
+Input: intervals = [[1,4],[4,5]]
+Output: [[1,5]]
+Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+
+Example 3:
+Input: intervals = [[4,7],[1,4]]
+Output: [[1,7]]
+Explanation: Intervals [1,4] and [4,7] are considered overlapping.
+
+Brute Force : Just sort the array based on first element of each interval . And then traverse first loop from i =0 to n
+. In second loop just check , when parent End is smaller than internal start . break internal loop there . 
+In this way , we also need to maintain maximum 'end' interval . 
+When I came to outer loop , there is need to check , ans variable last element end interval also . 
+ */
+var merge = function(arr) {
+    const n = arr.length; // size of the array
+    let ans = [];
+
+    arr.sort((a,b)=>a[0]-b[0]);
+
+    for(let i=0 ; i<n ; i++){
+        const start = arr[i][0];
+        let end = arr[i][1];
+
+        if(ans.length != 0 && ans.at(-1)[1] >= start  ){
+            continue ;
+        }
+
+        let j=i+1 ;
+
+        for( ; j<n ;j++){
+            const intStart = arr[j][0];
+            const intEnd= arr[j][1];
+            if( intStart > end){
+                break ;
+            }
+            end = Math.max(end , intEnd)
+        }
+
+        if(j<=n){
+            ans.push( [ start , end ])
+        }
+    }
+    return ans ;
+};
+
+// Optimized Ways 
+/**
+Approach : No need to check for each interval . First time , ans array me first interval daal dene ka , uske baad 
+check karte rehne ka , agar ans k last element k last element me har baar maximum store karna hai . 
+Or agar , ans ka last element chhota pad jata hai , interval k pehle element se , to wo interval store karne ka . 
+ */
+var merge = function(arr) {
+    const n = arr.length; 
+    let ans = [];
+
+    arr.sort((a,b)=>a[0]-b[0]);
+
+    for(const interval of arr){
+        if(ans.length == 0 || ans[ans.length-1][1] < interval[0] ){
+            ans.push(interval);
+        }
+        else{
+            ans[ans.length-1][1] = Math.max( ans[ans.length-1][1] , interval[1] )
+        }
+    }
+    return ans ;
+};
+
+
+// ========================================= 7. Merge two sorted array without third variable=============================
+/**
+Leetcode : https://leetcode.com/problems/merge-sorted-array/description/
+You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n,
+representing the number of elements in nums1 and nums2 respectively.
+
+Merge nums1 and nums2 into a single array sorted in non-decreasing order.
+
+The final sorted array should not be returned by the function, but instead be stored inside the array nums1. 
+To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that should be merged,
+and the last n elements are set to 0 and should be ignored. nums2 has a length of n.
+
+Example 1:
+Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
+Output: [1,2,2,3,5,6]
+Explanation: The arrays we are merging are [1,2,3] and [2,5,6].
+The result of the merge is [1,2,2,3,5,6] with the underlined elements coming from nums1.
+
+Example 2:
+Input: nums1 = [1], m = 1, nums2 = [], n = 0
+Output: [1]
+Explanation: The arrays we are merging are [1] and [].
+The result of the merge is [1].
+
+Example 3:
+Input: nums1 = [0], m = 0, nums2 = [1], n = 1
+Output: [1]
+Explanation: The arrays we are merging are [] and [1].
+The result of the merge is [1].
+Note that because m = 0, there are no elements in nums1. The 0 is only there to ensure the merge result can fit in nums1.
+
+ Approach : Just take three pointer , very easy approach . 
+
+ * @param {number[]} nums1
+ * @param {number} m
+ * @param {number[]} nums2
+ * @param {number} n
+ * @return {void} Do not return anything, modify nums1 in-place instead.
+ */
+var merge = function(nums1, m, nums2, n) {
+    
+    let i=m-1 ;
+    let j=n-1 ;
+    let k=m+n-1 ;
+
+    while(i>=0 && j>=0){
+        if(nums1[i] >= nums2[j]){
+            nums1[k] = nums1[i];
+            i-- ;
+        }
+        else{
+            nums1[k] = nums2[j];
+            j-- ;
+        }
+        k-- ;
+    }
+
+    while(j>=0){
+        nums1[k] = nums2[j];
+        k-- ;
+        j-- ;
+    }
+
+};
+
+
+
+// ================================================= 8. Maximum Product Subarray ========================================
+/**
+Leetcode : https://leetcode.com/problems/maximum-product-subarray/
+
+Given an integer array nums, find a subarray that has the largest product, and return the product.
+The test cases are generated so that the answer will fit in a 32-bit integer.
+
+Example 1:
+Input: nums = [2,3,-2,4]
+Output: 6
+Explanation: [2,3] has the largest product 6.
+
+Example 2:
+Input: nums = [-2,0,-1]
+Output: 0
+Explanation: The result cannot be 2, because [-2,-1] is not a subarray.
+Brute Force Approach : Just use 2 loop , and check for each subarray .
+ */
+var maxProduct = function(arr) {
+    
+    let ans = -Infinity  ;
+    let n = arr.length ;
+
+    for(let i=0 ; i<n ; i++){
+        let prd = arr[i];
+        ans = Math.max(ans , prd);
+        for(let j=i+1 ; j<n ; j++){
+            prd = prd * arr[j];
+            ans = Math.max(ans , prd);
+        }
+        ans = Math.max(ans , prd);
+    }
+    return ans ;
+};
+
+/**
+Optimized way : Front and back se calculate karte jaana hai . agar total number of negative numbers odd hue , it means ya to 
+left mai ans hai ya to right me . Agar kahi 0 aa jaye product , to waha se aage badh jao . Very Simple and easy approach .
+ */
+var maxProduct = function(arr) {
+    
+    let ans = -Infinity  ;
+    let n = arr.length ;
+
+    let pref = 1 ;
+    let suff = 1 ;
+
+    for(let i=0 ; i<n ; i++){
+        const curr = arr[0];
+
+        if(pref == 0){
+            pref = 1 ;
+        }
+
+        if(suff == 0){
+            suff = 1 ;
+        }
+
+        pref = pref * arr[i];
+        suff = suff * arr[n-i-1];
+        ans = Math.max(ans , pref , suff)
+    }
+    
+    return ans ;
+};
 
 
 
