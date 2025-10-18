@@ -627,10 +627,261 @@ var maxProduct = function(arr) {
 };
 
 
+// ============================================== 9. Reverse Pairs ========================================================
+/**
+Leetcode : https://leetcode.com/problems/reverse-pairs/description/
+
+Given an integer array nums, return the number of reverse pairs in the array.
+A reverse pair is a pair (i, j) where:
+0 <= i < j < nums.length and
+nums[i] > 2 * nums[j].
+ 
+Example 1:
+Input: nums = [1,3,2,3,1]
+Output: 2
+Explanation: The reverse pairs are:
+(1, 4) --> nums[1] = 3, nums[4] = 1, 3 > 2 * 1
+(3, 4) --> nums[3] = 3, nums[4] = 1, 3 > 2 * 1
+
+Example 2:
+Input: nums = [2,4,3,5,1]
+Output: 3
+Explanation: The reverse pairs are:
+(1, 4) --> nums[1] = 4, nums[4] = 1, 4 > 2 * 1
+(2, 4) --> nums[2] = 3, nums[4] = 1, 3 > 2 * 1
+(3, 4) --> nums[3] = 5, nums[4] = 1, 5 > 2 * 1
+ 
+ * @param {number[]} nums
+ * @return {number}
+ */
+var reversePairs = function(arr) {
+    let count = 0 ;
+    const n = arr.length ;
+
+    for(let i=0 ; i<n ; i++){
+
+        for(let j=i+1 ; j< n ; j++){
+            if(arr[i] > 2*arr[j]){
+                count++ ;
+            }
+        }
+    }
+    return count ;
+};
 
 
+// Optimized Approach 
+/**
+Use Logic of Count Inversion . Similarily first break it down using merge sort , and then before merging 
+apply count inversion logic . In below code , I am using third variable count which we can optimize it also . 
+ */
+var reversePairs = function(arr) {
+    let count = 0 ;
+    let n = arr.length ;
+    
+    const countPairs = (low , mid , high)=>{
+        let i = low ;
+        let j = mid+1 ;
+
+        for( ; i<= mid ; i++){
+
+            while(j<=high && arr[i] > 2*arr[j]){
+                j++ ;
+            }
+            
+            count = count + (j - (mid + 1));
+        }
+    }
+
+    const merge = (low , mid , high)=>{
+        let i = low ;
+        let j = mid+1 ;
+        let temp = [];
+        
+        while(i<= mid && j<=high){
+            if(arr[i] <= arr[j]){
+                temp.push(arr[i])
+                i++ ;
+            }
+            else{
+                temp.push(arr[j]);
+                j++ ;
+            }
+        }
+
+        while(i<=mid){
+            temp.push(arr[i]);
+            i+=1 ;
+        }
+        while(j<=high){
+            temp.push(arr[j]);
+            j+=1 ;
+        }
+
+        let k=low ;
+
+        while(k<=high){
+            arr[k] = temp.shift();
+            k+=1 ;
+        }
+    }
+
+    const partition = (low , high)=>{
+        if(low < high){
+            const mid = Math.floor((low+high)/2);
+            partition(low , mid);
+            partition(mid+1 , high);
+            countPairs(low , mid , high)
+            merge(low , mid , high);
+        }
+    }
+
+    partition(0 , n-1 )
+    return count ;
+
+};
+
+// Thoda Aur Optimized
+
+var reversePairs = function(arr) {
+    
+    let n = arr.length ;
+    
+    const countPairs = (low , mid , high)=>{
+        let i = low ;
+        let j = mid+1 ;
+        let count = 0 ;
+
+        for( ; i<= mid ; i++){
+
+            while(j<=high && arr[i] > 2*arr[j]){
+                j++ ;
+            } 
+            count = count + (j - (mid + 1));
+        }
+
+        return count ;
+    }
+
+    const merge = (low , mid , high)=>{
+        let i = low ;
+        let j = mid+1 ;
+        let temp = [];
+        
+        while(i<= mid && j<=high){
+            if(arr[i] <= arr[j]){
+                temp.push(arr[i])
+                i++ ;
+            }
+            else{
+                temp.push(arr[j]);
+                j++ ;
+            }
+        }
+
+        while(i<=mid){
+            temp.push(arr[i]);
+            i+=1 ;
+        }
+        while(j<=high){
+            temp.push(arr[j]);
+            j+=1 ;
+        }
+
+        let k=low ;
+
+        while(k<=high){
+            arr[k] = temp.shift();
+            k+=1 ;
+        }
+    }
+
+    const partition = (low , high)=>{
+        let count = 0 ;
+        if(low < high){
+            const mid = Math.floor((low+high)/2);
+            count += partition(low , mid);
+            count += partition(mid+1 , high);
+            count += countPairs(low , mid , high)
+            merge(low , mid , high);
+            return count ;
+        }
+        return count ;
+    }
+
+    return partition(0 , n-1 )
+
+};
 
 
+// =========================================== 10. Missing and Repeating Elements ==========================================
+
+/**
+Leetcode : https://leetcode.com/problems/find-missing-and-repeated-values/
+You are given a 0-indexed 2D integer matrix grid of size n * n with values in the range [1, n2]. Each integer appears 
+exactly once except a which appears twice and b which is missing. The task is to find the repeating and missing numbers
+a and b.
+
+Return a 0-indexed integer array ans of size 2 where ans[0] equals to a and ans[1] equals to b.
+
+Example 1:
+Input: grid = [[1,3],[2,2]]
+Output: [2,4]
+Explanation: Number 2 is repeated and number 4 is missing so the answer is [2,4].
+
+Example 2:
+Input: grid = [[9,1,7],[8,9,2],[3,4,6]]
+Output: [9,5]
+Explanation: Number 9 is repeated and number 5 is missing so the answer is [9,5].
+
+Brute Force 
+ */
+
+/**
+Leetcode Solution
+ */
+var findMissingAndRepeatedValues = function(grid) {
+    
+    let map = new Map();
+    let repeating = 0 ; 
+    let sum = 0 ;
+
+    grid.forEach((arr)=>{
+        arr.forEach((e)=>{
+            if(map.has(e)){
+                repeating = e ;
+            }
+            map.set(e , (map.get(e) || 0)+1 ) ;
+            sum += e ;
+        })
+    })
+
+    const n = grid.length * grid.length ;
+    const diff = ((n*(n+1))/2) - sum ;
+
+    return [repeating , repeating + diff];
+};
+
+class Solution {
+    findTwoElement(arr) {
+        let map = new Map();
+        let repeating = 0 ; 
+        let sum = 0 ;
+    
+        arr.forEach((e)=>{
+            if(map.has(e)){
+                repeating = e ;
+            }
+            map.set(e , (map.get(e) || 0)+1 ) ;
+            sum += e ;
+        })
+    
+        const n = arr.length ;
+        const diff = ((n*(n+1))/2) - sum ;
+    
+        return [repeating , repeating + diff];
+    }
+}
 
 
 
