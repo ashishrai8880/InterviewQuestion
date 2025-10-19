@@ -555,12 +555,112 @@ var findPeakElement = function(nums) {
 };
 
 
+// Optimized Way : 
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findPeakElement = function(nums) {
+    const n = nums.length ;
+
+    let low = 0, high = nums.length - 1;
+
+    while (low < high) {
+        let mid = Math.floor((low + high) / 2);
+
+        if (nums[mid] > nums[mid + 1]) {
+            high = mid;
+        } else {
+            low = mid + 1;
+        }
+    }
+
+    return low;
+    
+};
 
 
+// ============================================= 12. Single Element in Sorted Array ======================================
+/**
+Leetcode : https://leetcode.com/problems/single-element-in-a-sorted-array/
+You are given a sorted array consisting of only integers where every element appears exactly twice, except for
+one element which appears exactly once.
+Return the single element that appears only once.
+Your solution must run in O(log n) time and O(1) space.
+
+Example 1:
+Input: nums = [1,1,2,3,3,4,4,8,8]
+Output: 2
+ */
+/**
+Brute Force
+ */
+var singleNonDuplicate = function(nums) {
+    let xor = 0 ;
+    for(const x of nums){
+        xor = xor ^ x ;
+    }
+    return xor ;
+};
+
+// Optimized way 
+/**
+Logic : If in mid element , it is not equal to previous and next one , then it is answer . 
+If mid one equal to next one or mid one equal to previos one , it means till mid index every element is correct before mid . 
+so ignore left part 
+otherwise ignore right part .
+ */
+var singleNonDuplicate = function(arr) {
+    
+    const n = arr.length ;
+
+    if(n==1) return arr[0];
+    if (arr[0] !== arr[1]) return arr[0];
+    if (arr[n - 1] !== arr[n - 2]) return arr[n - 1];
+
+    let ans = 0 ;
+    let low = 0 ;
+    let high = n-1 ;
+
+    while(low <= high){
+        let mid = Math.floor((low + high) / 2);
+
+        if(arr[mid] != arr[mid-1]  && arr[mid] != arr[mid+1]){
+            return arr[mid];
+        }
+
+        if((mid%2==0 && arr[mid] == arr[mid+1])   ||  (mid%2 ==1 && arr[mid] == arr[mid-1]) ){
+            low = mid+1 ;
+        }else{
+            high = mid -1 ;
+        }
+    }
+    return -1 ;
+
+};
 
 
-
-
+// ======================================== 13. Find How many times array is rotated =====================================
+/**
+GFG : https://www.geeksforgeeks.org/problems/rotation4723/1
+Brute Force : Just find index of minimum element in array 
+ */
+class Solution {
+    findKRotation(arr) {
+      
+        let ans = 0 ;
+        let min = Infinity ;
+        
+        arr.forEach((e,i)=>{
+            if(min > e){
+                min = e ;
+                ans = i ;
+            }
+        })
+        
+        return ans ;
+    }
+}
 
 
 
