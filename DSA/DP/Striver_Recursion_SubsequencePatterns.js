@@ -1223,4 +1223,81 @@ var solveSudoku = function(board) {
 
 
 
+// =================================================== 17. Different ways to add parenthesis =============================
+/**
+Leetcode : https://leetcode.com/problems/different-ways-to-add-parentheses/description/
+
+Given a string expression of numbers and operators, return all possible results from computing all the different possible 
+ways to group numbers and operators. You may return the answer in any order.
+
+The test cases are generated such that the output values fit in a 32-bit integer and the number of different results does not exceed 104.
+
+Example 1:
+Input: expression = "2-1-1"
+Output: [0,2]
+Explanation:
+((2-1)-1) = 0 
+(2-(1-1)) = 2
+
+Example 2:
+Input: expression = "2*3-4*5"
+Output: [-34,-14,-10,-10,10]
+Explanation:
+(2*(3-(4*5))) = -34 
+((2*3)-(4*5)) = -14 
+((2*(3-4))*5) = -10 
+(2*((3-4)*5)) = -10 
+(((2*3)-4)*5) = 10
+ 
+ */
+var diffWaysToCompute = function(expression) {
+    
+    const util = (start , end)=>{
+        let res = [];
+
+        // for single digit
+        if(start == end){
+            return [parseInt(expression.substring(start , end+1))]
+        }
+
+        // for double digit
+        if(end - start == 1){
+            return [parseInt(expression.substring(start , end+1))];
+        }
+
+        for(let i=start ; i<=end ; i++){
+            const ch = expression[i];
+
+            if(  Number.isInteger(Number(ch) )  ){
+                continue ;
+            }
+
+            const op = ch ;
+            const left = util(start , i-1);
+            const right = util( i+1 , end );
+
+            for(const x of left){ 
+                for(const y of right){
+                    if(op == '*'){
+                        res.push(x*y)
+                    }
+                    if(op == '+'){
+                        res.push(x+y)
+                    }
+                    if(op == '-'){
+                        res.push(x-y)
+                    }
+                }
+            }
+            
+        }
+        return res ;
+    }
+
+    const n = expression.length ;
+    return util(0 , n-1);
+
+};
+
+
 
