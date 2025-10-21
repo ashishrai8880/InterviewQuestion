@@ -902,5 +902,180 @@ class Solution {
 }
 
 
+// Optimized Approach , Just used priority queue so that every time you will have maximum gap between any two station 
+// at top , so no need to write internal loop . 
+/*
+Time Complexity: O(nlogn + klogn),  n = size of the given array, k = no. of gas stations to be placed.
+Reason: Insert operation of priority queue takes logn time complexity. O(nlogn) for inserting all the indices with 
+distance values and O(klogn) for placing the gas stations.
+
+Space Complexity: O(n-1)+O(n-1)
+Reason: The first O(n-1) is for the array to keep track of placed gas stations and the second one is for the priority queue.
+*/
+
+class MaxPriorityQueue {
+    constructor() {
+        this.queue = [];
+    }
+
+    enqueue(element) {
+        this.queue.push(element);
+        this.queue.sort((a, b) => b.priority - a.priority);
+    }
+
+    dequeue() {
+        return this.queue.shift();
+    }
+
+    front() {
+        return this.queue[0];
+    }
+    
+    print(){
+        console.log({q : this.queue})
+    }
+}
+
+class Solution {
+    
+    minMaxDist(arr, k) {
+        const n = arr.length; //size of array.
+        const howMany = new Array(n - 1).fill(0);
+        const pq = new MaxPriorityQueue();
+        
+        if(n==1) return 0 ;
+    
+        for (let i = 0; i < n - 1; i++) {
+            pq.enqueue({priority: arr[i + 1] - arr[i], value: i});
+        }
+    
+        for (let gasStations = 1; gasStations <= k; gasStations++) {
+            
+            const tp = pq.dequeue();
+            
+            const secInd = tp.value || 0;
+    
+            howMany[secInd]++;
+    
+            const inidiff = arr[secInd + 1] - arr[secInd];
+            const newSecLen = inidiff / (howMany[secInd] + 1);
+            pq.enqueue({priority: newSecLen, value: secInd});
+        }
+        return pq.front().priority;
+    }
+}
+
+
+// Optimized Way : Use of binary Search 
+
+
+
+class Solution {
+    /**
+    * @param number[] stations
+    * @param number k
+
+    * @returns float
+    */
+    minMaxDist(arr, k) {
+        
+        const numberOfGasStationsRequired = (dist, arr) => {
+            const n = arr.length; // size of the array
+            let cnt = 0;
+            for (let i = 1; i < n; i++) {
+                const numberInBetween = Math.floor((arr[i] - arr[i - 1]) / dist);
+                if ((arr[i] - arr[i - 1]) === dist * numberInBetween) {
+                    cnt += numberInBetween - 1;
+                } else {
+                    cnt += numberInBetween;
+                }
+            }
+            return cnt;
+        }
+        
+        
+        const n = arr.length; // size of the array
+        let low = 0;
+        let high = 0;
+    
+        for (let i = 0; i < n - 1; i++) {
+            high = Math.max(high, arr[i + 1] - arr[i]);
+        }
+    
+        const diff = 1e-6;
+        while (high - low > diff) {
+            const mid = (low + high) / 2.0;
+            const cnt = numberOfGasStationsRequired(mid, arr);
+            if (cnt > k) {
+                low = mid;
+            } else {
+                high = mid;
+            }
+        }
+        return high;
+    }
+}
+
+
+
+// ============================================ 10. Medium of two sorted array ===========================================
+/**
+Leetcode : https://leetcode.com/problems/median-of-two-sorted-arrays/
+
+Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
+The overall run time complexity should be O(log (m+n)).
+
+Example 1:
+Input: nums1 = [1,3], nums2 = [2]
+Output: 2.00000
+Explanation: merged array = [1,2,3] and median is 2.
+
+Example 2:
+Input: nums1 = [1,2], nums2 = [3,4]
+Output: 2.50000
+Explanation: merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5.
+ 
+
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number}
+
+ Brute Force . Super Easy 
+ */
+var findMedianSortedArrays = function(nums1, nums2) {
+    let arr = [...nums1 , ...nums2];
+    arr.sort((a,b)=>a-b);
+    const n = arr.length ;
+    const midIndex = Math.floor(n/2) ;
+    if(n%2 == 1){
+        return arr[midIndex];
+    }
+    else{
+        return (arr[midIndex]+ arr[midIndex-1])/2 ;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  
