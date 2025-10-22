@@ -1,5 +1,7 @@
 Best Link : https://dev.to/vincenttommi/understanding-distributed-consensus-and-data-replication-day-17-of-learning-system-design-c2n
 
+Also : https://medium.com/@roopa.kushtagi/data-replication-strategies-and-their-application-in-distributed-systems-d623c9b5ec04
+
 
 Imagine running a massive app like Twitter or a bank’s database, where millions of users are reading and writing data 
 across servers worldwide. If one server fails or servers disagree on data, chaos could ensue! Distributed consensus and
