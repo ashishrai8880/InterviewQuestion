@@ -212,3 +212,110 @@ console.log("New Employee=> ", newEmployee);
 
 Deep Copy
 A deep copy, on the other hand, creates a completely independent copy of the object, including all nested objects or arrays. This ensures that changes made to one object do not affect the other. Each object is stored in a separate memory location, making them entirely independent.
+
+
+======================================================= Event Loop In Browser Perspective =========================================================================
+
+console.log("A")
+func(){
+	console.log("fun");
+}
+func()
+console.log("B")
+
+- Whatever piece of javascript code we write , first there will be Global Execution Context(GEC) created in callstack . Callstack is basically a place where code actually 
+executes . Whatever inside callstack , it immediately executes . In GEC , our program executes line by line . Entire piece of code of program exists in GEC . 
+So from line 1 , it executes first console , then there will be func() call in callstack on top of it , it will executes and then second console . 
+
+There are some time taking process which can require resource like network request , i/o operation , timers . 
+setTimeout , console , fetch , DOM , localStorage etc -> these are not javascript things , In web side , these are superpower provided by browser , these are not directly related to 
+javascript . we can use these using window.console , window.fetch also . These all things comes under global variable called 'window' . 
+
+There are WebAPIs which is responsible to executes these code in web side . All these things are available under WebAPIs . 
+
+
+console.log("A")
+
+setTimeout( ()=>{
+	console.log('timer')
+} , 5000 )
+
+console.log("B")
+
+
+Initial execution will be same , first there will be GEC created in callstack , then first line of console printed . And then there is setTimeout , so it will 
+send to WebAPIs , and then it will print last console . 
+After completion of 5 seconds in WebAPI , now the code is ready to executes . But wait wait , how the callback function entered into callstack , who will take that 
+function into callstack . Because we know everything which executes is under callstack .
+
+Here comes in picture of Event Loop . Now event loop will take that function callback inside callstack . But wait again , does event loop direcly takes from 
+WebAPIs . No . There is one more middle man comes in between which is Callback Queue . 
+
+Callback Queue -> It basically stores all the callback which is coming from WebAPIs . So Event loop takes first from WebAPIs and then put into callback queueu . 
+And when normal execution of program completes , GEC also popped out and then it start taking from callback queue and put into callstack .
+
+console.log("A")
+
+document.getElementById('btn').addEventListener('click' , ()=>{
+	console.log("clicking") ;
+})
+
+console.log("B")
+
+Similarily DOM and addEventListener is WebAPIs not javascript things . In normal execution of code , this event listener will get registered with WebAPIs . 
+and all execution will complete normally . Now whenever there is click on button , WebAPIs callback is triggered , and event loop will put that callback 
+inside callback queue . And then from callback queue , it will get placed into callstack by event loop . and then it will get executed . 
+
+****** something different **********
+console.log("A")
+
+setTimeout( ()=>{
+	console.log('timer')
+} , 5000 )
+
+fetch('https://netflix.com' ).then((data)=>{
+	console.log("data comes from netflix" , data) ;
+})
+
+console.log("B")
+
+Normal execution is same , firs there will be GEC created in callstack and then code will executes synchrnously till second console . 
+Now there will be 2 things in WebAPIs , first settimeout which is waiting in timers till 5 second . And second one is network request  . 
+Now fetch will return promise . let suppose fetch method took 50 ms to get response from netflix . 
+It will then get places into microtask queue . Now Microtask queue is same as callback queue but with higher priority . It works same as callback queue . 
+Point to remember Promise have always higher priority among operation which takes time , because promise got places into microtask queue which have
+higher priority . 
+
+When all normal execution completes , then event loop first start picking from microtask queue . After taking all operation from microtask queue 
+it then start taking from callback queue . 
+So first output is from netflix and then there will be output of settimeout . 
+Now there can be conditioin of starvation also for operation which is present inside callback queue . If there are lot of operation inside microtask queue , 
+then operation inside callback queue have to wait for long period of time . 
+
+
+
+
+
+====================================================== Normal Javascript =========================================================================
+
+Each browser have its own javascript engine . Chrome have V8 engine , firefox have spidermonkey engine , edge have Chakra javascript engine and there are
+many more javascript engine . one of it is Nodejs also which is built over chrome V8 engine . 
+
+There is standard ECMAScript . ECMAScript (ES) is the official standard for scripting languages, most famously implemented by JavaScript. The standard is defined by Ecma International in the ECMA-262 specification and provides the core language features, syntax, and semantics that scripting languages must follow. 
+ECMAScript is the blueprint for the language. It defines the rules for syntax (e.g., how to declare variables and write loops), the types of data that can be used (e.g., strings, numbers, objects), and other core features.
+
+Similar to WebAPIs which provides console , network request , timers there is also provision in nodejs . These things are provided in Node either by inbuilt module 
+like http( to make network request) , fs (for file manipulation) , path , os , event stream or either by its so called NPM which contains a lot and lot of package . 
+
+Implementation of settimeout in browser and in nodejs may or may not same . They can be different . 
+
+
+
+
+
+
+
+
+
+
+
