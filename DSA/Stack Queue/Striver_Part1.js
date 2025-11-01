@@ -369,16 +369,462 @@ var asteroidCollision = function(arr) {
 
 
 
+// =========================================== 8. Sum of Subarray Ranges (Easy) =======================================
+
+/**
+Leetcode : https://leetcode.com/problems/sum-of-subarray-ranges/description/
+You are given an integer array nums. The range of a subarray of nums is the difference between the largest and smallest element in the subarray.
+Return the sum of all subarray ranges of nums.
+A subarray is a contiguous non-empty sequence of elements within an array.
+
+Example 1:
+Input: nums = [1,2,3]
+Output: 4
+Explanation: The 6 subarrays of nums are the following:
+[1], range = largest - smallest = 1 - 1 = 0 
+[2], range = 2 - 2 = 0
+[3], range = 3 - 3 = 0
+[1,2], range = 2 - 1 = 1
+[2,3], range = 3 - 2 = 1
+[1,2,3], range = 3 - 1 = 2
+So the sum of all ranges is 0 + 0 + 0 + 1 + 1 + 2 = 4.
+
+Example 2:
+Input: nums = [1,3,3]
+Output: 4
+Explanation: The 6 subarrays of nums are the following:
+[1], range = largest - smallest = 1 - 1 = 0
+[3], range = 3 - 3 = 0
+[3], range = 3 - 3 = 0
+[1,3], range = 3 - 1 = 2
+[3,3], range = 3 - 3 = 0
+[1,3,3], range = 3 - 1 = 2
+So the sum of all ranges is 0 + 0 + 0 + 2 + 0 + 2 = 4.
+
+Example 3:
+Input: nums = [4,-2,-3,4,1]
+Output: 59
+Explanation: The sum of all subarray ranges of nums is 59.
+
+Brute Force Appraoch 
+ * @param {number[]} nums
+ * @return {number}
+ */
+var subArrayRanges = function(arr) {
+    let res = 0 ;
+    const n = arr.length ;
+
+    for(let i = 0 ; i<n ; i++){
+        let min = arr[i];
+        let max = arr[i];
+        for(let j = i+1 ; j<n ; j++){
+            max = Math.max(max , arr[j])
+            min = Math.min(min , arr[j])
+            res += (max-min) ;
+        }
+    }
+    return res ;
+};
+
+/**
+Optimized Approach : Just take reference from question 6 sum of subarray minimums . 
+Concept is , for ranges , we have to find minimum and maximum element of each subarray and then find difference 
+So Summation of all (Max - Min) . Which gives (Sum of subarray maximums) - (Sum of subarray minimums) .
+
+ * @param {number[]} arr
+ * @returns {number}
+ */
+class Solution {
+    findNSE(arr) {
+        const n = arr.length;
+        const ans = new Array(n).fill(0);
+        const st = [];
+        for (let i = n - 1; i >= 0; i--) {
+            const currEle = arr[i];
+            while (st.length > 0 && arr[st[st.length - 1]] >= currEle) {
+                st.pop();
+            }
+            ans[i] = st.length > 0 ? st[st.length - 1] : n;
+            st.push(i);
+        }
+        return ans;
+    }
+    
+    findNGE(arr) { 
+        const n = arr.length;
+        const ans = new Array(n).fill(0);
+        const st = [];
+        for (let i = n - 1; i >= 0; i--) {
+            const currEle = arr[i];
+            while (st.length > 0 && arr[st[st.length - 1]] <= currEle) {
+                st.pop();
+            }
+            ans[i] = st.length > 0 ? st[st.length - 1] : n;
+            st.push(i);
+        } 
+        return ans;
+    }
+   
+    findPSEE(arr) {
+        const n = arr.length;
+        const ans = new Array(n).fill(0);
+        const st = [];
+        for (let i = 0; i < n; i++) {
+            const currEle = arr[i];
+            while (st.length > 0 && arr[st[st.length - 1]] > currEle) {
+                st.pop();
+            }
+            ans[i] = st.length > 0 ? st[st.length - 1] : -1;
+            st.push(i);
+        }
+        return ans;
+    }
+    
+    findPGEE(arr) {
+        const n = arr.length;
+        const ans = new Array(n).fill(0);
+        const st = [];
+        for (let i = 0; i < n; i++) {
+            const currEle = arr[i];
+            while (st.length > 0 && arr[st[st.length - 1]] < currEle) {
+                st.pop();
+            }
+            ans[i] = st.length > 0 ? st[st.length - 1] : -1;
+            st.push(i);
+        }
+        return ans;
+    }
+    
+    sumSubarrayMins(arr) {  
+        const nse = this.findNSE(arr);
+        const psee = this.findPSEE(arr);
+        const n = arr.length;
+        let sum = 0;
+        
+        for (let i = 0; i < n; i++) {
+            const left = i - psee[i];
+            const right = nse[i] - i;
+            const freq = left * right * 1;
+            const val = (freq * arr[i] * 1);
+            sum += val;
+        }
+        return sum;
+    }
+    
+    sumSubarrayMaxs(arr) {
+        const nge = this.findNGE(arr);
+        const pgee = this.findPGEE(arr);
+        const n = arr.length;
+        let sum = 0;
+        
+        for (let i = 0; i < n; i++) {
+            const left = i - pgee[i];
+            const right = nge[i] - i;
+            const freq = left * right * 1;
+            const val = (freq * arr[i] * 1);
+            sum += val;
+        }
+        return sum;
+    }
+    
+    subarrayRanges(arr) {
+        return ( this.sumSubarrayMaxs(arr) - this.sumSubarrayMins(arr) );
+    }    
+}
+
+
+// =============================================== 9. Remove K digits ===================================================
+/**
+Easy One Leetcode : https://leetcode.com/problems/remove-k-digits/
+
+Given string num representing a non-negative integer num, and an integer k, return the smallest possible integer after removing k digits from num.
+
+Approach : Just keep pushing smaller element into a stack . If there is number which is smaller than top of stack
+start popping it out . Keep counting k as well . Super Easy Method .
+
+Example 1:
+Input: num = "1432219", k = 3
+Output: "1219"
+Explanation: Remove the three digits 4, 3, and 2 to form the new number 1219 which is the smallest.
+
+Example 2:
+Input: num = "10200", k = 1
+Output: "200"
+Explanation: Remove the leading 1 and the number is 200. Note that the output must not contain leading zeroes.
+
+Example 3:
+Input: num = "10", k = 2
+Output: "0"
+Explanation: Remove all the digits from the number and it is left with nothing which is 0.
+
+ * @param {string} num
+ * @param {number} k
+ * @return {string}
+ */
+var removeKdigits = function(num, k) {
+    
+    let st = [];
+    let n = num.length ;
+
+    for(let i = 0 ; i<n ; i++){
+        const ele = parseInt(num[i]);
+
+        while( k != 0 && st.length != 0 && ele < st.at(-1)){
+            k-- ;
+            st.pop();
+        }
+        st.push(parseInt(ele));
+    }
+
+    while( st.length != 0 && k > 0){
+        st.pop();
+        k-- ;
+    }
+
+    if(st.length == 0) return "0";
+
+    let res = "";
+    for(let i = 0 ; i<st.length ; i++){
+        res += st[i];
+    }
+
+    const firstIdx = res.split('').findIndex((e)=>e!=='0') ;
+    return firstIdx >=0 ? res.slice(firstIdx) : "0" ;
+};
 
 
 
+// ============================================= 10. Largest Rectangle Area ===============================================
+/**
+Leetcode : https://leetcode.com/problems/largest-rectangle-in-histogram/description/
+Given an array of integers heights representing the histogram's bar height where the width of each bar is 1, return the area of the largest rectangle in the histogram.
+Brute Force : Just check all subarray , and then find maximum area . 
+ * @param {number[]} heights
+ * @return {number}
+ */
+var largestRectangleArea = function(arr) {
+    
+    let res = 0 ;
+    const n = arr.length ;
+
+    for(let i = 0 ; i<n ; i++){
+        let min = arr[i];
+        for(let j = i ; j< n ; j++){
+            min = Math.min(min , arr[j]);
+            const area = (j-i+1)*min ;
+            res = Math.max(res , area);
+        }
+    }
+    return res ;
+};
+
+
+// Better Optimize with TC of O(5N) and space is also there of O(3N) . Just take next smaller and previos smaller 
+/**
+and store index of it . Very Easy Question 
+ * @param {number[]} heights
+ * @return {number}
+ */
+var largestRectangleArea = function(arr) {
+    
+    const previousSmaller = ()=>{
+        let st = [];
+        let res = Array.from({length : n});
+
+        for(let i = 0 ; i < n ; i++){
+            const ele = arr[i];
+
+            while(st.length != 0 && ele <= arr[st.at(-1)]){
+                st.pop();
+            }
+
+            res[i] = st.length ? st.at(-1) : -1 ;
+            st.push(i);
+        }
+        return res ;
+    }
+
+    const nextSmaller = ()=>{
+        let st = [];
+        let res = Array.from({length : n});
+
+        for(let i = n-1 ; i>=0 ; i--){
+            const ele = arr[i];
+
+            while(st.length != 0 && ele <= arr[st.at(-1)]){
+                st.pop();
+            }
+
+            res[i] = st.length ? st.at(-1) : n ;
+            st.push(i);
+        }
+        return res ;
+    }
+
+    const n = arr.length ;
+    let res = 0 ;
+    const pes = previousSmaller();
+    const nes = nextSmaller();
+
+    for(let i=0 ; i<n ; i++){
+        const width = nes[i] - pes[i] -1 ;
+        const area = width * arr[i];
+        res = Math.max(res , area);
+    }
+    return res ;
+};
 
 
 
+// =========================================== 11. Maximal Rectangle =================================================
+/**
+Leetcode : https://leetcode.com/problems/maximal-rectangle/
+
+Given a rows x cols binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area.
+
+Example 1 : 
+Input: matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+Output: 6
+Explanation: The maximal rectangle is shown in the above picture.
+Example 2:
+
+Input: matrix = [["0"]]
+Output: 0
+Example 3:
+
+Input: matrix = [["1"]]
+Output: 1
+
+Approach : Easy One , just send each row of matrix to find largest rectangle in histogram . As per above question . 
+But for each row , need to calculate height of bar and then send that row . Very Easy Just code is lengthy . 
+
+ * @param {character[][]} matrix
+ * @return {number}
+ */
+var maximalRectangle = function(matrix) {
+    
+    const largestAreaInHistogram = (arr)=>{
+
+        const previousSmaller = ()=>{
+            let st = [];
+            let res = Array.from({length : n});
+
+            for(let i = 0 ; i < n ; i++){
+                const ele = arr[i];
+
+                while(st.length != 0 && ele <= arr[st.at(-1)]){
+                    st.pop();
+                }
+
+                res[i] = st.length ? st.at(-1) : -1 ;
+                st.push(i);
+            }
+            return res ;
+        }
+
+        const nextSmaller = ()=>{
+            let st = [];
+            let res = Array.from({length : n});
+
+            for(let i = n-1 ; i>=0 ; i--){
+                const ele = arr[i];
+
+                while(st.length != 0 && ele <= arr[st.at(-1)]){
+                    st.pop();
+                }
+
+                res[i] = st.length ? st.at(-1) : n ;
+                st.push(i);
+            }
+            return res ;
+        }
+
+        const n = arr.length ;
+        let res = 0 ;
+        const pes = previousSmaller();
+        const nes = nextSmaller();
+
+        for(let i=0 ; i<n ; i++){
+            const width = nes[i] - pes[i] -1 ;
+            const area = width * arr[i];
+            res = Math.max(res , area);
+        }
+        return res ;
+
+    }
 
 
+    let row = matrix.length ;
+    let col = matrix[0].length ;
+    let histMat = Array.from({length : row},()=>{
+        return Array.from({length : col } , ()=>0)
+    })
+
+    for(let i = 0 ; i<col ; i++){
+        let sum = 0 ;
+        for(let j=0 ; j<row ; j++){
+            if(matrix[j][i] == '0'){
+                sum = 0 ;
+            }
+            sum += parseInt(matrix[j][i]);
+            histMat[j][i] = sum ;
+        }
+    }
+
+    let res = 0 ;
+    for(let i = 0 ; i<row ; i++){
+        const max = largestAreaInHistogram(histMat[i]);
+        res = Math.max(res , max);
+    }
+    return res ;
+
+};
 
 
+// ========================================= 12 . Sliding Window Maximum ============================================
+/**
+Leetcode : https://leetcode.com/problems/sliding-window-maximum/
+
+You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
+
+Return the max sliding window.
+
+Example 1:
+Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
+Output: [3,3,5,5,6,7]
+Explanation: 
+Window position                Max
+---------------               -----
+[1  3  -1] -3  5  3  6  7       3
+ 1 [3  -1  -3] 5  3  6  7       3
+ 1  3 [-1  -3  5] 3  6  7       5
+ 1  3  -1 [-3  5  3] 6  7       5
+ 1  3  -1  -3 [5  3  6] 7       6
+ 1  3  -1  -3  5 [3  6  7]      7
+ 
+Example 2:
+Input: nums = [1], k = 1
+Output: [1]
+ 
+
+ Brute Force : Just check all subarray and find maximum which could throw TLE 
+ */
+var maxSlidingWindow = function(nums, k) {
+    
+    let res = [];
+    let n = nums.length ;
+
+    for(let i = 0 ; i<=n-k ; i++){
+        let max = -Infinity ;
+
+        for(let j = i ; j < i+k ; j++){
+            max = Math.max(max , nums[j]);
+        }
+        res.push(max);
+    }
+    return res ;
+
+};
 
 
 
