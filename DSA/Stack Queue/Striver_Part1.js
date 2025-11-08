@@ -827,6 +827,214 @@ var maxSlidingWindow = function(nums, k) {
 };
 
 
+// Optimized Way : Using DeQue 
+/**
+Logic : Take Doubly ended queue . One get bigger element then start removing from back of queue , until it get right place . 
+If window size increased in queue , then remove first element . Super Easy Questioin . 
+ */
+var maxSlidingWindow = function(nums, k) {
+    
+    let dq = [];
+    let res = [];
+    const n = nums.length ;
+
+    for(let i = 0 ; i < n ; i++){
+
+        if( dq.length !=0 && i-k >= dq.at(0)){
+            dq.shift();
+        }
+
+        while(dq.length != 0 && nums[dq.at(-1)] < nums[i] ){
+            dq.pop();
+        }
+        dq.push(i);
+
+        if((i+1)-k >= 0){
+            res.push(nums[dq.at(0)]);
+        }
+    }
+    return res ;
+};
+
+
+// ========================================== 13. Stock Span Problem ==================================================
+
+/** 
+Leetcode : https://leetcode.com/problems/online-stock-span/
+GFG : https://www.geeksforgeeks.org/problems/stock-span-problem-1587115621/1 . 
+
+The stock span problem is a financial problem where we have a series of daily price quotes for a stock and we need to calculate the span of stock price for all days.
+You are given an array arr[] representing daily stock prices, the stock span for the i-th day is the number of consecutive days up to day i (including day i itself) for which the price of the stock is less than or equal to the price on day i. Return the span of stock prices for each day in the given sequence.
+
+Example 1 : 
+Input: arr[] = [100, 80, 90, 120]
+Output: [1, 1, 2, 4]
+Explanation: Traversing the given input span 100 is greater than equal to 100 and there are no more days behind it so the span is 1, 80 is greater than equal to 80 and smaller than 100 so the span is 1, 90 is greater than equal to 90 and 80 so the span is 2, 120 is greater than 90, 80 and 100 so the span is 4. So the output will be [1, 1, 2, 4].
+
+Brute Force 
+ */
+class Solution {
+    calculateSpan(arr) {
+        // code here
+        let res = [];
+        const n = arr.length ;
+        
+        for(let i = 0 ; i<n ; i++){
+            let count = 0 ; 
+            
+            for(let j = i ; j>=0 ; j--){
+                if(arr[j] <= arr[i]){
+                    count+=1 ;
+                }else{
+                    break ;
+                }
+            }
+            res.push(count);
+        }
+        return res ;
+    }
+}
+
+
+// Optimized Way : Super Easy Super logical questioin 
+/**
+Just calculate previous greater element and then find difference between index of (curr element and prev greater element index) . 
+ */
+
+class Solution {
+    calculateSpan(arr) {
+        // code here
+        
+        const findPGE = ()=>{
+            let st = [];
+            let ans = [];
+            
+            for(let i = 0 ; i< n ; i++){
+                
+                while(st.length != 0 && arr[i] >= arr[st.at(-1)]){
+                    st.pop();
+                }
+                
+                if(st.length == 0){
+                    ans.push(-1);
+                }
+                else{
+                    ans.push(st.at(-1));
+                }
+                
+                st.push(i);
+                
+            }
+            return ans ;
+        }
+        
+        const n = arr.length ;
+        const pge = findPGE();
+        
+        // console.log({pge})
+        
+        for(let i = 0 ; i<n ; i++){
+            arr[i] = i - pge[i];
+        }
+        
+        return arr ;
+    }
+}
+
+
+// More Optimized . Extremely Good Solution
+/**
+Just store value and span in stack . for each element , pop from stack until number at top of stack is greater . 
+parallely count span variable . 
+ */
+
+class Solution {
+    calculateSpan(arr) {
+        // code here
+        
+        let st = [] ;
+        let ans = [] ; 
+        const n = arr.length ;
+        
+        for(let i = 0 ; i < n ; i++){
+            let span = 1 ; 
+            
+            while(st.length != 0 && arr[i] >= st.at(-1)[0] ){
+                span += st.pop()[1];
+            }
+            
+            ans.push(span);
+            
+            st.push([arr[i] , span]);
+        }
+        
+        return ans ;
+        
+    }
+}
+
+
+// ========================================== 14. Celebrity Problem ====================================================
+/**
+GFG : https://www.geeksforgeeks.org/problems/the-celebrity-problem/1
+
+A celebrity is a person who is known to all but does not know anyone at a party. A party is being organized by some people. A square matrix mat[][] of size n*n is used to represent people at the party such that if an element of row i and column j is set to 1 it means ith person knows jth person. You need to return the index of the celebrity in the party, if the celebrity does not exist, return -1.
+
+Note: Follow 0-based indexing.
+
+Examples:
+Input: mat[][] = [[1, 1, 0],
+                [0, 1, 0],
+                [0, 1, 1]]
+Output: 1
+Explanation: 0th and 2nd person both know 1st person and 1st person does not know anyone. Therefore, 1 is the celebrity person.
+
+Input: mat[][] = [[1, 1], 
+                [1, 1]]
+Output: -1
+Explanation: Since both the people at the party know each other. Hence none of them is a celebrity person.
+
+Input: mat[][] = [[1]]
+Output: 0
+ */
+class Solution {
+    celebrity(mat) {
+        // code here
+        
+        let flag = true ;
+        const n = mat.length ;
+        let celb = -1 ;
+        for(let i = 0 ; i<n ; i++){
+            flag = true ;
+            for(let j = 0 ; j< n ; j++){
+                if( j!=i && mat[i][j] == 1){
+                    flag = false ;
+                    break ;
+                }
+            }
+            if(flag){
+                celb = i ;
+                break ;
+            } 
+        }
+        
+        if(celb == -1) return celb ;
+        
+        for(let i = 0 ; i<n ; i++){
+            if( celb != i && mat[i][celb] == 0 ){
+                return -1 ;
+            }
+        }
+        return celb ;
+    }
+}
+
+
+
+
+
+
+
 
 
 
