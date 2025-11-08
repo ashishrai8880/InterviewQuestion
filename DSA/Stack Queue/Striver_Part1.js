@@ -1030,8 +1030,145 @@ class Solution {
 }
 
 
+// Optimized Approach 
+/**
+Use two pointer : Take top ptr and down ptr . If top knows down , it means top is not celebrity . If down knows 
+top , it means down is not celebrity . If no one knows each other , it means both of two is not celebrity . 
+Because there cannot be 2 celebrity . 
+ */
+class Solution {
+    celebrity(mat) {
+        // code here
+        
+        const m = mat.length ;
+        let top = 0 ;
+        let down = m-1 ;
+        
+        while(top < down){
+            if(mat[top][down] == 1){
+                top++ ;
+            }
+            else if(mat[down][top] == 1){
+                down-- ;
+            }
+            else{
+                top++ ;
+                down-- ;
+            }
+        }
+        
+        if(top > down) return -1 ;
+        
+        for(let i = 0 ; i<m ; i++){
+            if(i==top) continue ;
+            
+            if(mat[top][i] ==1 || mat[i][top] == 0){
+                return -1 ;
+            }
+        }
+        return top ;
+    }
+}
 
 
+// ========================================== 15. LRU Cache ======================================================
+/*
+Leetcode : https://leetcode.com/problems/lru-cache/
+In this question , just need to design cache with limited capacity . 
+Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
+
+Implement the LRUCache class:
+
+LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
+int get(int key) Return the value of the key if the key exists, otherwise return -1.
+void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.
+The functions get and put must each run in O(1) average time complexity.
+*/
+class Node{
+    constructor(key , value){
+        this.key = key ;
+        this.value = value ;
+        this.next = null ;
+        this.prev = null ;
+    }
+}
+
+/**
+ * @param {number} capacity
+ */
+var LRUCache = function(capacity) {
+    this.capacity = capacity ;
+    this.map = new Map();
+
+    this.head = new Node(null , null);
+    this.tail = new Node(null , null);
+
+    this.head.next = this.tail ;
+    this.tail.prev = this.head ;
+};
+
+LRUCache.prototype.insert = function(node) {
+    node.prev = this.head ;
+    node.next = this.head.next ;
+
+    this.head.next.prev = node ;
+    this.head.next = node ;
+}
+
+LRUCache.prototype.remove = function(node){
+    let prev = node.prev;
+    let next = node.next;
+    prev.next = next;
+    next.prev = prev;
+}
+
+/** 
+ * @param {number} key
+ * @return {number}
+ */
+LRUCache.prototype.get = function(key) {
+    
+    if(!this.map.has(key)) return -1 ;
+
+    let node = this.map.get(key);
+    this.remove(node);
+    this.insert(node);
+    return node.value ;
+};
+
+/** 
+ * @param {number} key 
+ * @param {number} value
+ * @return {void}
+ */
+LRUCache.prototype.put = function(key, value) {
+    if (this.map.has(key)) {
+        // update existing node
+        const node = this.map.get(key);
+        node.value = value;  // update value
+        this.remove(node);
+        this.insert(node);
+        return;
+    }
+
+    if (this.map.size === this.capacity) {
+        const lru = this.tail.prev;
+        this.remove(lru);
+        this.map.delete(lru.key);
+    }
+
+    // insert new node
+    const newNode = new Node(key, value);
+    this.insert(newNode);
+    this.map.set(key, newNode);
+};
+
+/** 
+ * Your LRUCache object will be instantiated and called as such:
+ * var obj = new LRUCache(capacity)
+ * var param_1 = obj.get(key)
+ * obj.put(key,value)
+ */
 
 
 
