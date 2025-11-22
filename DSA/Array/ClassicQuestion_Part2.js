@@ -362,8 +362,54 @@ var longestSubarray = function(nums, limit) {
 
 
 
+// =================================== 8. Max and Min Sum after removing K elements from array ========================================
 
+/*
+In Interview at UAS Aero International
+Eg : [1,2,3,4,5] and k = 2 
+Max Sum : 3,4,5 = 12   Min Sum 1,2,3 = 6
+*/
+class MinHeap extends Array {
+    push(x) { super.push(x); this.sort((a,b)=>a-b); }
+    pop() { return super.shift(); }
+}
 
+class MaxHeap extends Array {
+    push(x) { super.push(x); this.sort((a,b)=>b-a); }
+    pop() { return super.shift(); }
+}
+
+function getMaxMinSumOptimized(arr, k) {
+    let minHeap = new MinHeap(); // for largest k elements
+    let maxHeap = new MaxHeap(); // for smallest k elements
+
+    for (let num of arr) {
+        // ---- track k smallest using max heap ----
+        if (maxHeap.length < k) maxHeap.push(num);
+        else if (num < maxHeap[0]) { 
+            maxHeap.pop();
+            maxHeap.push(num);
+        }
+
+        // ---- track k largest using min heap ----
+        if (minHeap.length < k) minHeap.push(num);
+        else if (num > minHeap[0]) { 
+            minHeap.pop();
+            minHeap.push(num);
+        }
+    }
+
+    let total = arr.reduce((a, b) => a + b, 0);
+    let kSmallSum = maxHeap.reduce((a, b) => a + b, 0);
+    let kLargeSum = minHeap.reduce((a, b) => a + b, 0);
+
+    return {
+        maxSum: total - kSmallSum,
+        minSum: total - kLargeSum
+    };
+}
+
+console.log(getMaxMinSumOptimized([1,2,3,4,5], 2));
 
 
 
