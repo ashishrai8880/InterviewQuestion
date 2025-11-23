@@ -242,13 +242,187 @@ var totalFruit = function(arr) {
 };
 
 
+/**
+Most Optimized Solution
+ */
+var totalFruit = function(fruits) {
+    
+    let maxlen = 0;
+    let lastFruit = -1, secondLastFruit = -1;
+    let currCount = 0, lastFruitStreak = 0;
+
+    for (let fruit of fruits) {
+
+        if (fruit === lastFruit || fruit === secondLastFruit) {
+            currCount++;
+        } else {
+            currCount = lastFruitStreak + 1;
+        }
+
+        if (fruit === lastFruit) {
+            lastFruitStreak++;
+      
+        } else {
+            lastFruitStreak = 1;
+            secondLastFruit = lastFruit;
+            lastFruit = fruit;
+        }
+        maxlen = Math.max(maxlen, currCount);
+    }
+
+    return maxlen;
+};
 
 
 
+// ================================= 4. Longest Repeating character replacement ===========================================
+/**
+Leetcode : https://leetcode.com/problems/longest-repeating-character-replacement/description/
+
+You are given a string s and an integer k. You can choose any character of the string and change it to any other uppercase English character. You can perform this operation at most k times.
+Return the length of the longest substring containing the same letter you can get after performing the above operations.
+
+Example 1:
+Input: s = "ABAB", k = 2
+Output: 4
+Explanation: Replace the two 'A's with two 'B's or vice versa.
+
+Example 2:
+Input: s = "AABABBA", k = 1
+Output: 4
+Explanation: Replace the one 'A' in the middle with 'B' and form "AABBBBA".
+The substring "BBBB" has the longest repeating letters, which is 4.
+There may exists other ways to achieve this answer too.
+
+ */
+var characterReplacement = function(s, k) {
+    
+    let res = 0 ; 
+    const n = s.length ;
+
+    for(let i = 0 ; i < n ; i++){
+        
+        let freq = {};
+        let maxFreq = 0 ;
+
+        for(let j = i ; j< n ; j++){
+            const ch = s[j];
+            const len = j - i + 1 ;
+
+            freq[ch] = freq[ch] ? freq[ch] + 1 : 1 ;
+            maxFreq = Math.max(maxFreq , freq[ch] );
+            const replace = len - maxFreq ;
+            
+            if(replace <= k){
+                res = Math.max(res , len);
+            }else{
+                break ;
+            }
+        }
+    }
+    return res ;
+};
 
 
+/**
+Better Solution
+ */
+var characterReplacement = function(s, k) {
+    
+    let res = 0 ; 
+    const n = s.length ;
+    let l = 0 ;
+    let maxFreq = 0 ; 
+    let freq = {};
+
+    for(let r = 0 ; r < n ; r++){
+        const ch = s[r];
+
+        freq[ch] = ( freq[ch] || 0 ) + 1 ;
+
+        maxFreq = Math.max(maxFreq , freq[ch]);
+
+        while((r-l+1) - maxFreq > k ){
+            freq[s[l]]-- ;
+            l++ ;
+        }
+
+        res = Math.max(res , r-l+1)
+
+    }
+
+    return res ;
+
+};
 
 
+// ======================================= 5. Binary Subarray with sum ==============================================
+
+/**
+Leetcode : https://leetcode.com/problems/binary-subarrays-with-sum/description/
+
+Given a binary array nums and an integer goal, return the number of non-empty subarrays with a sum goal.
+
+A subarray is a contiguous part of the array.
+
+Example 1:
+Input: nums = [1,0,1,0,1], goal = 2
+Output: 4
+Explanation: The 4 subarrays are bolded and underlined below:
+[1,0,1,0,1]
+[1,0,1,0,1]
+[1,0,1,0,1]
+[1,0,1,0,1]
+
+Example 2:
+Input: nums = [0,0,0,0,0], goal = 0
+Output: 15
+ */
+var numSubarraysWithSum = function(nums, goal) {
+    
+    let res = 0 ;
+    const n = nums.length ;
+    let prefSum = 0 ;
+    let map = new Map();
+    map.set(0 ,1);
+
+    for(const num of nums){
+        prefSum += num ;
+        const check = prefSum - goal ;
+
+        if( map.has(check) ){
+            res = res + map.get(check);
+        }
+
+        map.set(prefSum , (map.get(prefSum) || 0) + 1 ) ;
+    }
+
+    return res ;
+
+};
+
+/**
+Better Solution using prefix sum 
+ */
+var numSubarraysWithSum = function(nums, goal) {
+    
+    let res = 0 ;
+    const n = nums.length ;
+    let prefSum = 0 ;
+    let map = new Map();
+    map.set(0 ,1);
+
+    for(const num of nums){
+        prefSum += num ;
+        const check = prefSum - goal ;
+
+        if( map.has(check) ){
+            res = res + map.get(check);
+        }
+        map.set(prefSum , (map.get(prefSum) || 0) + 1 ) ;
+    }
+    return res ;
+};
 
 
 
