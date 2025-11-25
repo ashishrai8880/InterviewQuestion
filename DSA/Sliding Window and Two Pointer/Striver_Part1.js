@@ -425,8 +425,126 @@ var numSubarraysWithSum = function(nums, goal) {
 };
 
 
+// ========================================== 6. Count Number of Nice Subarray =================================================
+/**
+Leetcode : https://leetcode.com/problems/count-number-of-nice-subarrays/
+
+Given an array of integers nums and an integer k. A continuous subarray is called nice if there are k odd numbers on it.
+Return the number of nice sub-arrays.
+
+Example 1:
+Input: nums = [1,1,2,1,1], k = 3
+Output: 2
+Explanation: The only sub-arrays with 3 odd numbers are [1,1,2,1] and [1,2,1,1].
+
+Example 2:
+Input: nums = [2,4,6], k = 1
+Output: 0
+Explanation: There are no odd numbers in the array.
+
+Example 3:
+Input: nums = [2,2,2,1,2,2,1,2,2,2], k = 2
+Output: 16
+
+Logic : Questioin is same as previous one . Just break every number by num%2 . If it is odd , it will give 1 otherwise 0 .
+so count of odd number would be like sum of 1 . 
+
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var numberOfSubarrays = function(nums, k) {
+    
+    let res = 0 ;
+    const n = nums.length ;
+    let map = new Map();
+    map.set(0 , 1)
+    let prefSum = 0 ;  
+
+    for(const num of nums){
+        prefSum += num%2 ;
+
+        if(map.has(prefSum - k)){
+            res = res + map.get(prefSum - k);
+        }
+
+        map.set(prefSum , (map.get(prefSum) || 0)+1 )
+    }
+
+    return res ;
+};
 
 
+
+// ========================================== 7. Number of substring containing all characters ============================
+/**
+Leetcode : https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/
+
+Given a string s consisting only of characters a, b and c.
+Return the number of substrings containing at least one occurrence of all these characters a, b and c.
+
+Example 1:
+Input: s = "abcabc"
+Output: 10
+Explanation: The substrings containing at least one occurrence of the characters a, b and c are "abc", "abca", "abcab", "abcabc", "bca", "bcab", "bcabc", "cab", "cabc" and "abc" (again). 
+
+Example 2:
+Input: s = "aaacb"
+Output: 3
+Explanation: The substrings containing at least one occurrence of the characters a, b and c are "aaacb", "aacb" and "acb". 
+
+Example 3:
+Input: s = "abc"
+Output: 1
+ * @param {string} s
+ * @return {number}
+ */
+var numberOfSubstrings = function(s) {
+    
+    let res = 0 ;
+    const n = s.length ;
+
+    for(let i = 0 ; i< n ; i++){
+        let set = new Set();
+        for(let j = i ; j<n ; j++){
+            set.add(s[j]);
+            if(set.size == 3){
+                res += (n-j) ;
+                break ;
+            }
+        }
+    }
+
+    return res ;
+
+};
+
+
+// Optimized way
+/**
+Basically taking last index of each character a , b , c . when we have last index , then simply finding minimum 
+last index , it means , before all character behind last minimum index will satisfy condition . 
+ */
+var numberOfSubstrings = function(s) {
+    
+    let res = 0 ;
+    const n = s.length ;
+   
+    let arr = [-1 , -1 , -1];
+    for(let i = 0 ; i<n  ; i++){
+        const ch = s[i];
+
+        const idx = ch.charCodeAt(0) - 'a'.charCodeAt(0);
+        arr[idx] = i ;
+
+        if(arr[0]!=-1 && arr[1]!=-1 && arr[2]!=-1  ){
+            const minIdx = Math.min(arr[0] , arr[1] , arr[2]);
+            res = res + 1 + minIdx ;
+        }
+    }
+    
+    return res ;
+};
 
 
 
