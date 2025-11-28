@@ -600,6 +600,79 @@ var maxScore = function(arr, k) {
 
 
 
+// ============================================ 9. Longest Substring with exact k distinct elements ======================
+/**
+GFG : https://www.geeksforgeeks.org/problems/longest-k-unique-characters-substring0853/1
+You are given a string s consisting only lowercase alphabets and an integer k. Your task is to find the length of the longest substring that contains exactly k distinct characters.
+
+Note : If no such substring exists, return -1. 
+
+Examples:
+
+Input: s = "aabacbebebe", k = 3
+Output: 7
+Explanation: The longest substring with exactly 3 distinct characters is "cbebebe", which includes 'c', 'b', and 'e'.
+Input: s = "aaaa", k = 2
+Output: -1
+Explanation: There's no substring with 2 distinct characters.
+Input: s = "aabaaab", k = 2
+Output: 7
+Explanation: The entire string "aabaaab" has exactly 2 unique characters 'a' and 'b', making it the longest valid substring.
+
+ * @param {string} s
+ * @param {number} k
+ * @returns {number}
+ */
+class Solution {
+    longestKSubstr(s, k) {
+        // brute force
+        
+        const n = s.length ;
+        let res = 0 ;
+        
+        let map = new Map();
+        let l = 0 ;
+        let r = 0 ;
+        
+        for( ; r< n ; r++){
+            const ch = s[r];
+            
+            map.set(ch , (map.get(ch) || 0) + 1 );
+            
+            while(map.size > k){
+                const left = s[l];
+                map.set(left, map.get(left) - 1);
+
+                if (map.get(left) === 0) {
+                    map.delete(left);
+                }
+                l++ ;
+            }
+            
+            if (map.size === k) {
+                res = Math.max(res, r - l + 1);
+            }
+            
+        }
+        
+        return res === 0 ? -1 : res;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
