@@ -708,7 +708,38 @@ var subarraysWithKDistinct = function(nums, k) {
 };
 
 
+//Optimized Approach
+/**
+count subarrays with at most k distinct integers . 
+ */
+var subarraysWithKDistinct = function(nums, d) {
+    
+    const n = nums.length ;
 
+    const atMost = (k)=>{
+
+        let res = 0 ;
+        let l = 0 ;
+        let map = new Map();
+
+        for (let r = 0; r < n; r++) {
+            map.set(nums[r], (map.get(nums[r]) || 0) + 1);
+
+            while (map.size > k) {
+                map.set(nums[l], map.get(nums[l]) - 1);
+                if (map.get(nums[l]) === 0) {
+                    map.delete(nums[l]);
+                }
+                l++;
+            }
+
+            res += r - l + 1;
+        }
+        
+        return res ;
+    }
+    return atMost(d) - atMost(d-1);
+};
 
 
 
