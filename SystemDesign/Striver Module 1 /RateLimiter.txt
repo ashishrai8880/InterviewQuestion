@@ -502,7 +502,38 @@ If the log size is the same or lower than the allowed count, a request is accept
 
 
 
+// ==================================== PROBLEM IN RATE LIMITERS ====================================================
+1. Race condition
 
+As discussed above:
+
+Read the counter value from Redis and check if ( counter + 1 ) exceeds the threshold. If not, increment the counter value by 1 in
+Redis.
+
+Press enter or click to view image in full size
+
+Image source System Design Interview — An insider’s guide by Alex Xu
+Assume the counter value in Redis is 3 (as shown in the image above). If two requests concurrently read the counter value before
+either of them writes the value back, each will increment the counter by one and write it back without checking the other thread.
+Both requests (threads) believe they have the correct counter value 4. However, the correct counter value should be 5.
+
+Locks can be useful here, but that might impact the performance. So we can use Redis Lua Scripts.
+
+This may result in better performance.
+Also, all steps within a script are executed in an atomic way. No other Redis command can run while a script is executing.
+
+2. Synchronization
+
+Synchronization is another important factor to consider in a distributed environment. To support millions of users, one rate 
+limiter server might not be enough to handle the traffic. When multiple rate limiter servers are used, synchronization is required.
+
+One possible solution is to use sticky sessions that allow a client to send traffic to the same rate limiter. This solution is not 
+advisable because it is neither scalable nor flexible. A better approach is to use centralized data stores like Redis.
+
+After things are in place, we can also monitor our rate limiter for metrics like performance, rules, algorithm effectiveness, etc. 
+For example, if rate-limiting rules are too strict, many valid requests are dropped. In this case, we want to relax the rules a
+little bit. In another example, we notice our rate limiter becomes ineffective when there is a sudden increase in traffic like 
+flash sales. In this scenario, we may replace the algorithm to support burst traffic. The token bucket is a good fit here.
 
 
 
