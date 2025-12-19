@@ -1,0 +1,87 @@
+
+📌 What is Base62?
+Base62 is an encoding scheme that uses a set of 62 characters to represent data. These characters include:
+
+26 lowercase letters: a–z
+26 uppercase letters: A–Z
+10 digits: 0–9
+
+🔤 Base62 Character Set
+0 1 2 3 4 5 6 7 8 9 
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 
+a b c d e f g h i j k l m n o p q r s t u v w x y z
+In total: 10 (digits) + 26 (uppercase) + 26 (lowercase) = 62 characters
+
+✅ Key Properties of Base62
+URL-safe: No special characters like +, /, or =.
+Compact: Encoded strings are short and readable.
+No padding required.
+Common in short URLs, unique ID generation, and compact representations.
+🧮 How Base62 Works (Example)
+Let’s say you want to convert a decimal number like 125 into Base62:
+
+Divide the number by 62, get the quotient and remainder:
+125 ÷ 62 = 2 remainder 1
+2 ÷ 62 = 0 remainder 2
+Now, reverse the remainders: 2, 1
+
+Lookup the character set:
+
+2 → '2'
+1 → '1'
+🔁 Final Base62 string = 21
+
+To decode 21 back:
+
+2 = value 2, 1 = value 1
+(2 × 62) + 1 = 125
+
+================================================== 🔐 What is Base64?  ======================================================
+Base64 is another encoding system — widely used in email encoding, image representation in HTML/CSS, binary-to-text encoding in APIs, etc.
+
+🔤 Base64 Character Set
+26 uppercase letters: A–Z
+26 lowercase letters: a–z
+10 digits: 0–9
+2 symbols: + and /
+Padding symbol: = (optional but often used)
+Total: 64 characters
+
+📥 Input-Output Format
+Takes 3 bytes (24 bits) of binary data.
+Encodes them into 4 Base64 characters (each 6 bits).
+🧪 Base64 Example
+Encoding Man:
+
+ASCII of M, a, n = 77 97 110
+Binary: 01001101 01100001 01101110
+Group into 6-bit chunks: 010011 010110 000101 101110
+Decimal: 19 22 5 46
+Base64: TWFu
+⚖️ Base62 vs Base64: Key Differences
+Press enter or click to view image in full size
+
+======================================================================================================
+🧩 Other Similar Encodings
+🔹 Base58
+Used in Bitcoin addresses (excludes confusing characters like 0, O, I, l)
+
+58 characters: A-Z, a-z, 1–9 (without confusing ones)
+No 0, O, I, l
+Safer for manual entry
+🔹 Base36
+Characters: 0-9, A-Z
+Often used for compact alphanumeric representations.
+Easier math, good for small-scale encoding.
+
+===============================================================================================================
+🔹 Base85 (Ascii85, Z85)
+Uses 85 printable characters.
+More efficient than Base64 (encoded size ~25% smaller)
+More complex and less human-readable.
+🔹 Base32
+Only 32 characters: A-Z, 2–7
+Used in QR codes, DNS, etc.
+More error-tolerant (case-insensitive)
+
+
