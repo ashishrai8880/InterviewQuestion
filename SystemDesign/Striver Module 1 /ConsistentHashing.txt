@@ -1,0 +1,153 @@
+------------------------------------------ REFERENCE : https://www.geeksforgeeks.org/system-design/consistent-hashing/ 
+
+
+Consistent hashing is a popular technique used in distributed systems to address the challenge of efficiently distributing keys
+or data elements across multiple nodes/servers in a network. Consistent hashing's primary objective is to reduce the number of 
+remapping operations necessary when adding or removing nodes from the network, which contributes to the stability and dependability 
+of the system.
+
+
+Consistent hashing can be used in to share the burden among nodes and lessen the effects of node failures.
+For example, when a new node is added to the network, only a small number of keys are remapped to the new node, which helps 
+to reduce the overhead associated with the addition.
+Similarly, when a node fails, only a small number of keys are affected, which helps to minimize the impact of the failure on 
+the system as a whole.  
+Consistent hashing is also useful in ensuring data availability and consistency in a distributed system.
+
+
+----------------- GPT Notes
+
+--------1. What is Consistent Hashing?
+
+Consistent hashing is a hashing strategy used in distributed systems to distribute data (keys) across multiple servers (nodes)
+such that when servers are added or removed, only a small portion of keys need to be remapped.
+
+It is commonly used in:
+
+Distributed caches (Redis, Memcached)
+Load balancers
+Distributed databases
+Sharding systems
+
+-------2. Why is Consistent Hashing Required?
+
+In distributed systems:
+Servers scale up/down
+Nodes fail
+Traffic is not static
+
+We want:
+Minimal data movement when topology changes
+Even data distribution
+High availability and scalability
+Consistent hashing solves the problem of massive rehashing when servers change.
+
+
+------------------3. Why Normal Hashing Fails
+Normal Hashing Approach
+
+serverIndex = hash(key) % N
+
+Where:
+key → data (userId, cache key)
+N → number of servers
+Problem When N Changes
+Example:
+3 servers → hash(key) % 3
+Add 1 server → hash(key) % 4
+
+🚨 Almost all keys get remapped
+
+Issues:
+Cache misses
+Massive data movement
+High latency
+System instability
+This makes normal hashing unsuitable for dynamic distributed systems.
+
+
+------------4. Core Idea of Consistent Hashing
+
+Instead of mapping keys → servers directly, we:
+Map both servers and keys onto a hash ring
+Use a circular space (0 to 2³²−1, for example)
+Each key is assigned to the next server clockwise on the ring
+
+-------------5. Hash Ring Visualization
+0 ------------------------> 2^32 - 1
+|                               |
+|                               |
+|                               |
+---------------------------------
+
+
+Servers are placed on the ring using hash(serverId)
+Keys are placed using hash(key)
+A key goes to the nearest server clockwise
+
+-------------6. What Happens When Servers Change?
+Server Added
+Only keys between the new server and its previous neighbor are remapped
+Rest of the system remains untouched
+Server Removed
+Only keys belonging to that server move to the next server
+📌 Rehashing impact is O(K/N), not O(K)
+
+
+-------------7. Virtual Nodes (VNodes)
+Problem Without VNodes
+Uneven data distribution
+Some servers get more keys than others
+Solution: Virtual Nodes
+Each physical server is represented by multiple virtual nodes
+
+Example:
+Server A → A#1, A#2, A#3
+Server B → B#1, B#2, B#3
+
+Benefits:
+Better load distribution
+Easier scaling
+Fault tolerance
+📌 Industry standard practice
+
+--------------8. Disadvantages of Consistent Hashing
+1. Uneven Load (without VNodes)
+Fixed using virtual nodes
+
+2. More Complex Implementation
+Requires hash ring, binary search, balancing
+
+3. Data Replication Complexity
+Replicas must be placed carefully (e.g., next N nodes)
+
+4. Hot Keys Problem
+Frequently accessed keys can overload a node
+Solved with caching, replication, or request-level load balancing
+
+---------------11. Real-World Systems Using Consistent Hashing
+
+Amazon DynamoDB
+Apache Cassandra
+Redis Cluster
+Memcached
+CDNs
+
+--------------13. When to Use Consistent Hashing (Say This in Interview)
+
+Use it when:
+System is distributed
+Nodes are dynamic
+You want horizontal scalability
+Data redistribution cost must be low
+
+
+
+
+
+
+
+
+
+
+
