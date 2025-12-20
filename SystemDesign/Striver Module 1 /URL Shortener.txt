@@ -1,0 +1,116 @@
+====================== REFERENECE :  https://blog.logrocket.com/how-build-url-shortener-node-js/  
+                                      https://dev.to/heymich/build-a-url-shortener-with-nodejs-4pnp
+
+
+A URL shortener decreases the length of a URL for you. Large URLs can be complicated to remember or share with others. 
+A shortened URL version can help you share your favorite link more easily.
+
+A URL shortener can help you in many other ways as well. For example, links shortened with the same tool look nearly identical,
+at least for the domain section. This overall increases the authenticity of the URL.
+
+--------------How does a URL shortener work?
+The basic workings of a URL shortener is straightforward. In the short URL generation part, the API takes in a POST request 
+with the original URL as a payload. A unique ID is generated that corresponds to the original URL. This ID is added to the end
+of the base URL, i.e., the URL of your application.
+
+----------------The generated URL and the original URL are stored in the database.
+
+Planning the URL shortener build process in Node.js
+Let’s first plan out the building process. As aforementioned, for each URL passed into our API, we will generate a unique ID 
+and create a short URL with it. Then, the long URL, short URL, a variable click with the value of 0, and unique ID will be stored
+in the database.
+
+When a user sends a GET request to the short URL, the URL will be searched within the database, and the user will be redirected to
+the corresponding original URL. Sound complex? Don’t worry, we’ll cover everything you need to know.
+
+npm i dotenv express mongoose nanoid
+
+
+import express from 'express';
+const app = Express();
+
+// Server Setup
+const PORT = 3333;
+app.listen(PORT, () => {
+  console.log(`Server is running at PORT ${PORT}`);
+});
+
+
+--------------------------------------------------------------------------
+import express from 'express';
+import { nanoid } from 'nanoid';
+import Url from '../models/Url.js';
+import { validateUrl } from '../utils/utils.js';
+import dotenv from 'dotenv';
+dotenv.config({ path: '../config/.env' });
+
+const router = express.Router();
+
+// Short URL Generator
+router.post('/short', async (req, res) => {
+  const { origUrl } = req.body;
+  const base = process.env.BASE;
+
+  const urlId = nanoid();
+  if (utils.validateUrl(origUrl)) {
+    try {
+      let url = await Url.findOne({ origUrl });
+      if (url) {
+        res.json(url);
+      } else {
+        const shortUrl = `${base}/${urlId}`;
+
+        url = new Url({
+          origUrl,
+          shortUrl,
+          urlId,
+          date: new Date(),
+        });
+
+        await url.save();
+        res.json(url);
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json('Server Error');
+    }
+  } else {
+    res.status(400).json('Invalid Original Url');
+  }
+});
+
+
+router.get('/:urlId', async (req, res) => {
+  try {
+    const url = await Url.findOne({ urlId: req.params.urlId });
+    if (url) {
+      await Url.updateOne(
+        {
+          urlId: req.params.urlId,
+        },
+        { $inc: { clicks: 1 } }
+      );
+      return res.redirect(url.origUrl);
+    } else res.status(404).json('Not found');
+  } catch (err) {
+    console.log(err);
+    res.status(500).json('Server Error');
+  }
+});
+
+module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
