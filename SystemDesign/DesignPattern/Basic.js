@@ -109,6 +109,97 @@ const instance2 = new Singleton();
 console.log(instance1 === instance2); // true, both are the same instance
 
 
+// *********************************************** MongoDB Connection using Singleton **************************************
+import mongoose from "mongoose";
+
+class MongooseConnection {
+  static connection = null;
+  static connectingPromise = null;
+
+  static async connect() {
+    if (this.connection) {
+      console.log("✅ Mongoose already connected");
+      return this.connection;
+    }
+
+    console.log("✅ DB Connection Started........... ");
+    const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/testdb";
+
+    if (!uri) {
+      throw new Error("MONGODB_URI is not defined in environment variables");
+    }
+
+    this.connectingPromise = (async () => {
+      try {
+        mongoose.set("strictQuery", false);
+
+        await mongoose.connect(uri, {
+          maxPoolSize: 10, // production ready
+          minPoolSize: 2,
+          serverSelectionTimeoutMS: 10000,
+          socketTimeoutMS: 45000,
+          autoIndex: false, // disable in production
+          retryWrites: true,
+        });
+
+        this.connection = mongoose.connection;
+
+        console.log("✅ Mongoose connected");
+
+        this.connection.on("error", (err) => {
+          console.error("❌ MongoDB error:", err);
+        });
+
+        this.connection.on("disconnected", () => {
+          console.warn("⚠ MongoDB disconnected");
+        });
+
+        return this.connection;
+      } catch (error) {
+        this.connectingPromise = null;
+        console.error("❌ Mongoose connection failed", error);
+        throw error;
+      }
+    })();
+
+    return this.connectingPromise;
+  }
+
+  static async disconnect() {
+    if (this.connection) {
+      await mongoose.disconnect();
+      this.connection = null;
+      this.connectingPromise = null;
+      console.log("🔌 Mongoose disconnected");
+    }
+  }
+}
+
+export default MongooseConnection;
+
+// app.js file
+
+const app = express();
+import MongooseConnection from "./mongoConnection.js";
+
+async function startApp() {
+  try {
+    await MongooseConnection.connect();
+    await MongooseConnection.connect(); // only create one connection
+    await MongooseConnection.connect();
+    await MongooseConnection.connect();
+    await MongooseConnection.connect();
+    await MongooseConnection.connect();
+    console.log("🚀 Application started");
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+}
+
+startApp();
+
+
 // 2. Factory Pattern
 /*
 The Factory Pattern is a creational design pattern that provides an interface for creating objects, but allows subclasses to alter the type of objects that will be
