@@ -223,6 +223,35 @@ var rearrangeArray = function(nums) {
 // ============================================================= 6. Next Permutation =================================================================
 /**
 Leetcode : https://leetcode.com/problems/next-permutation/
+
+A permutation of an array of integers is an arrangement of its members into a sequence or linear order.
+
+For example, for arr = [1,2,3], the following are all the permutations of arr: [1,2,3], [1,3,2], [2, 1, 3], [2, 3, 1],
+[3,1,2], [3,2,1].
+
+Example 1:
+Input: nums = [1,2,3]
+Output: [1,3,2]
+
+Example 2:
+Input: nums = [3,2,1]
+Output: [1,2,3]
+
+Example 3:
+Input: nums = [1,1,5]
+Output: [1,5,1]
+
+ Next permutation is always greater than the previous one . It is not difficult question easy one . watch shradha khapra video
+ for this . 
+
+ Brute Force : Find all permutation of array , then return next permutation of given array . 
+
+ Optimized way : Step 1 : Find deviation pivot index from last . There would be one point from where array element is changing .
+                 Step 2 : Then swap the rightmost element with pivot element . Here rightmost element would be the 
+                            next greater number than pivot . 
+                 Step 3 : Reverse the last part after pivot element . 
+ 
+
  */
 var nextPermutation = function(nums) {
     
