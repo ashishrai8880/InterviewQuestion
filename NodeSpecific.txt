@@ -1,0 +1,96 @@
+---------------------------------> What is libuv? (Interview Definition)
+
+libuv is a C library used by Node.js that provides the event loop and handles asynchronous, non-blocking operations such as file I/O, networking, timers, and background 
+tasks.
+Node.js itself is JavaScript, but:
+
+OS-level async I/O
+Thread management
+Event polling
+
+👉 These are handled by libuv.
+
+libuv is a C library used by Node.js that provides the event loop and handles asynchronous, non-blocking operations like file I/O, networking, timers, and
+background tasks. It uses OS-level async APIs and a thread pool to execute slow operations without blocking the main JavaScript thread, allowing Node.js to
+scale efficiently while remaining single-threaded at the JavaScript level.
+
+2️⃣ Why Node.js Needs libuv
+JavaScript is single-threaded.
+
+Without libuv:
+File reads would block the entire process
+Network requests would block execution
+Node.js wouldn’t scale
+
+libuv allows Node.js to:
+Stay single-threaded at the JS level
+Still handle thousands of concurrent operations
+Use OS async APIs efficiently
+
+3️⃣ Core Responsibilities of libuv
+✅ 1. Event Loop
+libuv implements the event loop.
+It:
+Waits for async operations to complete
+Pushes their callbacks to the JS execution stack
+Ensures non-blocking execution
+
+Event loop phases include:
+Timers , I/O callbacks ,Poll ,Check , Close callbacks
+
+✅ 2. Asynchronous I/O (Non-Blocking)
+
+libuv handles:
+Network I/O (TCP, HTTP, sockets) → mostly OS async
+File system I/O → thread pool
+
+Example:
+
+fs.readFile("file.txt", callback)
+
+Behind the scenes:
+libuv sends the task to a worker thread
+JS thread continues execution
+Callback is queued when done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
