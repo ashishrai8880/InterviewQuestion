@@ -319,3 +319,138 @@ NoSQL: NoSQL databases generally focus on eventual consistency rather than stric
 5. Use Cases:
 SQL: Best for applications with structured data that require complex queries, transactions, and relationships between data (e.g., banking systems, customer relationship management).
 NoSQL: Best for applications with unstructured data or where high scalability and flexibility are needed (e.g., social media apps, big data analytics, content management).
+
+
+
+
+
+****************************************************** Part 2 *************************************************************
+Link : https://www.geeksforgeeks.org/node-js/node-interview-questions-and-answers/?utm_source=chatgpt.com
+
+-----------> 1. What are the main disadvantages of NodeJS?
+Here are some main disadvantages of NodeJS listed below:
+
+Single-threaded nature: It may not fully utilize multi-core CPUs, limiting performance.
+NoSQL preference: Relational databases like MySQL aren't commonly used.
+Rapid API changes: Frequent updates can introduce instability and compatibility issues.
+
+
+------------> 2. What is event-driven programming in NodeJS?
+Event-driven programming in Node.js basically means the app doesn’t run step by step waiting for each task to finish.
+Instead, it reacts to events like API requests, DB responses, file reads, or timers.
+
+In Node.js, when a request comes in, we register what should happen next and move on. When that operation finishes, Node.js triggers the corresponding callback or promise and continues from there.
+
+Example 
+Suppose my API gets 100 requests at the same time.
+Node.js doesn’t create 100 threads and wait on each request.
+It accepts the requests, starts async operations like DB calls, and keeps serving other requests.
+When the DB responds, Node.js picks that event and sends the response back.
+
+
+
+-----------> 3. What is a buffer in NodeJS?
+The Buffer class in NodeJS is used to perform operations on raw binary data. Generally, Buffer refers to the particular memory location in memory. Buffer and array have some similarities, but the difference is that array can be any type, and it can be resizable. Buffers only deal with binary data, and it can not be resizable. Each integer in a buffer represents a byte. console.log() function is used to print the Buffer instance.
+
+
+------------> 4. What are streams in NodeJS?
+In NodeJS, streams are a powerful way to handle data in chunks rather than loading the entire data into memory. Streams allow for the efficient processing of large volumes of data, especially in situations where the data size is too large to fit into memory all at once.
+
+There are four types of the Streams:
+
+Readable Streams: These streams allow you to read data. For example, reading data from a file or receiving HTTP request data. Example:
+fs.createReadStream() or http.IncomingMessage.
+
+Writable Streams: These streams allow you to write data. For example, writing data to a file or sending HTTP response data. Example:
+ fs.createWriteStream() or http.ServerResponse.
+
+Duplex Streams: These are both readable and writable. You can both read and write data using the same stream. Example: A TCP socket.
+Transform Streams: These are a type of duplex stream where the data is transformed as it is read and written. Example: A zlib stream to compress or decompress data.
+
+
+----------------> 5. Callback Hell 
+Callback hell is a problem in Node.js that occurs when multiple asynchronous operations depend on each other and are
+written using nested callbacks.
+As the number of async steps grows, the code becomes deeply nested, hard to read, hard to debug, and difficult to 
+maintain or handle errors properly.
+
+Example : 
+getUser(id, (err, user) => {
+	  if (err) return handle(err);
+	  getOrders(user.id, (err, orders) => {
+	    if (err) return handle(err);
+	    getOrderDetails(orders[0].id, (err, details) => {
+	      if (err) return handle(err);
+	      console.log(details);
+	    });
+	  });
+	});
+
+First: what’s a callback?
+In Node.js, many things (like reading a file or getting data from a server) take time.
+So instead of waiting, you give Node.js a callback — a function it should run after the task finishes.
+
+Idea:
+“Hey Node, do this task, and when you’re done, call this function.”
+
+readFile("file.txt", function(result) {
+  console.log(result);
+});
+
+
+========> How people avoid callback hell
+Modern JavaScript gives us better tools:
+1️⃣ Promises
+Flattens the code:
+getUser(userId)
+  .then(user => getPosts(user.id))
+  .then(posts => getComments(posts[0].id))
+  .then(comments => console.log(comments))
+  .catch(err => console.error(err));
+
+2️⃣ Async / Await (most popular)
+Looks almost like normal code:
+async function showComments() {
+  try {
+    const user = await getUser(userId);
+    const posts = await getPosts(user.id);
+    const comments = await getComments(posts[0].id);
+    console.log(comments);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+-----------------------------> 6. What is a .body-parser in NodeJS?
+Body-parser is the NodeJS body-parsing middleware. It is responsible for parsing the incoming request bodies in a middleware before you handle it. It is an NPM module that processes data sent in HTTP requests.
+
+
+--------------------------> 7. What is piping in NodeJS?
+In NodeJS, piping refers to the process of passing the output of one stream directly into another stream. It allows data to flow through multiple streams without needing to store it in memory or temporarily write it to disk. This is a common pattern used in file handling, HTTP requests, and other I/O operations in NodeJS.
+
+
+--------------------> 8. How to manage sessions in NodeJS?
+Session management can be done in NodeJS by using the express-session module. It helps in saving the data in the key-value form. In this module, the session data is not saved in the cookie itself, just the session ID.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
