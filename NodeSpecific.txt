@@ -229,7 +229,41 @@ event.on("loss" , ()=>{
 event.emit("won" , "dummy data")
 
 
+************************************************ Concurrency and Parallelism **********************************************
+Concurrency is about dealing with many tasks at once, even if they’re not all running at the exact same moment.
+The program switches between tasks
+Tasks overlap in time
+Often used to keep programs responsive
 
+Analogy:
+You’re doing homework, then checking a text, then going back to homework. You’re not doing both at the same time, but you’re handling both.
+
+Task A runs a bit → Task B runs a bit → Task A again → ...
+
+⚡ Parallelism
+Parallelism is about doing multiple tasks at the exact same time.
+Requires multiple CPU cores
+Tasks truly run simultaneously
+Focused on speed
+
+Analogy:
+You and a friend clean different rooms at the same time.
+
+Example:
+A video editor that:
+processes multiple video frames at once
+each frame runs on a different CPU core
+
+Core 1: Task A
+Core 2: Task B   (at the same time)
+
+You can have:
+Concurrency without parallelism (single-core CPU)
+Parallelism with concurrency (multi-core CPU running many tasks)
+
+🚀 Simple Rule to Remember
+Concurrency = managing many things
+Parallelism = doing many things at once
 
 
 
