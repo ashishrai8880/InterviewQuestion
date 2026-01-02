@@ -75,12 +75,70 @@ function fun() {
 
 Isme variable and function declration top me ho jaata hai lekin initialization nhi hota . Or ye bas var k sath hota hai , let const k sath nhi hota .
 
+Example of hoisting . 
+
+1. console.log(a);
+var a = 10;
+
+## Output
+undefined
+
+
+2. var a = 10;
+console.log(a);
+
+## Output
+10
+
+3. console.log(a);
+var a;
+a = 5;
+
+## Output
+undefined
+
+4. var a = 1;
+function test() {
+  console.log(a);
+  var a = 2;
+}
+test();
+
+## Output
+undefined
+
+5. var a = 1;
+function test() {
+  console.log(a);
+}
+test();
+
+## Output
+1
+
+Key Interview Rules to Remember
+
+✅ var → hoisted + initialized as undefined
+✅ let / const → hoisted but TDZ applies
+✅ Function declarations → fully hoisted
+❌ Function expressions → behave like variables
+❌ Classes → hoisted but not accessible before declaration
+
+
 // =================================================================================================================================================================
 ============================================================  Temporal Dead Zone ===================================================================================
-Temporal Dead Zone in JavaScript
+What is Temporal Dead Zone (TDZ) in JavaScript?
 
-The Temporal Dead Zone refers to the period between the entering of a scope and the actual declaration of a variable using let or const. During this period, 
-the variable is in an "uninitialized" state and accessing it will result in a ReferenceError.
+Temporal Dead Zone (TDZ) is the time between:
+- when a variable is declared
+- and when it is initialized
+
+During this time, you cannot use the variable.
+TDZ applies to let and const, not var.
+
+Simple Definition (Interview-friendly)
+Temporal Dead Zone is the period where a let or const variable exists but cannot be accessed until it is initialized.
+If you try to access it → ❌ ReferenceError
 
 The TDZ starts from the beginning of the block until the variable is declared.
 Variables declared with let and const are hoisted but not initialized.
@@ -147,6 +205,227 @@ Why Does Temporal Dead Zone Exist?
 In ES6 (ECMAScript 2015) the concept of the Temporal Dead was introduced to prevent the issues which was occurring during the variable hoisting.
 When the TDZ concept was not introduced at that time the variables declared with var was automatically set to undefined which was causing the bugs or the issues.
 To avoid such problems, Temporal Dead Zone ensures that only let and const variables are only accessible after being initialized.
+
+Interview ready made examples 
+1. console.log(a); // ❌ ReferenceError
+let a = 10;
+
+a is known to JavaScript
+but not initialized yet
+so it is in TDZ
+
+Timeline Visualization
+{
+  // TDZ starts
+  console.log(x); // ❌ ReferenceError
+
+  let x = 5; // TDZ ends
+  console.log(x); // ✅ 5
+}
+
+Key Difference
+Keyword		Hoisted		TDZ
+var			Yes			❌ No
+let			Yes			✅ Yes
+const		Yes			✅ Yes
+
+🔑 let and const are hoisted but not initialized
+
+Why Does TDZ Exist?
+Interview answer:
+TDZ helps catch bugs by preventing access to variables before they are properly declared.
+
+2️⃣ Does TDZ apply to var?
+Answer:
+No. TDZ only applies to let and const. var variables are initialized with undefined.
+
+3️⃣ Are let and const hoisted?
+Answer:
+Yes, they are hoisted but not initialized. That’s why accessing them before declaration causes TDZ.
+
+4️⃣ What error occurs in TDZ?
+Answer:
+ReferenceError
+
+5️⃣ When does TDZ start and end?
+Answer:
+Starts at the beginning of the block
+Ends when the variable is declared and initialized
+
+6️⃣ Does TDZ exist inside functions and blocks?
+Answer:
+Yes. TDZ is block-scoped, so it applies inside { } blocks and functions.
+
+7️⃣ Example question: What is the output?
+{
+  console.log(a);
+  let a = 10;
+}
+Answer:
+❌ ReferenceError (because a is in TDZ)
+
+8️⃣ Why doesn’t this cause an error?
+let a = 10;
+console.log(a);
+Answer:
+Because a is accessed after initialization, so TDZ is over.
+
+9️⃣ Is this TDZ?
+let a;
+console.log(a);
+Answer:
+❌ No TDZ error
+a is already initialized with undefined
+
+🔟 Does const behave differently from let in TDZ?
+Answer:
+No. Both have TDZ.
+But const must be initialized immediately.
+const x; // ❌ SyntaxError
+
+🔟
+console.log(a);
+let a = 10;
+
+Output:
+ReferenceError
+Why: let is hoisted but not initialized (TDZ).
+
+
+🔟
+let a = 10;
+{
+  console.log(a);
+}
+
+Output:
+10
+
+🔟
+const a = 10;
+a = 20;
+console.log(a);
+
+Output:
+TypeError
+
+🔹 3. Function Declarations vs Function Expressions
+
+🔟
+hello();
+function hello() {
+  console.log("Hello");
+}
+
+Output:
+Hello
+Why: Function declarations are fully hoisted.
+
+🔟
+hello();
+
+var hello = function () {
+  console.log("Hello");
+};
+
+Output:
+TypeError
+Why: TypeError: hello is not a function
+
+🔟
+console.log(test);
+function test() {}
+
+Output:
+ReferenceError
+Why: let is hoisted but not initialized (TDZ).
+
+🔟
+console.log(a);
+let a = 10;
+
+Output:
+ƒ test() {}
+
+🔟
+console.log(test);
+var test = function () {};
+
+Output:
+undefined
+
+🔹 4. Hoisting Inside Functions
+
+🔟
+function foo() {
+  console.log(a);
+  a = 10;
+}
+foo();
+
+Output:
+ReferenceError
+Why: a is not declared.
+
+🔟
+function foo() {
+  console.log(a);
+  var a = 10;
+}
+foo();
+
+Output:
+undefined
+
+🔟
+var a = 5;
+(function () {
+  console.log(a);
+  var a = 10;
+})();
+
+Output:
+undefined
+
+🔹 5. Class Hoisting
+
+🔟
+const obj = new MyClass();
+class MyClass {}
+
+Output:
+ReferenceError
+Why: Classes are hoisted but in TDZ (like let).
+
+🔹 6. Mixed Hoisting Tricky Questions
+
+🔟
+var x = 10;
+function test() {
+  console.log(x);
+  var x = 20;
+}
+test();
+
+Output:
+undefined
+
+🔟
+function test() {
+  console.log(x);
+}
+test();
+var x = 5;
+
+Output:
+undefined
+
+🔟
+console.log(typeof a);
+var a = 10;
+
+Output:
+undefined
 
 ==================================================================================================================================================================================================================================================================================================================================
 
