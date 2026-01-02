@@ -427,6 +427,162 @@ var a = 10;
 Output:
 undefined
 
+
+============================================================================================================================
+============================================================================================================================
+ Execution Context In Javascript
+
+In JavaScript, an execution context is basically the environment where your code is evaluated and run. It determines what 
+variables, functions, and objects are accessible at any point in the code.
+
+Every execution context has three main parts:
+1. Variable Environment
+Stores variables and function declarations
+Handles hoisting
+Keeps track of let, const, var, and functions
+
+2. Scope Chain
+Determines how JavaScript looks up variables
+If a variable isn’t found in the current context, JS looks in the outer context
+
+3. this Keyword
+The value of this depends on how the function is called
+Not where it’s written
+
+**************🔹 Types of Execution Contexts
+1️⃣ Global Execution Context (GEC)
+
+Created when the JS file first runs
+Only one per program
+Creates:
+	Global object (window in browsers)
+	this → global object
+
+var x = 10;
+console.log(this.x); // 10 (in browser)
+
+2️⃣ Function Execution Context (FEC)
+Created every time a function is called
+Each function call gets its own context
+
+function greet() {
+  let name = "Alex";
+  console.log(name);
+}
+greet(); // creates a new execution context
+
+3️⃣ Eval Execution Context (rare & discouraged)
+Created when eval() is used
+Avoided due to performance and security issues
+
+****************************** 🔹 Phases of Execution Context ************************
+
+Each execution context is created in two phases:
+
+🧱 1. Creation Phase
+Memory is allocated
+Variables are set to undefined
+Function declarations are stored fully
+this is defined
+
+console.log(a); // undefined
+var a = 5;
+
+▶️ 2. Execution Phase
+Code is executed line by line
+Variables get assigned real values
+
+a = 5;
+console.log(a); // 5
+
+***************************🔹 Execution Context & Call Stack
+
+JavaScript uses a Call Stack to manage execution contexts:
+Global Execution Context is pushed first
+Function contexts are pushed when called
+Contexts are popped when functions return
+
+function first() {
+  second();
+}
+function second() {
+  console.log("Hello");
+}
+first();
+
+📌 Call Stack Flow
+Global
+→ first()
+→ second()
+→ pop second()
+→ pop first()
+
+*********************************🔰 Basic Interview Questions
+4️⃣ What happens during the creation phase of an execution context?
+Answer:
+Memory is allocated
+Variables are set to undefined
+Functions are hoisted completely
+this keyword is defined
+
+5️⃣ What happens during the execution phase?
+Answer:
+JavaScript executes code line by line and assigns actual values to variables.
+
+6️⃣ What is hoisting and how is it related to execution context?
+Answer:
+Hoisting is JavaScript’s behavior of moving variable and function declarations to the top during the creation phase of an execution context.
+
+7️⃣ What is the scope chain?
+Answer:
+The scope chain is used to resolve variables. JavaScript first looks in the current execution context, then in the outer context, and finally in the global context.
+
+8️⃣ What is the relationship between execution context and call stack?
+Answer:
+JavaScript uses the call stack to manage execution contexts. Each time a function is called, a new execution context is pushed onto the stack and popped after execution.
+
+9️⃣ How many execution contexts are created for a function?
+Answer:
+A new execution context is created every time the function is called, even if it’s the same function.
+
+1️⃣3️⃣ What is the difference between execution context and scope?
+Answer:
+Execution context is created when code runs
+Scope defines where variables are accessible
+Scope exists before execution, execution context exists during execution.
+
+1️⃣4️⃣ Is execution context synchronous or asynchronous?
+Answer:
+Execution context itself is synchronous.
+Asynchronous operations are handled by Web APIs and the Event Loop, not by execution contexts directly.
+
+1️⃣5️⃣ Does arrow function have its own execution context?
+Answer:
+Arrow functions create an execution context but do not have their own this. They inherit this from the parent scope.
+
+1️⃣6️⃣ Can multiple global execution contexts exist?
+Answer:
+❌ No. Only one global execution context exists per JavaScript program.
+
+🔹 What is Eval Execution Context?
+An Eval Execution Context is a special execution context that is created when JavaScript runs code written inside eval().
+
+👉 In simple words:
+When JavaScript sees eval("some code"), it creates a new execution context to run that code.
+
+🔹 What is eval()?
+eval() is a JavaScript function that takes a string and executes it as JavaScript code.
+eval("let x = 10; console.log(x);");
+Output:
+10
+
+🔹 Why Eval Execution Context Exists
+JavaScript needs: memory , scope , this value
+to run any code, even code written as a string.
+
+So when eval() runs:
+➡️ JavaScript creates an Eval Execution Context for that code.
+
 ==================================================================================================================================================================================================================================================================================================================================
 
 4. What is first class function ?
@@ -588,6 +744,40 @@ like http( to make network request) , fs (for file manipulation) , path , os , e
 
 Implementation of settimeout in browser and in nodejs may or may not same . They can be different . 
 
+
+=================================================== Call Stack and Callback Queue =========================================
+
+First: the Call Stack 🥞 (think: a stack of plates)
+The call stack is where JavaScript keeps track of what function is currently running.
+
+How it works:
+JavaScript runs one thing at a time
+When a function starts → it’s pushed onto the stack
+When it finishes → it’s popped off the stack
+
+Example:
+function sayHi() {
+  console.log("Hi");
+}
+function start() {
+  sayHi();
+}
+start();
+
+What happens:
+start() goes on the stack
+sayHi() goes on the stack
+"Hi" is printed
+sayHi() is removed
+start() is removed
+
+================> Now: the Callback Queue ⏳ (think: a waiting line)
+Some things in JavaScript take time, like:
+setTimeout
+fetching data
+events (clicks, keypresses)
+These do NOT go directly on the call stack.
+Instead, their callbacks wait in the callback queue until JavaScript is free.
 
 
 
