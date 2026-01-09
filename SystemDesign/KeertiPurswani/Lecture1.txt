@@ -1,11 +1,165 @@
 
 1. Layers : Transport Layer and Application Layer . Two Main Layer . 
 
+Think of OSI as 7 layers of responsibility that data passes through when one computer talks to another.
+
+👉 As a backend developer, you mainly live in:
+
+Layer 7 – Application
+
+Layer 4 – Transport
+
+Other layers exist, but you mostly just benefit from them.
+
+Layer	        Name	            Should you care?
+7	            Application	      ✅ YES (most important)
+6	            Presentation	    ⚠️ Somewhat
+5	            Session	          ⚠️ Rarely
+4	            Transport	        ✅ YES (very important)
+3	            Network	          ❌ Mostly abstracted
+2	            Data Link	        ❌ Ignore
+1	            Physical	        ❌ Ignore
 
 
+Layer 7 – Application Layer (MOST IMPORTANT FOR YOU)
+What it actually means
 
+This is not your Node.js app code itself.
+It’s the protocols your app uses to communicate.
 
+Examples you already use daily
+HTTP / HTTPS , REST APIs , GraphQL , WebSockets , gRPC , SMTP (emails)
 
+When you write:
+app.get("/users", (req, res) => { ... })
+
+👉 You are working entirely at the Application layer.
+
+What Application Layer is responsible for
+Request/response format
+Headers
+Methods (GET, POST, PUT, DELETE)
+Status codes (200, 404, 500)
+Authentication (JWT, OAuth tokens)
+Cookies
+Payload structure (JSON, XML)
+
+System Design perspective (VERY IMPORTANT)
+
+When interviewers talk about:
+API design
+REST vs GraphQL
+Idempotency
+Rate limiting
+Caching (HTTP cache headers)
+Versioning APIs
+Authentication & Authorization
+
+👉 They are talking about the Application Layer
+
+Layer 4 – Transport Layer (SECOND MOST IMPORTANT)
+This layer decides how data moves reliably (or fast) between client and server.
+
+Main protocols
+TCP ✅
+UDP ⚠️
+
+TCP (You use this MOST of the time)
+What TCP gives you
+Reliable delivery
+Guaranteed order
+Retries if packets are lost
+Connection-based
+When Node.js uses TCP
+HTTP / HTTPS
+REST APIs
+GraphQL
+Database connections (Postgres, MongoDB)
+
+👉 99% of backend APIs run on TCP
+
+TCP concepts you SHOULD know (as a backend dev)
+1. Connection
+TCP establishes a connection before sending data.
+Why it matters:
+Each open connection consumes server resources
+Leads to connection pooling
+Impacts scalability
+
+2. Latency & Throughput
+TCP is reliable → slightly slower
+Retransmissions increase latency
+System design impact:
+High latency APIs
+Slow mobile networks
+Retry storms
+
+3. Keep-Alive
+Keeps TCP connection open for reuse.
+Why you care:
+Improves performance
+Reduces handshake cost
+Node.js example:
+http.Agent({ keepAlive: true })
+
+4. Backpressure
+If client is slow, TCP slows sending.
+Why you care:
+Node.js streams
+Prevents memory overload
+
+**************UDP (Less common, but know WHY)
+
+UDP is:
+Fast
+No guarantee
+No retries
+No ordering
+
+Used for:
+Video streaming
+Gaming
+Live metrics
+
+DNS
+👉 Backend APIs rarely use UDP, but:
+gRPC streaming
+Real-time systems
+may discuss it in system design.
+
+=========> How Application & Transport Layers Work Together
+Example: API request flow
+Client sends HTTP request (Application Layer)
+HTTP uses TCP to send data (Transport Layer)
+TCP ensures reliable delivery
+Server receives request
+Node.js processes it
+Response goes back same way
+
+********************************* How connection establish in TCP *********************************************
+GFG : https://www.geeksforgeeks.org/computer-networks/what-is-transmission-control-protocol-tcp/
+Must read above article super good . 
+
+Transmission Control Protocol (TCP) is a connection-oriented protocol for communications that helps in the exchange of 
+messages between different devices over a network. It is one of the main protocols of the TCP/IP suite
+
+** TCP establishes a reliable connection between sender and receiver using the three-way handshake (SYN, SYN-ACK, ACK) and
+it uses a four-step handshake (FIN, ACK, FIN, ACK) to close connections properly.
+** It ensures error-free, in-order delivery of data packets.
+** It uses acknowledgments (ACKs) to confirm receipt.
+** It prevents data overflow by adjusting the data transmission rate according to the receiver’s buffer size.
+** It prevents network congestion using algorithms like Slow Start, Congestion Avoidance, Fast Retransmit, and Fast Recovery.
+** TCP header uses checksum to detect corrupted data and requests retransmission if needed.
+It is used in applications requiring reliable and ordered data transfer, such as web browsing, email, and remote login.
+
+----------- Features of TCP
+1. Segment Numbering: Each byte of data is numbered, and segments carry sequence numbers. Acknowledgment numbers confirm 
+successful receipt.
+2. Connection-Oriented: Sender and receiver remain connected until data transfer is complete. Data order is preserved.
+3. Full Duplex: Data can flow in both directions simultaneously, improving efficiency.
+4. Flow Control: Uses a sliding window to prevent the sender from overwhelming the receiver.
+5. Error Control: Detects and manages corrupted, lost, duplicate, or out-of-order segments to ensure reliability.
+6. Congestion Control: Adjusts the sending rate based on network congestion to avoid overload.
 
 
 
