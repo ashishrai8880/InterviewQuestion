@@ -163,4 +163,104 @@ successful receipt.
 
 
 
+**************************************************** UDP **********************************************************
+UDP does NOT establish a connection. It just sends data and hopes it arrives.
+UDP does not establish or maintain a session between client and server.
+Each packet is sent independently without handshake, state, or delivery guarantees.
+This makes UDP faster and suitable for low-latency and real-time systems where occasional packet loss is acceptable.
+What “Connection” Means (Important)
+
+In networking, a connection means: Both sides agree to talk . State is maintained (session info) . Reliability guarantees
+exist . Setup & teardown steps exist .
+
+How UDP Data Flow Actually Works
+
+Let’s say Client A wants to send data to Server B using UDP.
+Step-by-step UDP flow
+1️⃣ Client creates a UDP socket
+// Node.js example
+const socket = dgram.createSocket("udp4");
+
+No handshake. No setup with server.
+
+2️⃣ Client sends a message
+socket.send("hello", 41234, "server-ip");
+
+What happens internally:
+OS wraps the message in a UDP packet
+Packet contains: Source IP + port , Destination IP + port , Packet is sent immediately
+
+👉 Server may or may not even exist.
+
+3️⃣ Server receives (if it’s listening)
+socket.on("message", (msg, rinfo) => {
+  console.log(msg.toString());
+});
+
+If:
+Server is up
+Port is open
+Network doesn’t drop packet
+
+👉 Server receives the message.
+If not?
+❌ Message is lost forever.
+
+Client → Data → Server . No Connection . 
+
+*********************************************** HTTP ***********************************************************
+History of HTTP
+Tim Berners-Lee and his team at CERN get credit for inventing the original HTTP and associated technologies. 
+
+-> HTTP version 0.9: This was the first version of HTTP, which was introduced in 1991. 
+-> HTTP version 1.0: In 1996, RFC 1945 (Request For Comments) was introduced in HTTP version 1.0. 
+-> HTTP version 1.1: In January 1997, RFC 2068 was introduced in HTTP version 1.1. Improvements and updates to the HTTP 
+version 1.1 standard were released under RFC 2616 in June 1999. 
+-> HTTP version 2.0: The HTTP version 2.0 specification was published as RFC 7540 on May 14, 2015. 
+-> HTTP version 3.0: HTTP version 3.0 is based on the previous RFC draft. It is renamed as Hyper-Text Transfer Protocol QUIC
+which is a transport layer network protocol developed by Google.
+
+============> HTTP/2: Improved Performance
+HTTP/2 is an improved version of HTTP introduced in 2015. It made several changes to make websites load faster:
+
+* Multiplexing: Multiple requests can be sent over one connection at the same time, reducing delays.
+* Header Compression: HTTP/2 compresses the data sent in headers to make it smaller and faster.
+* Server Push: This allows the server to send additional resources (like images or scripts) to the browser before the 
+browser even asks for them.
+
+* ================> HTTP/3: The Latest Version
+HTTP/3, released in 2022, builds on HTTP/2 but with a key improvement: it uses the QUIC protocol instead of TCP. QUIC is 
+faster and more reliable because it:
+
+* Reduces connection setup time.
+* Handles data loss better, especially in poor network conditions.
+* Offers better security by integrating encryption directly into the protocol.
+
+
+**************************************** Encryption in HTTP *********************************************
+
+Symmetric Encryption : In this both side have same key for encryption and decryption . It is more fast and cheaper but less
+secure . 
+
+Assymetric Encryption : There is 1 public key which is available to client and one private key which is at server side only .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
