@@ -117,5 +117,178 @@ function longPoll() {
 longPoll();
 
 
+****************************************** Websocket **********************************************
+
+WebSocket is a protocol that provides full-duplex, bidirectional communication between client and server.
+Uses a single persistent TCP connection.
+Designed for real-time applications.
+Unlike polling, the server can push data to the client anytime.
+
+How WebSockets Work
+Client sends an HTTP handshake request.
+Server accepts and upgrades the connection to WebSocket.
+Persistent connection is established.
+Client and server exchange data in real time.
+Connection stays open until explicitly closed.
+
+===> When to Use WebSockets
+Real-time communication required
+Chat applications
+Live notifications
+Multiplayer games
+Live trading / stock updates
+Collaborative apps (Google Docs–like)
+
+===> Pros of WebSockets
+✅ True real-time communication
+✅ Low latency
+✅ Full-duplex (both sides send anytime)
+✅ Efficient (no repeated HTTP headers)
+✅ Scales well for real-time use cases
+
+Cons of WebSockets
+❌ More complex to implement
+❌ Requires stateful connections
+❌ Harder to scale horizontally
+❌ Needs connection management (reconnect, heartbeat)
+❌ Not ideal for simple request-response APIs .
+
+*** Imp : When client sends request to server in http format . header contains 2 things 
+    1. upgrade : 'websocket'
+    2. connection : upgrade 
+
+    From this header , server knows to switch protocols from http to websocket . Switch protocol status code 101 . 
+    Under the hood , socket also uses TCP protocol . 
+
+
+---------------------------------- Server-Sent Events (SSE) ------------------------------------------------
+
+Server-Sent Events (SSE) is a one-way communication mechanism.
+Server can push updates to the client over a persistent HTTP connection.
+Communication is server → client only.
+Built on top of standard HTTP.
+Ideal when the server needs to continuously send updates.
+
+==> How SSE Works
+Client opens a connection using EventSource.
+Server keeps the HTTP connection open.
+Server sends data whenever events occur.
+Client receives events automatically.
+Connection stays open until closed or interrupted.
+Browser auto-reconnects if connection drops.
+
+===> When to Use SSE
+Live notifications
+News feeds
+Stock prices
+Live dashboards
+Logs / monitoring updates
+Real-time analytics
+
+====> Pros of SSE
+✅ Simple to implement
+✅ Uses standard HTTP (works with proxies & firewalls)
+✅ Automatic reconnection handled by browser
+✅ Efficient for server → client updates
+✅ Less overhead than polling
+
+====> Cons of SSE
+❌ One-way communication only
+❌ Not supported in older browsers (e.g., IE)
+❌ Limited to text data (UTF-8)
+❌ Not ideal for high-frequency bi-directional use cases
+❌ Requires separate API for client → server communication
+
+********** Implementation ***************
+client side 
+
+const eventSource = new EventSource('/events');
+
+eventSource.onmessage = (event) => {
+  console.log('Received:', event.data);
+};
+
+eventSource.onerror = () => {
+  console.error('Connection error');
+};
+
+server side
+data: New message arrived
+
+data: Another update
+
+** Uses text/event-stream content type
+** Each message is separated by a blank line
+
+
+------------------------------------------ Microservices ---------------------------------------------
+
+1. Strangler Fig Pattern 
+The Strangler Fig Pattern is a safe way to convert a monolithic application into microservices gradually, instead of 
+rewriting everything at once.
+
+It’s named after the strangler fig tree, which grows around a big tree, slowly replaces it, and eventually becomes the main
+tree.
+
+==> How It Works (Step by Step)
+
+Start with a monolith
+    One big application handling everything
+
+Add a routing layer (API Gateway / Proxy)
+    This decides where requests should go
+
+Create a new microservice
+    Example: User Service, Order Service
+
+Route specific requests to the new service
+    Old features → monolith
+    New or migrated features → microservice
+
+Repeat
+    Gradually “strangle” the monolith
+    Until it’s fully replaced
+
+Very Simple Example
+
+Monolith has:
+User Management
+Payments
+Orders
+
+Migration using Strangler Pattern:
+    Create a Payment microservice
+    Route /payments requests to it
+    Monolith still handles Users & Orders
+    Later move Users → Orders
+    Finally remove the monolith
+
+Why Use Strangler Fig Pattern?
+✅ Advantages
+No big-bang rewrite
+Lower risk
+Continuous delivery
+Easy rollback if something fails
+Works well for legacy systems
+
+❌ Disadvantages
+Temporary complexity
+Requires good routing & monitoring
+Needs strong discipline and planning
+
+===> When Should You Use It?
+Large legacy monolith
+Business cannot afford downtime
+Gradual migration preferred
+Microservices adoption over time
+
+
+
+
+
+
+
+
+
 
 
