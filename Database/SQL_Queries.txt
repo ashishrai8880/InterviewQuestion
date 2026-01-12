@@ -25,8 +25,73 @@
     );
 
 5. Find nth highest salary (generic) ? 
-select * from user order by salary desc offset (n-1) limit 1 
-select salary , name from user group by salary order by salary desc offset n-1 limit 1 
+     SELECT DISTINCT e.salary
+        FROM (
+            SELECT emp.salary,
+                   DENSE_RANK() OVER (ORDER BY emp.salary DESC) AS rnk
+            FROM Employee emp
+        ) e
+        WHERE e.rnk = N;
+
+6. Find customers who never placed an order ? 
+    SELECT c.id
+    FROM customers c
+    LEFT JOIN orders o ON c.id = o.customer_id
+    WHERE o.id IS NULL;
+
+
+7. Find total orders and total amount per customer
+    SELECT customer_id, COUNT(*) AS total_orders, SUM(amount) AS total_amount
+    FROM orders
+    GROUP BY customer_id;
+
+8. Get department-wise highest salary ?
+    SELECT department_id, MAX(salary)
+    FROM employees
+    GROUP BY department_id;
+
+9. Find departments having more than 10 employees ?
+        SELECT department_id
+        FROM employees
+        GROUP BY department_id
+        HAVING COUNT(*) > 10;
+
+. 3️⃣ Window Functions (Very Important for 3+ yrs)
+
+10. Rank employees by salary within each department
+    SELECT name, department_id, salary,
+           RANK() OVER (PARTITION BY department_id ORDER BY salary DESC) AS rank
+    FROM employees;
+
+11. Find top 2 salaries per department ?
+    SELECT *
+    FROM (
+      SELECT *, DENSE_RANK() OVER (PARTITION BY department_id ORDER BY salary DESC) r
+      FROM employees
+    ) t
+    WHERE r <= 2;
+
+12. Running total of sales ?
+    SELECT date,     
+           SUM(amount) OVER (ORDER BY date) AS running_total
+    FROM sales;
+
+
+------------------------------------------------------------- PROPER WITH TABLE ------------------------------------------------------------------
+| emp_id | date       | status |
+| ------ | ---------- | ------ |
+| 1      | 2024-01-01 | P      |
+| 1      | 2024-01-02 | P      |
+| 1      | 2024-01-03 | A      |
+| 2      | 2024-01-01 | P      |
+| 2      | 2024-01-02 | P      |
+| 2      | 2024-01-03 | P      |
+
+8️⃣ Find employees who were present all days ?
+    SELECT emp_id
+    FROM attendance
+    GROUP BY emp_id
+    HAVING COUNT(*) = SUM(CASE WHEN status = 'P' THEN 1 ELSE 0 END);
 
 
 
