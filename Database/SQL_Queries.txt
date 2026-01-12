@@ -1,0 +1,42 @@
+
+1. Find the second highest salary from an employee table ?
+    SELECT MAX(salary)
+    FROM employees
+    WHERE salary < (SELECT MAX(salary) FROM employees);
+
+2. Get employees who earn more than their manager ?
+    SELECT e.name
+    FROM employee e
+    JOIN employee m ON e.manager_id = m.id
+    WHERE e.salary > m.salary;
+
+3. Find duplicate records in a table ?
+    SELECT email, COUNT(*)
+    FROM users
+    GROUP BY email
+    HAVING COUNT(*) > 1;
+
+4. Delete duplicate records but keep one ? 
+    DELETE FROM users
+    WHERE id NOT IN (
+      SELECT MIN(id)
+      FROM users
+      GROUP BY email
+    );
+
+5. Find nth highest salary (generic) ? 
+select * from user order by salary desc offset (n-1) limit 1 
+select salary , name from user group by salary order by salary desc offset n-1 limit 1 
+
+
+
+
+
+
+
+
+
+
+
+
+
