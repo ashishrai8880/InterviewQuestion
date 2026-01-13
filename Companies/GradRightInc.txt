@@ -364,8 +364,20 @@ One-line summary
 
 exec waits for everything, spawn listens while it runs, and fork talks to another Node.js program.
 
+Must Read Article :  https://dev.to/wallacefreitas/understanding-worker-threads-and-child-processes-52nj
 
+***************** Difference between child process and worker threads ****************************************
+Choosing Between Worker Threads and Child Processes
 
+Feature	                          Worker Threads	                              Child Processes
+Memory Sharing	                  Supported via SharedArrayBuffer	              Not supported
+Task Isolation	                  Shared environment, less isolated	            Fully isolated
+Use Case	                        CPU-intensive tasks in JavaScript	            System-level tasks or external code
+Overhead	                        Lower (same process)	                        Higher (separate processes)
+Communication	                    Via message passing, faster	                  Via IPC, slower
+Supported Languages	              JavaScript/Node.js only	                      Any scripting or system-level language
+Startup Time	                    Faster	                                      Slower
+Error Containment	                Less contained, can crash the process	        Fully contained, isolated failures
 
 
 
