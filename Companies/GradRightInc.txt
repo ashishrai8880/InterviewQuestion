@@ -1,0 +1,374 @@
+
+***************************1. How to handle event loop to not get blocked ?
+
+🔁 Why the Node.js event loop gets blocked
+
+Node.js runs JavaScript on a single thread.
+If that thread is busy doing CPU-heavy or synchronous work, the event loop can’t process:
+
+incoming requests
+
+timers
+
+I/O callbacks
+
+➡️ Result: your app “freezes” or becomes slow.
+
+❌ Common things that block the event loop
+1. Synchronous operations
+fs.readFileSync('big.txt'); // ❌ blocks
+
+2. Heavy CPU calculations
+while (true) {} // ❌ blocks everything
+
+3. Large JSON parsing
+JSON.parse(hugeString); // ❌ can block
+
+4. Bad async patterns
+for (let i = 0; i < 1e9; i++) {
+  await doSomething(); // ❌ serial + slow
+}
+
+✅ How to prevent event loop blocking
+
+1️⃣ Use async, non-blocking APIs
+
+Always prefer async versions.
+
+// ✅ Non-blocking
+fs.readFile('big.txt', (err, data) => {});
+
+or with promises:
+
+await fs.promises.readFile('big.txt');
+
+2️⃣ Offload CPU-heavy work
+✔ Use Worker Threads (best for CPU tasks)
+const { Worker } = require('worker_threads');
+
+new Worker('./worker.js', {
+  workerData: bigData
+});
+
+✔ Good for:
+encryption
+image processing
+data transformation
+
+3️⃣ Use child processes (for isolation)
+const { fork } = require('child_process');
+fork('heavyTask.js');
+
+✔ Useful for:
+background jobs
+long-running tasks
+
+4️⃣ Break large tasks into chunks
+
+Yield back to the event loop.
+
+function processChunk(items) {
+  const chunk = items.splice(0, 1000);
+
+  chunk.forEach(doWork);
+
+  if (items.length) {
+    setImmediate(() => processChunk(items)); // ✅ yields
+  }
+}
+
+6️⃣ Use streams for large data
+fs.createReadStream('big.txt')
+  .pipe(fs.createWriteStream('copy.txt'));
+
+✔ Prevents loading everything into memory.
+
+⚠️ Golden rule
+If it takes more than ~10–20ms of CPU time, don’t run it on the main thread.
+
+
+********************************* 2. What is worker thread ***********************************************
+A worker thread is:
+A separate JavaScript thread with its own event loop, own call stack, and own V8 instance
+
+When you create a worker thread:
+It runs in parallel to the main thread
+It does not block the main event loop
+It can execute CPU-heavy code safely
+
+Think of it like this:
+
+Main Thread (Event Loop)
+ ├── handles HTTP requests
+ ├── timers
+ ├── async I/O
+ └── delegates heavy work
+
+Worker Thread
+ └── runs heavy CPU logic
+
+2️⃣ Does a worker thread execute code in parallel with the event loop?
+✅ YES — truly in parallel
+
+This is real parallelism, not async trickery.
+
+If you have:
+1 main thread
+1 worker thread
+
+And your CPU has at least 2 cores:
+➡️ both run at the same time.
+
+CPU Core 1 → Main Event Loop
+CPU Core 2 → Worker Thread
+
+So while the worker is crunching numbers:
+the main thread keeps serving requests
+timers still fire
+sockets still work
+
+3️⃣ Why async/await alone is NOT enough
+
+This is a common misunderstanding.
+
+await heavyComputation(); // ❌ still blocks
+
+Why?
+async/await only helps with I/O
+CPU work still runs on the same thread
+
+So:
+async ≠ parallel
+worker threads = parallel
+
+4️⃣ How a worker thread actually works (internally)
+
+When you do:
+new Worker('./worker.js')
+
+Node:
+Spawns a new thread
+Starts a new JS runtime
+Loads worker.js
+Runs it independently
+
+Communication happens via:
+postMessage()
+SharedArrayBuffer (advanced)
+
+
+5️⃣ Simple example (image processing)
+Main thread
+const { Worker } = require('worker_threads');
+
+function resizeImage(imageBuffer) {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker('./imageWorker.js', {
+      workerData: imageBuffer
+    });
+
+    worker.on('message', resolve);
+    worker.on('error', reject);
+  });
+}
+
+#Worker thread
+const { workerData, parentPort } = require('worker_threads');
+const result = heavyImageProcessing(workerData);
+parentPort.postMessage(result);
+
+
+📌 While heavyImageProcessing() runs:
+event loop stays free
+requests continue
+app stays responsive
+
+6️⃣ Are worker threads the same as child processes?
+Feature	          Worker Thread	                Child Process
+Memory	          Shared (optional)	            Separate
+Startup cost	    Low	                          High
+Communication	    Fast	                        Slower (IPC)
+Best for	        CPU tasks	                    Isolation
+
+7️⃣ How many worker threads should you use?
+
+Rule of thumb:
+maxWorkers = number_of_CPU_cores - 1
+
+Why?
+Leave one core for the event loop
+Too many workers = context switching overhead
+You can get CPU count:
+
+const os = require('os');
+os.cpus().length;
+
+8️⃣ When should you NOT use worker threads?
+
+❌ Don’t use workers for:
+
+database calls
+HTTP requests
+file I/O
+
+Those are already async & non-blocking.
+
+9️⃣ Mental model (remember this 👇)
+
+Node.js is single-threaded for I/O, but multi-threaded for CPU if you allow it
+Workers are how you “unlock” multiple cores.
+
+
+***************************************** Child Process ****************************************************
+A child process in Node.js is a way for your app to run another program in the background without blocking itself.
+
+First, a tiny idea: what is a “process”?
+When you run a program on your computer, the computer starts a process.
+
+Example:
+You open Chrome → Chrome runs as a process
+You run node app.js → Node.js runs as a process
+
+So a process = a running program
+
+What is Node.js doing?
+
+---> When you start a Node.js app:
+
+node app.js
+
+Node.js runs your code in one main process.
+This main process:
+Handles requests
+Runs your JavaScript code
+Uses one CPU core by default
+
+A child process is simply:
+A new program started by your Node.js program
+
+Very simple mental model 🧠
+Main Node App (Parent)
+        |
+        |---- Child Process (extra helper)
+        |---- Child Process (another helper)
+
+Each child:
+Runs separately
+Can do heavy work
+Won’t block the main app
+
+Types of child processes (just names for now)
+Node.js gives you a few ways to create them:
+exec() → run simple commands
+spawn() → stream data (better for large output)
+fork() → run another Node.js file
+
+1️⃣ exec – “Run a command and give me the result”
+What it’s for
+Use exec when:
+The command is small
+You want the final output as a string
+
+Real-life analogy
+
+👉 “Run this command and tell me what it prints.”
+
+Simple example
+const { exec } = require("child_process");
+
+exec("node -v", (error, stdout, stderr) => {
+  console.log("Node version is:", stdout);
+});
+
+What happens step-by-step
+
+Your Node app starts
+It creates a child process
+That process runs node -v
+The entire output is returned at once
+
+Important thing to know ⚠️
+Output is stored in memory
+Not good for big output
+
+✔️ Good for:
+Checking versions
+Running small commands
+
+2️⃣ spawn – “Run a command and show output little by little”
+What it’s for
+
+Use spawn when:
+Output is large
+You want data as it happens
+
+Real-life analogy
+
+👉 “Run this command and keep talking while it runs.”
+
+Simple example
+const { spawn } = require("child_process");
+
+const child = spawn("node", ["-v"]);
+
+child.stdout.on("data", (data) => {
+  console.log("Output:", data.toString());
+});
+
+What happens step-by-step
+Node creates a child process
+The command starts running
+Output comes in chunks
+You receive data piece by piece
+
+*******3️⃣ fork – “Run another Node.js file”
+What it’s for
+Use fork when:
+You want to run another Node.js script
+You want to send messages back and forth
+
+Real-life analogy
+
+👉 “Run this Node.js file and let’s talk to each other.”
+
+Simple example
+parent.js
+const { fork } = require("child_process");
+
+const child = fork("child.js");
+
+child.on("message", (msg) => {
+  console.log("From child:", msg);
+});
+
+child.send("Hello child!");
+
+child.js
+process.on("message", (msg) => {
+  console.log("From parent:", msg);
+  process.send("Hello parent!");
+});
+
+What happens
+Parent starts
+Parent forks another Node.js file
+They can talk using messages
+Heavy work can run in the child
+
+🧠 Beginner rule of thumb
+Small command → exec
+Big / long task → spawn
+Another Node.js file → fork
+
+One-line summary
+
+exec waits for everything, spawn listens while it runs, and fork talks to another Node.js program.
+
+
+
+
+
+
+
+
+
