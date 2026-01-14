@@ -3,3 +3,334 @@ DSA
 
 1. Rotting Oranges
 2. House Robber
+
+*************************************** Round 2 System Design **************************************************
+Must Read Link : https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/
+
+1. What is SOLID pattern ?
+Ans : S - Single Responsibility Principle : This principle states that "A class should have only one reason to change" which 
+means every class should have a single responsibility or single job or single purpose. In other words, a class should have
+only
+one job or purpose within the software system.
+
+// Class for baking bread
+class BreadBaker {
+    bakeBread() {
+        console.log("Baking high-quality bread...");
+    }
+}
+
+// Class for managing inventory
+class InventoryManager {
+    manageInventory() {
+        console.log("Managing inventory...");
+    }
+}
+
+// Class for ordering supplies
+class SupplyOrder {
+    orderSupplies() {
+        console.log("Ordering supplies...");
+    }
+}
+
+// Class for serving customers
+class CustomerService {
+    serveCustomer() {
+        console.log("Serving customers...");
+    }
+}
+
+// Class for cleaning the bakery
+class BakeryCleaner {
+    cleanBakery() {
+        console.log("Cleaning the bakery...");
+    }
+}
+
+function main() {
+    const baker = new BreadBaker();
+    const inventoryManager = new InventoryManager();
+    const supplyOrder = new SupplyOrder();
+    const customerService = new CustomerService();
+    const cleaner = new BakeryCleaner();
+
+    // Each class focuses on its specific responsibility
+    baker.bakeBread();
+    inventoryManager.manageInventory();
+    supplyOrder.orderSupplies();
+    customerService.serveCustomer();
+    cleaner.cleanBakery();
+}
+
+main();
+
+Each of these tasks represents a separate responsibility, and by combining them, the baker's focus and effectiveness in 
+baking bread could be compromised.
+
+2. Open/Closed Principle - This principle states that "Software entities (classes, modules, functions, etc.) should be open 
+for extension, but closed for modification" which means you should be able to extend a class behavior, without modifying it.
+
+Let's understand Open/Closed Principle using an example:
+
+ Imagine you have a class called PaymentProcessor that processes payments for an online store. Initially, the 
+PaymentProcessor class only supports processing payments using credit cards. However, you want to extend its functionality to
+also support processing payments using PayPal.
+
+Instead of modifying the existing PaymentProcessor class to add PayPal support, you can create a new class called 
+PayPalPaymentProcessor that extends the PaymentProcessor class. This way, the PaymentProcessor class remains closed for 
+modification but open for extension, adhering to the Open-Closed Principle.
+
+
+from abc import ABC, abstractmethod
+
+// Base class for payment processing
+class PaymentProcessor {
+    processPayment(amount) { // Pure virtual function
+        throw new Error("processPayment must be implemented");
+    }
+}
+
+// Credit card payment processor
+class CreditCardPaymentProcessor extends PaymentProcessor {
+    processPayment(amount) {
+        console.log(`Processing credit card payment of $${amount}`);
+    }
+}
+
+Extended Functionality:
+Now, to add support for PayPal payments, you create a new class PayPalPaymentProcessor that extends PaymentProcessor.
+
+// PayPal payment processor
+class PayPalPaymentProcessor extends PaymentProcessor {
+    processPayment(amount) {
+        console.log(`Processing PayPal payment of $${amount}`);
+    }
+}
+
+// Function to process payment
+function processPayment(processor, amount) {
+    processor.processPayment(amount);
+}
+
+function main() {
+    const creditCardProcessor = new CreditCardPaymentProcessor();
+    const payPalProcessor = new PayPalPaymentProcessor();
+
+    processPayment(creditCardProcessor, 100.00); // Processing credit card payment
+    processPayment(payPalProcessor, 150.00);     // Processing PayPal payment
+}
+
+main();
+
+3. Liskov's Substitution Principle :  The principle was introduced by Barbara Liskov in 1987 and according to this principle
+"Derived or child classes must be substitutable for their base or parent classes". This principle ensures that any class 
+that is the child of a parent class should be usable in place of its parent without any unexpected behaviour.
+
+Let's understand Liskov's Substitution Principle using an example:
+
+One of the classic examples of this principle is a rectangle having four sides. A rectangle's height can be any value and 
+width can be any value. A square is a rectangle with equal width and height. So we can say that we can extend the properties
+of the rectangle class into square class.
+
+// Base class for shapes
+class Rectangle {
+    constructor(w, h) {
+        this.width = w;
+        this.height = h;
+    }
+
+    area() {
+        return this.width * this.height;
+    }
+
+    getWidth() {
+        return this.width;
+    }
+
+    getHeight() {
+        return this.height;
+    }
+
+    setWidth(w) {
+        this.width = w;
+    }
+
+    setHeight(h) {
+        this.height = h;
+    }
+}
+
+// Derived class for squares
+class Square extends Rectangle {
+    constructor(size) {
+        super(size, size);
+    }
+
+    setWidth(w) {
+        this.width = this.height = w; // Ensure both width and height remain the same
+    }
+}
+
+Explanation of the above code:
+
+ - Rectangle Class: This is the base class that has properties for width and height. It has methods for calculating the area 
+and for setting width and height.
+ - Square Class: This class inherits from Rectangle but overrides the setWidth and setHeight methods to ensure that changing
+one dimension affects the other, maintaining the property that all sides are equal.
+
+
+4. Interface Segregation Principle : 
+This principle is the first principle that applies to Interfaces instead of classes in SOLID and it is similar to the single
+responsibility principle. It states that "do not force any client to implement an interface which is irrelevant to them". 
+Here your main goal is to focus on avoiding fat interface and give preference to many small client-specific interfaces. You
+should prefer many client interfaces rather than one general interface and each interface should have a specific 
+responsibility.
+
+import java.util.*;
+
+// Interface for vegetarian menu
+interface IVegetarianMenu {
+    List<String> getVegetarianItems();
+}
+
+// Interface for non-vegetarian menu
+interface INonVegetarianMenu {
+    List<String> getNonVegetarianItems();
+}
+
+// Interface for drinks menu
+interface IDrinkMenu {
+    List<String> getDrinkItems();
+}
+
+// Class for vegetarian menu
+class VegetarianMenu implements IVegetarianMenu {
+    public List<String> getVegetarianItems() {
+        return Arrays.asList("Vegetable Curry", "Paneer Tikka", "Salad");
+    }
+}
+
+// Class for non-vegetarian menu
+class NonVegetarianMenu implements INonVegetarianMenu {
+    public List<String> getNonVegetarianItems() {
+        return Arrays.asList("Chicken Curry", "Fish Fry", "Mutton Biryani");
+    }
+}
+
+// Class for drinks menu
+class DrinkMenu implements IDrinkMenu {
+    public List<String> getDrinkItems() {
+        return Arrays.asList("Water", "Soda", "Juice");
+    }
+}
+
+// Function to display menu items for a vegetarian customer
+class MenuDisplay {
+    public static void displayVegetarianMenu(IVegetarianMenu menu) {
+        System.out.println("Vegetarian Menu:");
+        for (String item : menu.getVegetarianItems()) {
+            System.out.println("- " + item);
+        }
+    }
+
+    // Function to display menu items for a non-vegetarian customer
+    public static void displayNonVegetarianMenu(INonVegetarianMenu menu) {
+        System.out.println("Non-Vegetarian Menu:");
+        for (String item : menu.getNonVegetarianItems()) {
+            System.out.println("- " + item);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        VegetarianMenu vegMenu = new VegetarianMenu();
+        NonVegetarianMenu nonVegMenu = new NonVegetarianMenu();
+        DrinkMenu drinkMenu = new DrinkMenu();
+
+        MenuDisplay.displayVegetarianMenu(vegMenu);
+        MenuDisplay.displayNonVegetarianMenu(nonVegMenu);
+    }
+}
+
+5. Dependency Inversion Principle : The Dependency Inversion Principle (DIP) is a principle in object-oriented design that 
+states that "High-level modules should not depend on low-level modules. Both should depend on abstractions". Additionally,
+abstractions should not depend on details. Details should depend on abstractions.
+
+In simpler terms, the DIP suggests that classes should rely on abstractions (e.g., interfaces or abstract classes) rather 
+than concrete implementations.
+This allows for more flexible and decoupled code, making it easier to change implementations without affecting other parts
+of the codebase.
+
+class IVersionControl {
+    commit(message) { throw new Error("commit() must be implemented"); }
+    push() { throw new Error("push() must be implemented"); }
+    pull() { throw new Error("pull() must be implemented"); }
+}
+
+// Git version control implementation
+class GitVersionControl extends IVersionControl {
+    commit(message) {
+        console.log("Committing changes to Git with message: " + message);
+    }
+
+    push() {
+        console.log("Pushing changes to remote Git repository.");
+    }
+
+    pull() {
+        console.log("Pulling changes from remote Git repository.");
+    }
+}
+
+// Team class that relies on version control
+class DevelopmentTeam {
+    constructor(vc) {
+        this.versionControl = vc;
+    }
+
+    makeCommit(message) {
+        this.versionControl.commit(message);
+    }
+
+    performPush() {
+        this.versionControl.push();
+    }
+
+    performPull() {
+        this.versionControl.pull();
+    }
+}
+
+function main() {
+    const git = new GitVersionControl();
+    const team = new DevelopmentTeam(git);
+
+    team.makeCommit("Initial commit");
+    team.performPush();
+    team.performPull();
+}
+
+main();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
