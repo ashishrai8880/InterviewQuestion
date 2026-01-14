@@ -385,6 +385,7 @@ Error Containment	                Less contained, can crash the process	        
 
 Best Article : https://medium.com/@amirilovic/how-to-find-production-memory-leaks-in-node-js-applications-a1b363b4884f 
               https://github.com/felixge/node-memory-leak-tutorial
+              In Github , also there is one repo called 'memory-lead-node' 
 
 
 1️⃣ What is a memory leak in Node.js?
@@ -486,6 +487,77 @@ Heap snapshots show increasing retained size
 8️⃣ Summary (one-liner)
 Node.js memory leaks happen when objects remain reachable from long-lived references such as globals, closures, listeners,
 timers, or caches.
+
+
+************************* How to debug Memory Leak issue in Node ****************************************
+
+1. We can run node application in inspect mode by node --inspect app.js . 
+
+🧠 1. Node.js uses the same JS engine as Chrome
+Node.js is built on V8, the same JavaScript engine that Chrome (and Chromium-based browsers) use. Because of that, V8 
+exposes debugging and profiling functionality in a standard way. These features — including heap snapshots — were originally
+developed for browsers, but Node.js exposes them too.
+
+🛠 2. How the “browser” sees a Node.js app
+
+When you run Node with:
+
+node --inspect index.js
+
+or
+
+node --inspect-brk index.js
+
+Node starts an Inspector agent. This agent:
+Listens on a WebSocket port (default 9229)
+Speaks the Chrome DevTools Protocol (CDP)
+Exposes debug and profiling features (like heap snapshots) via that protocol.
+
+Now go to your browser and open:
+
+chrome://inspect
+
+You will see your Node.js process listed as a “remote target.” When you click Inspect, your browser opens Chrome DevTools,
+but connected to your Node process instead of a web page.
+
+So even though it’s a browser window, it’s really acting as a remote debugger UI talking to Node.
+
+🧾 3. Heap snapshots aren’t “from the browser” — they’re from Node
+
+Inside DevTools, you’ll see a Memory tab. When you click Take heap snapshot, what happens is:
+
+1. DevTools (browser) sends a CDP command over WebSocket to Node/V8.
+2. Node/V8 generates a snapshot of its own memory heap.
+3. That snapshot file is sent back to DevTools.
+4. DevTools displays it in the browser UI for you to explore.
+
+So the browser isn’t magically inspecting Node’s memory by itself — it’s using DevTools protocol to ask Node’s V8 to produce a snapshot and then visualize it.
+
+🔄 Why this is useful for debugging leaks
+
+Heap snapshots show you:
+All JS objects currently in memory
+Their sizes
+The paths that keep them alive (what’s retaining them)
+
+You use this by:
+1. Taking a snapshot at an initial point
+2. Triggering some app behavior you think leaks memory
+3. Taking another snapshot
+4. Comparing them to see what objects increased or didn’t get freed
+5. Investigating what’s holding references to those objects
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
