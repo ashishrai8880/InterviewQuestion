@@ -380,7 +380,112 @@ Startup Time	                    Faster	                                      Sl
 Error Containment	                Less contained, can crash the process	        Fully contained, isolated failures
 
 
+****************************************************************************************************************************
+*************************************************** Memory Leak In Node Application ***************************************
 
+Best Article : https://medium.com/@amirilovic/how-to-find-production-memory-leaks-in-node-js-applications-a1b363b4884f 
+              https://github.com/felixge/node-memory-leak-tutorial
+
+
+1️⃣ What is a memory leak in Node.js?
+
+A memory leak happens when:
+Memory is allocated
+But never released
+Even though the application no longer needs it
+
+In Node.js:
+Garbage Collection (GC) does exist
+Leaks happen when objects are still reachable
+GC cannot free reachable objects
+
+⚠️ If something is referenced, it is not garbage.
+
+2️⃣ Why memory leaks happen in Node.js
+🔹 Single long-running process
+Node servers often run for days or weeks
+Small leaks accumulate over time
+Restart hides problems temporarily
+
+🔹 V8 Garbage Collector is reference-based
+GC frees only unreachable objects
+Any reference from a GC root keeps memory alive
+
+🔹 JavaScript makes leaks easy
+Closures , Globals , Dynamic object growth , Hidden references .
+
+3️⃣ GC Roots (very important concept)
+
+Objects are never freed if reachable from:
+Global variables , Module-level variables , Active closures , Event listeners , Timers , Caches
+These are called GC roots.
+
+4️⃣ Common ways memory leaks happen in Node.js ?
+
+4.3 Closures retaining large objects
+function handler(req) {
+  const largeData = loadBigData();
+
+  return () => {
+    console.log(req.url);
+  };
+}
+
+Why it leaks:
+Closure keeps largeData alive
+Even if not used anymore
+Very common in:
+Event handlers
+Middleware
+Async callbacks
+
+4.4 Event listeners not removed
+emitter.on("data", handler);
+
+Why it leaks:
+Listener holds references
+Never removed → never GC’d
+
+Examples:
+WebSocket connections
+Process events
+Custom EventEmitters
+Node even warns:
+
+MaxListenersExceededWarning
+
+-- 4.5 Timers & intervals not cleared
+setInterval(() => {
+  doSomething();
+}, 1000);
+
+Why it leaks:
+Timer keeps callback alive
+Callback keeps scope alive
+
+Examples:
+Polling logic
+Background tasks
+Retry loops
+
+4.6 Promises that never resolve or reject
+new Promise(() => {});
+
+Why it leaks:
+Promise stays pending forever
+Captured variables never released
+
+5️⃣ Signs you might have a memory leak
+Heap size keeps growing
+GC runs more frequently
+App slows down over time
+Container OOMKills
+Requires periodic restarts
+Heap snapshots show increasing retained size
+
+8️⃣ Summary (one-liner)
+Node.js memory leaks happen when objects remain reachable from long-lived references such as globals, closures, listeners,
+timers, or caches.
 
 
 
