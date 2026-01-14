@@ -548,7 +548,110 @@ You use this by:
 5. Investigating what’s holding references to those objects
 
 
+*************************************************************************************************************************
+Problem Statement : Think of system like OYO which have thousands of agents and huge user base . If user will do some 
+search based on some parameters , how should it get optimized . Because when i fetch all agents and then process 
+all agent data , it will take time and processing cost will be also there . What should be good solution of this ?
 
+Answer : You should never scan everything.
+
+Instead:
+
+Move filtering, ranking, and searching as close to the data as possible
+Use indexing, pre-aggregation, and search systems .
+
+3. High-level ideal solution
+🔑 Key ideas
+Pre-index agent data
+Use a Search Engine (not just DB)
+Filter first → Rank later
+Cache popular queries
+Asynchronous updates
+
+4. Realistic architecture (OYO-like)
+1️⃣ Use a Search Engine (VERY IMPORTANT)
+
+Use:
+Elasticsearch / OpenSearch / Solr
+
+Why?
+Designed for:
+fast filtering
+scoring
+ranking
+geo search
+faceted search
+
+Each agent/listing is indexed like:
+
+{
+  "agentId": 123,
+  "city": "Bangalore",
+  "price": 1500,
+  "rating": 4.3,
+  "amenities": ["wifi", "ac"],
+  "availability": true,
+  "geo": { "lat": 12.97, "lon": 77.59 }
+}
+
+2️⃣ Indexing strategy (CRUCIAL)
+
+Create indexes on:
+
+destination / city , price range , rating , availability , geo location
+
+So search becomes:
+
+city = Bangalore
+AND price between 1000–2000
+AND rating >= 4
+ORDER BY relevance_score
+
+⚡ This query runs in milliseconds, not seconds.
+
+3️⃣ Filtering vs Ranking
+
+Step 1 – Filter (cheap operation)
+
+City, Price range, Availability
+
+Step 2 – Rank (scoring)
+
+Best price, Best rating, Distance, Personalized score
+
+Example scoring formula:
+
+score = (0.5 * rating)
+      + (0.3 * price_score)
+      + (0.2 * distance_score)
+
+This ranking happens inside search engine, not app code.
+
+6. Caching (huge win)
+Types of cache:
+🔹 Query Cache
+Popular searches like:
+"Hotels in Delhi under 2000"
+
+Store:
+
+Redis / Memcached
+
+🔹 Result Cache
+
+Cache top results for:
+city + price bucket + date
+
+TTL:
+Short (5–10 minutes)
+
+“I would not fetch all agents and filter in application.
+Instead, I would index agent data in a search engine like Elasticsearch with proper indexes on city, price, rating, and 
+availability.
+User queries are executed directly on the search index, which filters and ranks results efficiently.
+Only the top N agent IDs are fetched and enriched from DB.
+Additionally, I would use caching for popular searches and async updates to keep the index fresh.
+This approach is scalable, low-latency, and production-ready.”
 
 
 
