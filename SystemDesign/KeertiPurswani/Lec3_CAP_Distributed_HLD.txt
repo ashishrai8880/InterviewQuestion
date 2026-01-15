@@ -1,0 +1,370 @@
+
+Distributed System : A Distributed System is a collection of independent computers that:
+
+1. Communicate over a network
+2. Appear to users as a single coherent system
+
+“A distributed system is one in which the failure of a computer you didn’t even know existed can render your own computer unusable.”
+— Leslie Lamport
+
+Key Characteristics
+
+1. Multiple nodes (machines/processes)
+2. No shared memory
+3. Network communication
+4. Partial failures
+5. Concurrency
+6. Independent clocks
+
+Goals of Distributed Systems
+
+1. Scalability – handle growth in users/data
+2. Reliability – tolerate failures
+3. Availability – system stays usable
+4. Performance – low latency, high throughput
+5. Fault Tolerance – continue despite failures
+6. Transparency – hide complexity from users
+
+Types of Distributed Systems
+
+1. Client–Server systems
+2. Microservices architecture
+3. Distributed databases
+4. Peer-to-peer systems
+5. Cloud-based systems
+6. Big data systems (Hadoop, Spark)
+
+Fundamental Challenges
+
+1. Network Issues
+    Unreliable
+    Latency is unpredictable
+    Bandwidth is limited
+    Packet loss
+
+2. Partial Failures
+    One node fails, others still run
+    Hard to detect (crash vs slow)
+
+3. Concurrency
+    Multiple nodes update data simultaneously
+    Causes race conditions
+
+4. No Global Clock
+    Clock drift
+    Event ordering is difficult
+
+5. Data Consistency
+    Keeping replicas in sync
+
+Distributed systems are multiple independent machines working together, dealing with failures, latency, concurrency, 
+and consistency to appear as a single reliable system.
+
+The Eight Fallacies of Distributed Computing
+
+----- Network is reliable
+
+1. Latency is zero
+2. Bandwidth is infinite
+3. Network is secure
+4. Topology doesn’t change
+5. There is one administrator
+6. Transport cost is zero
+7. Network is homogeneous
+
+
+
+*************************************************************************************************************************
+************************************************ Consistency Models ****************************************************
+
+Consistency defines what guarantees a system provides about the visibility and ordering of data updates across multiple nodes.
+
+In simple words:
+“When I read data, will I see the latest write?”
+
+Why Consistency Models Matter
+
+1. Distributed data is replicated
+2. Network delays exist
+3. Nodes can fail
+4. Strong consistency reduces availability & performance
+5. We must choose trade-offs
+
+----1. Strong Consistency
+Definition
+
+After a write completes, all subsequent reads return the latest value.
+
+  Guarantees
+1. Linearizability
+2. Single global order of operations
+3. Feels like a single machine
+
+  Pros
+1. Simple mental model
+2. No stale reads
+
+Cons
+1. High latency
+2. Lower availability
+3. Poor scalability
+
+  Examples
+1. Traditional RDBMS
+2. Google Spanner
+3. Zookeeper (for metadata)
+4. Banking System 
+
+                                                    Node 2 
+                                                      |
+              A ------------------>  Node 1 -----------
+                                                      |
+                                                    Node 3
+
+If there is any update by client A , then Node 1 will make ensure first that it should be replicated to Node 2 and Node 3
+only then it allows reading from Node 2 and 3 . So it makes strong consisteny but loose availability . 
+
+
+2.  Eventual Consistency : If no new updates occur, all replicas will eventually converge to the same value.
+
+    Guarantees
+1. No guarantee of immediate consistency
+1. Convergence over time
+
+    Pros
+1. High availability
+2. Low latency
+3. Scales well
+
+    Cons
+1. Stale reads
+2. Complex application logic
+
+    Examples
+1. Amazon DynamoDB
+2. Cassandra
+3. DNS
+
+
+------- 3. Read Your Write Consistency : In this model , if user A updates to Node 1 and next time (for few time) user A 
+read operation will only takes place from Node A . Behind the scene there would be asynchronous replication to other 
+node like B , C . 
+
+For Example : in social media , if i post something , then it should be immediately visible to me so that i do not post 
+again . But at the same time , my new post may not available to other user because they might be reading from 
+other Node . 
+
+Read-your-writes consistency is a desirable property in distributed systems and databases where users expect to see the 
+results of their own operations immediately
+
+Examples of Read-your-Writes
+1. Social Media Platforms:
+Scenario: A user posts a new status update or comment.
+Importance: The user should immediately see their new post or comment in their feed to confirm the action was successful.
+Implementation: The system routes the user's read requests to the same replica or master node that processed the write.
+
+2. Online Banking Applications:
+Scenario: A user transfers money from their savings to their checking account.
+Importance: The user should see the updated balance reflecting the transfer immediately to trust the system's accuracy.
+Implementation: The banking system ensures the user's read requests for account balances are handled by the node where the write occurred.
+
+3. E-commerce Websites:
+Scenario: A user adds items to their shopping cart.
+Importance: The user should see the added items in their cart right away to proceed with the purchase.
+Implementation: The e-commerce platform directs the user's reads to the master database or ensures the replication delay is
+minimal.
+
+
+------4. Monotonic Reads : Once a user sees newer data, they should never see older data later.
+Think of it as:
+1. Time should only move forward for your reads
+2. No going backward
+
+Simple real-life analogy 📱
+
+Imagine checking your WhatsApp messages:
+
+1. You open WhatsApp and see a message:
+👉 “See you at 5 PM”
+
+2. You refresh the app
+3. Suddenly the latest message disappears 😱
+
+That would feel wrong, right?
+Monotonic reads prevent this problem.
+
+Why does this problem happen in systems?
+
+In distributed systems:
+    1. Data is stored in multiple servers (replicas)
+    2. Some replicas may be slightly behind others
+
+So you might read:
+    1. New data from one server
+    2. Old data from another server
+
+         WRITE
+         |
+         v
+   +------------+
+   |  Database  |
+   +------------+
+     /        \
+    v          v
++--------+  +--------+
+|Server A|  |Server B|
+|New data|  |Old data |
++--------+  +--------+
+
+User reads:
+1st read → Server A → gets NEW data ✅
+2nd read → Server B → gets OLD data ❌ (BAD)
+
+What monotonic reads guarantee
+
+With monotonic read consistency:
+
+User reads:
+1st read → NEW data
+2nd read → SAME or NEWER data
+
+✔️ Never older than what was already seen
+
+"Monotonic read consistency ensures that once a client reads a particular version of data, all future reads by that client
+will return the same or a newer version."
+
+
+---- 5. Casual Consistency : If one action depends on another, everyone must see them in the same order.
+👉 Cause must be seen before effect.
+
+Real-life analogy 💬
+
+Imagine a chat app:
+
+Alice sends a message:
+“Are you coming to the party?”
+
+Bob replies:
+“Yes, I’m coming.”
+
+Now imagine someone sees:
+“Yes, I’m coming.”
+but never sees the question 😵
+
+That would make no sense.
+👉 Causal consistency prevents this.
+
+If event B is caused by event A, then any user who sees B must also see A first.
+
+        +-------------+
+        |  Database   |
+        +-------------+
+         /           \
+        v             v
+ +-----------+   +-----------+
+ | Server A  |   | Server B  |
+ | Has A,B   |   | Has only B|
+ +-----------+   +-----------+
+
+User connects to:
+Server B → sees Reply B ❌
+(but Message A missing!)
+
+
+***************************************************************************************************************************
+****************************************** Functional and Non Functional Requirement *************************************
+
+1. Functional Requirements (FR) : Functional requirements describe WHAT the system should do.
+They define system behavior, features, and use cases.
+
+Characteristics
+
+1. User-facing
+2. Business logic oriented
+3. Feature-specific
+4. Easy to validate (works / doesn’t work)
+
+Examples
+1. User can sign up / login
+2. User can upload photos
+3. System sends notifications
+4. User can search products
+5. Payment can be processed
+
+
+------ 2. Non-Functional Requirements (NFR) : Non-functional requirements describe HOW well the system performs.
+They define quality attributes and constraints.
+
+Common Non-Functional Requirements
+1. Scalability
+Handle growth in users, traffic, data
+Horizontal vs vertical scaling
+
+2. Availability
+System uptime (e.g., 99.9%, 99.99%)
+Fault tolerance
+No single point of failure
+
+3. Performance: Latency (response time), Throughput (requests/sec), Tail latency (P95, P99)
+4. Reliability : Correct operation over time, Data durability, Failures are rare
+5. Consistency: Strong vs eventual, Read/write guarantees
+6. Fault Tolerance: System continues to operate despite failures. Replication, retries, failover
+7. Security: Authentication, Authorization, Encryption (in transit & at rest), Rate limiting
+8. Maintainability: Easy to modify, Modular design, Clear interfaces
+9. Observability : Logging, Monitoring, Tracing, Alerting
+10. Cost: Infrastructure cost, Cloud usage, Trade-off between performance and expense
+
+
+***********************************************************************************************************************
+*************************************** Service Layer Agreement SLA **********************************************
+
+What is SLA?
+  Formal agreement between service provider and customer
+  Defines expected service quality
+
+What SLA Specifies
+1. Availability (uptime %)
+2. Performance (latency, throughput)
+3. Reliability
+4. Support & response time
+5. Penalties / credits for violations
+
+“9s” of Availability
+What are “9s”?
+
+Representation of uptime percentage
+
+More 9s = less allowed downtime
+
+Downtime per Year
+Availability	                      Downtime / Year
+99% (2 nines)	                      ~3.65 days
+99.9% (3 nines)	                    ~8.76 hours
+99.99% (4 nines)	                  ~52.6 minutes
+99.999% (5 nines)	                  ~5.26 minutes
+
+Key Observations
+1. Each extra 9 is very expensive
+2. Requires redundancy, replication, automation
+3. Strong consistency makes high 9s harder
+
+Question 1 : How to increase availability of server ?
+1. Replication (leads to Redundancy )
+2. Scaling 
+3. CDN (Content Delivery Network )
+4. Load Balancing 
+5. Failure Mechanism 
+6. Monitoring 
+7. Cloud Service
+8. Scheduled Maintenance
+9. Testing + Simulation 
+
+
+
+
+
+
+
+
+
+
