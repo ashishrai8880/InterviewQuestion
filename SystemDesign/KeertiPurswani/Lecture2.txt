@@ -283,6 +283,160 @@ Gradual migration preferred
 Microservices adoption over time
 
 
+*************************************************************************************************************************
+************************************ RPC Remote Procedure Call gRPC *****************************************************
+
+RPC (Remote Procedure Call)
+What is RPC?
+RPC allows a program to call a function on another machine as if it were a local function call.
+
+Goal: Hide network communication and make distributed calls feel local.
+
+ - How RPC Works (High Level)
+
+1.Client calls a local stub
+2. Stub serializes request (marshalling)
+3. Request sent over network
+4. Server deserializes request
+5. Server executes function
+6. Response serialized and sent back
+7. Client receives response
+
+Key Components
+
+1. Client Stub – acts like a local function
+2. Server Stub (Skeleton) – receives and invokes real function
+3. IDL (Interface Definition Language) – defines function signatures
+4. Transport – TCP / UDP / HTTP
+5. Serialization – JSON / XML / Binary
+
+Types of RPC
+
+1. Synchronous RPC – client blocks until response
+2. Asynchronous RPC – client continues execution
+3. One-way RPC – no response expected
+
+Advantages
+
+1. Easy to understand (function calls)
+2. Abstracts network complexity
+3. Language-agnostic (with IDL)
+
+Disadvantages
+
+1. Network failures are hidden → false sense of reliability
+2. Tight coupling between client & server
+3. Harder to debug than REST
+4. Versioning issues
+
+Popular RPC Frameworks
+
+1. gRPC
+2. Apache Thrift
+3. JSON-RPC
+4. XML-RPC
+5. CORBA
+
+
+---gRPC (Google Remote Procedure Call)
+What is gRPC?
+
+gRPC is a modern, high-performance RPC framework developed by Google.
+
+Used for microservices, low-latency, and high-throughput systems.
+
+Key Features
+
+1. Uses HTTP/2
+2. Uses Protocol Buffers (Protobuf) for serialization
+3. Strongly typed APIs
+4. Supports bi-directional streaming
+5. Cross-language support
+
+gRPC Architecture
+
+1. Client
+2. Server
+3. .proto file (service & message definitions)
+4. Protobuf Compiler (protoc)
+5. Generated client & server code
+
+Protocol Buffers (Protobuf)
+
+1. Binary serialization format
+2. Smaller & faster than JSON
+3. Schema-based
+
+``` Example 
+
+syntax = "proto3";
+
+service UserService {
+  rpc GetUser(UserRequest) returns (UserResponse);
+}
+
+message UserRequest {
+  int32 id = 1;
+}
+
+message UserResponse {
+  string name = 1;
+}
+
+-Communication Types in gRPC
+
+1. Unary RPC
+One request → One response
+
+2. Server Streaming
+One request → Stream of responses
+
+3. Client Streaming
+Stream of requests → One response
+
+4. Bidirectional Streaming
+Stream ↔ Stream
+
+Why HTTP/2 Matters
+
+1. Multiplexing (multiple requests over single connection)
+2. Header compression
+3. Lower latency
+4. Better performance than HTTP/1.1
+
+Advantages of gRPC
+
+1. Very fast (binary + HTTP/2)
+2. Strong contract (proto files)
+3. Streaming support
+4. Auto code generation
+5. Ideal for internal microservices
+
+Disadvantages of gRPC
+
+1. Not human-readable (binary)
+2. Browser support is limited
+3. Harder to debug than REST
+4. Overkill for simple CRUD APIs
+
+RPC vs REST vs gRPC (Quick Comparison)
+Feature	              REST	                  RPC	                    gRPC
+Protocol	            HTTP	                  Any	                    HTTP/2
+Data Format	          JSON	                  JSON/Binary	            Protobuf
+Performance	          Medium	                Medium	                High
+Streaming	            Limited	                Limited	                Excellent
+Schema	              Weak	                  Medium	                Strong
+Browser Friendly	    Yes	                    Yes	                    No (mostly)
+
+
+
+
+
+
+
+
+
+
 
 
 
