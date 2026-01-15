@@ -429,7 +429,8 @@ Schema	              Weak	                  Medium	                Strong
 Browser Friendly	    Yes	                    Yes	                    No (mostly)
 
 
-
+Question : If gRPC is so good then why it is not being used on frontend ?
+Ans : Because gRPC supports http/2 protocol which is not supported on most of the browser .
 
 
 
