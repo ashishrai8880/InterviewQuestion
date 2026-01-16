@@ -1,0 +1,190 @@
+
+
+******************************************************************************************************************************
+1. Message Queue : Message queues are a way for different parts of a software system to communicate asynchronously by sending
+messages through an intermediate buffer (the queue).
+
+Instead of one component talking directly to another, it sends a message to the queue. Another component later pulls and
+processes that message when it’s ready.
+
+How message queues work
+1. Producer sends a message to the queue
+2. Queue stores the message safely
+3. Consumer retrieves the message
+4. Consumer processes it and acknowledges completion
+5. Messages are usually processed in FIFO order (first in, first out), though priorities are sometimes supported.
+
+Why Message Queue are important ?
+1. Decoupling Systems 
+2. Asynchronous Processing and Communication
+3. Scalability 
+4. Reliability and Fault Tolerance
+5. Load balancing
+6. Buffering and Throttling
+
+Common Use Cases 
+1. Sending emails or notifications 
+2. Processing Payments 
+3. Background Jobs
+4. Event driven systems 
+5. Log and data processing pipelines 
+
+Popular message queue technologies
+1. RabbitMQ – traditional message broker
+2. Apache Kafka – high-throughput event streaming
+3. Amazon SQS – fully managed cloud queue
+4. ActiveMQ
+5. Azure Service Bus
+6. Google Pub/Sub
+
+
+********************* Distributed Message Queue ********************************
+A distributed message queue is a message queue system that runs across multiple machines (nodes) instead of a single server,
+so it can handle high scale, fault tolerance, and reliability.
+
+In short:
+👉 it’s a message queue designed for distributed systems.
+
+A distributed message queue:
+1. Stores messages across multiple servers
+2. Continues working if one or more servers fail
+3. Can handle very large volumes of messages
+4. Allows many producers and consumers at the same time
+
+Why “distributed” matters
+1. A single-server queue has limits:
+2. If the server crashes → messages are lost or unavailable
+3. Limited throughput
+4. Hard to scale
+5. A distributed queue solves this by spreading data and work across nodes.
+
+How a distributed message queue works (high level)
+1. Producers send messages to the system
+2. Messages are partitioned across multiple nodes
+3. Messages are replicated to other nodes for fault tolerance
+4. Consumers read messages in parallel from different partitions
+5. The system coordinates consistency and delivery guarantees
+
+Examples of distributed message queues
+1. Apache Kafka (most common example)
+2. Amazon SQS
+3. Google Pub/Sub
+4. Apache Pulsar
+5. Azure Service Bus
+6. RocketMQ
+Kafka and Pulsar are often called distributed logs, but they function as distributed message queues.
+
+One-sentence summary
+A distributed message queue is a messaging system that runs on multiple machines to provide scalability, reliability, and 
+fault tolerance for asynchronous communication.
+
+
+***************************************************************************************************************************
+************************************************* KAFKA *******************************************************************
+
++-------------+        +-------------------+        +------------------+
+|  Producer   | -----> |   Kafka Cluster   | -----> |    Consumers     |
++-------------+        |                   |        +------------------+
+                       |  +-------------+  |         Consumer Group
+                       |  |   Broker 1  |  |        (C1, C2, C3)
+                       |  +-------------+  |
+                       |  |   Broker 2  |  |
+                       |  +-------------+  |
+                       |  |   Broker 3  |  |
+                       |  +-------------+  |
+                       +-------------------+
+
+
+1. Kafka :   Apache Kafka is a distributed, fault-tolerant, high-throughput message streaming platform used for real-time
+data pipelines and event-driven systems.
+
+2. Kafka Cluster : A Kafka cluster is a group of brokers working together to store and serve data.
+
+3. Broker : A broker is a Kafka server that:
+      Stores data (partitions)
+      Handles read/write requests
+      Manages replication
+      👉 One Kafka server = one broker
+
+4. Topic : A topic is a logical category or stream of messages. Basically it is a channel over which some common
+  things will be streamed as simple AF . Examples:
+      orders
+      payments
+      logs
+    ✔ Topics are split into partitions
+    ✔ Topics are immutable (append-only)
+
+5. Partition : Partition is a subsection of kafka topics . Topics can have multiple partition so data can be spread
+out across broker . Each partition maintain a sequential order of message allowing paraller read and write for higher 
+performance . Are basically agar ek topic hai , or million of user base hai , or usi topic me publish hue jaa rha hai 
+to obviosly it will be very high load , so isiliye there is partition , divide kr dia traffic ko across multiple partition
+All partitioin will be listening to the same topic . For eg : we can make partition based on varios things , like location (
+south ind zomato or north india ) or on varios parameter we can make partition . We can publish message to particular partition
+ya fir random round robin me bhi apne aap kafka maintain kr sakta hai . It is basically kind of load balancing . 
+
+A partition is (by gpt):
+      A physical log file
+      An ordered sequence of messages
+      The unit of parallelism
+      ✔ Ordering is guaranteed only within a partition
+
+
+6. Offset : An offset is:
+      A unique, sequential ID
+      Assigned per partition
+      Used by consumers to track progress
+
+8. Producer - A producer:
+      Publishes messages to Kafka topics
+      Chooses partition (by key or round-robin)
+      Can batch and compress messages
+
+9. Consumer - A consumer:
+      Reads messages from topics
+      Tracks offsets
+      Pull-based (not push)
+
+ ---------- Some Cases --------------
+
+Case 1 : Agar 1 topic k 3 partition hai or 1 consumer hai . To fir , all 3 partition sirf 1 consumer ko bhej rhe honge . ya fir
+ye bol sakte hai ki 1 consumer sabhi 3 partition ko listen kr rha hoga . 
+
+Case 2 : Agar 1 topic k 3 partition hai or 2 consumer hai . To fir koi 1 consumer partition 1 and 2 ko listen kr rha hoga 
+or dusra consumer 3rd partition ko listen kr rha hoga . Basically auto load balancing here also . 
+
+Case 3 : Agar 1 topic k 3 partition hai or 3 hi consumer hai . To obviosly sabhi 3 partition apne apne consumer ko data bhej
+rhe honge . 
+
+Case 4 : Agar 1 topic k 3 partition hai or 4 consumer hai . To obviously , 1 consumer free rahega kyuki , usko dene k liye 
+koi partition hi nahi hai . 
+
+* Case 5 : Ek topic ka message , chahe kisi bhi partition me ho , to wo ek baar hi consume hoga kisi bhi ek consumer se . 
+1 se jayada baar consume nahi ho sakta koi bhi message . Obviosly aaisa hona bhi nahi chahiye . 
+
+
+Consumer Group : Kuch consumer ko mila k consumer group bana sakte hai . Basically agar koi order ka data hai . To usko 
+hum analytics k liye bhi use kr sakte hai or inventory update k liye bhi . But But , 1 consumer group me again 
+message 1 hi consumer consumer krega . But 1 topic ka message multiple consumer group me jayega . Obviously na , kyuki 
+sabhi alag alag service hai , unko data to chahiye hi na . 
+      - Is a set of consumers working together
+      - Each partition is read by only one consumer per group
+      - Enables scalability and fault tolerance
+
+Case 6 : Agar 2 CG hai , or 3 partition hai topic k . Or dono CG me 3-3 consumer hai . To 1 consumer group k liye uper 
+wale cases jaise hi behaviour rahega . 3 partitioin dono consumer group k sabhi consumer ko message de rahe honge . 
+
+Case 7 : Agar 2 CG hai , or 1 CG me 3 consumer hai or dusre CG me 1 hi consumer hai . Or 3 partition hai 1 topic ka 
+to Pehle CG me to sabhi consumer alag alag partition se data le rha hoga , lekin kyuki second CG me sirf 1 hi 
+consumer hai , to akela wahi consumer sabhi partition se data le rha hoga . 
+
+
+11. Leader : Handles all reads & writes for a partition . Exists per partition
+12. Follower : Replicates data from the leader . Takes over if leader fails
+
+13. Replication : Agar koi partition down chala gya , to fir sabhi partitioin ka replication hota hai , baanki k 
+partition me . 
+
+
+
+
+
