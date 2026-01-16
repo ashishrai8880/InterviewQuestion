@@ -360,6 +360,78 @@ Question 1 : How to increase availability of server ?
 9. Testing + Simulation 
 
 
+***********************************************************************************************************************
+********************************************* CAP Theorem *************************************************************
+
+Few Quizes before start 
+
+Feature                              Consistency                             Availability 
+1. Yoututbe Comment                                                          True
+2. Insta Post/Feed                                                           True
+3. Amazon Cart                         True
+4. Uber Payment                        True
+5. Uber Other(Book/receipt)                                                     True
+6. Whatsapp Messaging                  True
+7. ATM                                 True
+8. Whatsapp Active Status                                                     True
+9. File Sharing (Google docs)          True
+
+
+Few Jargons Definition in Distributed System
+
+1. Latency : Latency is the time delay between sending a request and receiving a response.
+Measured in milliseconds (ms)
+Example: “It takes 120 ms for a user request to reach the server and come back.”
+👉 Low latency = faster response time
+
+2. Throughput : Throughput is the amount of work a system can handle per unit of time.
+    Measured as requests/second, transactions/second, etc.
+    Example: “This service can process 10,000 requests per second.”
+👉 High throughput = handles many requests
+
+3. Fault : A fault is the cause of a problem in the system. Any error or abnormal behavior
+    Example: hardware crash, network partition, buggy code, disk failure
+👉 Fault = something went wrong internally
+
+4. Failure : A failure occurs when the system does not behave as expected from the user’s point of view. Fault leads to failure
+    Example: service unavailable, wrong response, timeout
+👉 Fault may cause a failure, but not always
+
+5. Resiliency : Resiliency is the system’s ability to continue operating correctly despite faults or failures.
+    Includes retries, failover, graceful degradation
+    Example: service keeps running even if one server crashes
+👉 Resilient systems bend, not break
+
+6. Redundancy : Redundancy means having extra or duplicate components so the system can survive failures.
+    Example: multiple servers, replicas of data, backup networks
+👉 Redundancy is how resiliency is often achieved
+
+7. Stateful System : A stateful system remembers past interactions or data between requests.
+    State is stored in memory, disk, or session storage
+    Example: shopping cart, logged-in user session , websocket
+👉 Request depends on previous requests
+
+8. Stateless System : A stateless system does not store any client-specific state between requests.
+    Each request is independent and self-contained
+    Example: REST APIs where all data is sent with each request
+👉 Easier to scale and recover
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
