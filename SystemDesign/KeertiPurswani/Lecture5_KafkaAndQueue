@@ -185,6 +185,186 @@ consumer hai , to akela wahi consumer sabhi partition se data le rha hoga .
 partition me . 
 
 
+*************************************************************************************************************************
+********************************************* RabbitMQ *****************************************************************
+
+Best And Must Read Articles : https://medium.com/@erickzanetti/rabbitmq-a-complete-guide-to-message-broker-performance-and-reliability-3999ee776d85
+                            https://medium.com/cwan-engineering/rabbitmq-concepts-and-best-practices-aa3c699d6f08
+
+Implementation : https://sharmilas.medium.com/get-started-with-rabbitmq-in-node-js-1adb18d019d0
+                https://dev.to/pawandeore/using-rabbitmq-with-nodejs-a-complete-guide-48ej
+
+RabbitMQ is a message broker — it sits between producers and consumers and reliably passes messages between them.
+Think of it as a post office:
+  Producers → send letters
+  RabbitMQ → sorts & routes letters
+  Consumers → receive letters
+
+2️⃣ Core RabbitMQ Architecture (VERY IMPORTANT)
+RabbitMQ is based on AMQP (Advanced Message Queuing Protocol).
+
+The main building blocks 👇
+Producer → Exchange → Queue → Consumer
+
+1️⃣ Producer : Application that sends messages . Doesn’t know who will consume the message
+
+Sends message to an Exchange, NOT directly to a queue
+📌 Example:
+User service emits USER_CREATED
+Drawing service emits FILE_LOCKED
+
+2️⃣ Exchange (the brain 🧠): Exchange decides:
+              Where should this message go?
+              It does NOT store messages.
+
+Exchange types:
+🔹 Direct Exchange : Routes message by exact routing key match
+routingKey = "file.lock"
+📌 Use when:
+  One-to-one or exact routing
+
+🔹 Topic Exchange (most common) : Routes based on patterns
+      file.locked
+      file.*
+      file.# 
+📌 Use when:
+      Events
+      Microservices
+      Flexible routing
+
+🔹 Fanout Exchange : Sends message to all bound queues . Ignores routing key
+📌 Use when:
+      Broadcast (notifications, cache invalidation)
+
+🔹 Headers Exchange : Uses headers instead of routing key
+      Rarely used
+
+3️⃣ Queue (storage 📦) : Stores messages until consumed  , FIFO (mostly)
+Messages stay until:
+    Consumed & acknowledged
+    TTL expires
+    Queue is deleted
+
+📌 Important properties:
+    Durable (survives restart)
+    Exclusive (only one consumer)
+    Auto-delete
+
+4️⃣ Consumer : Application that receives messages
+        Pulls or gets pushed messages
+        Must ACK messages
+
+          channel.ack(msg);
+
+        If no ACK → message can be re-delivered.
+
+Producer
+   |
+   v
+[ Exchange ]
+   |
+   v
+[ Queue ]
+   |
+   v
+Consumer
+
+*** Important things 
+🔹 Bindings
+      Connection between:
+      Exchange → Queue
+
+Includes:
+    Routing key
+    Pattern
+
+🔹 Acknowledgements (ACK)
+    1. Auto ACK ❌
+          Message removed immediately
+          Risk of data loss
+
+    2. Manual ACK ✅
+          Consumer explicitly confirms
+          Safe
+
+🔹 Prefetch (QoS)
+      channel.prefetch(5);
+      Means: “Don’t give me more than 5 unacked messages”
+      📌 Prevents consumer overload.
+
+🔹 Dead Letter Exchange (DLX) 🔥
+      Failed messages go to a dead-letter queue.
+      Used for:
+          Retries
+          Debugging
+          Poison messages
+
+🔹 Message Durability
+      For full safety:
+          Durable exchange
+          Durable queue
+          Persistent messages
+
+      persistent: true
+
+8️⃣ Medium-Level Interview Questions (with answers)
+Q1️⃣ Why does RabbitMQ use exchanges instead of sending directly to queues?
+Answer: Exchanges provide routing flexibility and decoupling. Producers don’t need to know queue names.
+
+Q2️⃣ What happens if a consumer crashes before ACK?
+Answer: Message is re-queued and delivered to another consumer.
+
+Q3️⃣ What is the purpose of prefetch?
+Answer: To limit unacknowledged messages per consumer and prevent overload.
+
+Q4️⃣ What is a dead-letter queue?
+Answer: A queue where messages go after being rejected, expired, or failed.
+
+Q5️⃣ Difference between durable and persistent?
+Answer:
+Durable → queue/exchange survives restart
+Persistent → message survives restart
+Both are needed for full durability.
+
+Q6️⃣ Can multiple consumers read from the same queue?
+Answer: Yes. Messages are distributed in a round-robin manner.
+
+Q7️⃣ What is message ordering guarantee?
+Answer: RabbitMQ guarantees order per queue, not across multiple consumers.
+
+Q8️⃣ What happens if exchange exists but queue doesn’t?
+Answer:Message is dropped unless:
+      mandatory flag is set
+      Alternate exchange is configured
+
+Q9️⃣ When would you NOT use RabbitMQ?
+Answer: For:
+      High-volume analytics
+      Event replay
+      Long-term storage of events
+
+Q🔟 How does RabbitMQ handle backpressure?
+Answer: Using:
+      Prefetch
+      Flow control
+      Publisher confirms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
