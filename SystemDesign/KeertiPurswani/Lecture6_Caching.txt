@@ -1,0 +1,21 @@
+
+1. Caching
+
+    Locality of reference principle  
+    Best Article : https://medium.com/@shinchan76/locality-of-reference-and-its-type-cache-memory-74baa6644eae
+
+    * Locality of Reference means programs often reuse the same data or nearby instructions rather than accessing random memory locations.
+    * Locality of reference is the property of a program that describes how memory references are grouped together in time and space during execution.
+
+    Two Types of locality of referecne 
+
+      1. Temporal Locality : Temporal locality states that if a particular memory location (data or instruction) is accessed at one time, it is likely to be accessed again in the near future.
+      2. Spatial Locality : Spatial locality states that if a particular memory location is accessed, the nearby memory locations are also likely to be accessed soon. Instructions and data are
+            stored in contiguous memory locations.
+
+
+      Client   <---------->  Web Server <----------->  Application Server  <-----------> Database
+
+
+
+
