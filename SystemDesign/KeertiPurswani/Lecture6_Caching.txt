@@ -463,19 +463,104 @@ Returns response to client
 ***********************************************************************************************************************
 ************************************** Load Balancing Strategies *******************************************
 
+Best Link : https://vertisystem.medium.com/10-load-balancing-techniques-mastering-the-art-of-distributed-computing-9ab053ad138f
+
 1. Round Robin Strategies
+Round Robin is one of the simplest algorithms used in load balancing. In this method, incoming requests are distributed in a circular
+order across all the available servers in a server pool
+Pros : 
+    Simplicity , Fairness , Low Overhead , Predictablity , Quick Response 
+Cons : 
+    Unaware of server load .
+    Not session aware :  In a stateful application where user sessions are important, Round Robin can break the application logic 
+        because it does not ensure session persistence. For example, if a user logs in on Server A and the next request goes to 
+        Server B, the user might be logged out if sessions are not shared between the servers.
+    Inefficient Resource Utilization: If servers have different capabilities (e.g., different CPU, RAM), Round Robin will not exploit
+        these differences efficiently.
+
+
 2. Least Connection Strategies
-3. Weighted Round Robin
-4. Weighted Least Connection
-5. Geographical Based Connection
-6. Content Based 
+The Least Connections algorithm is a more advanced load balancing technique compared to Round Robin. In this method, the load 
+balancer maintains a record of the number of active connections for each server in the pool. Incoming requests are routed to the
+server with the least number of active connections at that moment.
+
+Pros : More Intelligent routing , better for varying request complexity , good for long-lived connections , improves over time . 
+Cons : 
+    Unaware of task complexity  : While the Least Connections method considers the number of active connections, it doesn’t account 
+for the computational complexity of the tasks each server is handling. A server could have fewer but more resource-intensive tasks,
+and yet still receive new requests.
+    Higher Overhead : Maintaining a real-time count of active connections for each server incurs more computational overhead compared
+to simpler algorithms like Round Robin.
+    Potential for Suboptimal Utilization: If servers are of varying capacities, the least capable server may receive the same number 
+of requests as the most capable server, which could result in suboptimal resource utilization.
+    Initial Imbalance: In some setups, when all servers have zero or the same number of connections, the first few requests could all go to the same server, creating a temporary imbalance.
 
 
+3. Weighted Round Robin and  Weighted Least Connection : Both Weighted Round Robin and Weighted Least Connections are extensions of
+the basic Round Robin and Least Connections algorithms, respectively. In these weighted methods, each server is assigned a weight 
+based on its capacity or some other criteria. Servers with higher weights will receive a proportionally larger number of requests.
+Pros : Better resource utilization , adaptability , fairness and priority , scalability , hybrid scenarios .
+Cons : 
+   -  Complexity: The added layer of weights increases the complexity of managing and configuring the load balancer.
+   -  Manual Tuning: Deciding the appropriate weights for each server often requires manual tuning and a deep understanding of the 
+workload characteristics and server capabilities. 
+    - Resource Monitoring: For Weighted Least Connections, the load balancer has to not only keep track of active connections but also needs to consider the weights in real-time, increasing the computational overhead.
+   -  Inefficiency in Weight Allocation: If weights are not set properly, it can lead to inefficient use of resources. For example, assigning a too-high weight to a low-capacity server can overwhelm it.
+
+4. Hashing : Hashing is a technique used to map data to a fixed-size array, typically called a hash table. A hash function processes 
+the input data to produce an output called a hash code, which is then used to index into the hash table. Hashing is commonly used for
+efficient data retrieval, data indexing, data deduplication, and various other applications.
+    Pros : 
+        1. Speed vs Space : A larger hash table reduces collisions but uses more memory. Conversely, a smaller table uses less memory
+but is more prone to collisions, which would then require additional time for resolution.
+        2. Simple Vs Complex Function :  Simple hash functions are generally faster but may produce more collisions. Complex or 
+cryptographic functions reduce the risk of collision or reverse engineering but are computationally more expensive.
+
+    Cons : 
+        Collisions , Non invertible , limited security , space time tradeoff , non ordered
+
+5. Random Ordered : Random Allocation is a load-balancing strategy where incoming requests are distributed randomly across available
+servers. Unlike algorithms like Round Robin or Least Connections, Random Allocation doesn’t follow a predefined pattern or consider 
+any server metrics; it simply picks a server at random each time a request comes in.
+
+    Pros : No need for tracking , uniformity over time , simplicity vs effficiency 
+    Cons : Unpredictable load , no considereation for server capacity , not ideal for sticky session . 
+
+6.. Geographical Based Connection : Geo-Location Based Load Balancing is a technique used to distribute incoming network or 
+application traffic based on the geographic locations of the client and the server. This method helps in minimizing latency, as a 
+user’s requests are generally routed to the closest or most appropriate data center.
+
+Cons : Geo Ip Inaccuracy , Handling mobile users , regulatory and data sovereignty issues , complexity 
+Pros : Cost vs performance , local optimization 
+
+7. Application Layer Content Switching
+Application Layer Content Switching is a sophisticated form of load balancing that distributes incoming requests based on content type, application state, or other application-layer data. This method is highly flexible and can route traffic based on a variety of factors such as URL paths, cookies, HTTP headers, or even custom application logic.
 
 
+8. Resource-Based Load Balancing
+Resource-Based Load Balancing is a strategy that considers the resources (CPU load, memory usage, network I/O, etc.) available on each server before distributing incoming requests. This approach aims to ensure that each server’s workload corresponds to its resource availability, leading to better performance and utilization.
 
 
+******************************************************************************************************************************
+*************************************************** CDN ****************************************************************
 
+A CDN is a network of servers distributed around the world that deliver your website’s content from the location closest to the user.
+
+Why should you use a CDN?
+Main benefits
+✅ Faster page load times
+✅ Better performance for global users
+✅ Reduced load on your main server
+✅ Better reliability (traffic spikes, DDoS protection)
+✅ Often improves SEO and user experience
+
+Method 1: Use a CDN provider (Easiest & Most common)
+Popular CDN providers:
+Cloudflare (very beginner-friendly)
+Fastly
+Akamai
+Bunny.net
+AWS CloudFront
 
 
 
