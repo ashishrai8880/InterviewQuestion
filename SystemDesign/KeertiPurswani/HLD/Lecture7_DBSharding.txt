@@ -19,6 +19,130 @@ Database : There are broadly two categories of databases
   . Consistency
   . Scalability 
 
+********************************************************************************************************************************
+********************************************* Vertical Partitioning ************************************************************
+
+Vertical partitioning is a database design technique where you split a table by columns instead of rows. It’s commonly used in SQL 
+databases like PostgreSQL (psql) to improve performance, security, or manageability.
+
+In Disk , data is stored within blocks . Suppose there are blocks available of size 5 KB . And if one rows is taking 1 KB 
+it means , in one block only 5 rows can be stored there . 
+
+1. What is Vertical Partitioning?
+
+Instead of one wide table:
+
+users
+---------------------------------------------------
+id | name | email | password | bio | profile_pic
+
+
+You split it into multiple tables that share the same primary key:
+
+users_core
+-------------------------
+id | name | email
+
+users_private
+-------------------------
+id | password
+
+users_profile
+-------------------------
+id | bio | profile_pic
+
+Now suppose if we have 100 million user in our table and each user rows have 80 rows . Suppose everything related to user
+we are storing in same table in same rows . Now suppose 1 row size is 5KB and disk block size is 10 KB 
+So In one block only 2 rows can be stored . For 100 million user : (5 * 10^3) bytes * 100 * 10^6(million) = 500 * 10^9 bytes = 500 GB 
+and 50 million block . So for each user profile search we have to search from 500 GB storage or 50 million block . which take a lot 
+of time 
+
+
+Optimization : We can vertically partition the table or we can seperate user data in different table . suppose user_profile is 
+seperated and now it have only 5 column . Suppose 1 row is now taking 250 bytes . So for 100 million user 
+250 * (100 * 10^6) = 25 * (10^9) = 25 GB . so now we have to search only from 25 GB data . 
+
+When NOT to Use Vertical Partitioning
+❌ Small tables
+❌ Tables always queried as a whole
+❌ Over-joining causes performance regression
+❌ Premature optimization
+
+**************************************************************************************************************************
+Horizontal Partitioning : Horizontal partitioning (also called horizontal sharding) in databases is a technique where a table’s rows
+are split across multiple partitions, while each partition keeps the same table structure (columns).
+
+Common partitioning strategies
+1. Range-based
+    Example: orders by date
+    2023 orders → Partition A, 2024 orders → Partition B
+2. List-based
+    Example: country or region
+3. Hash-based
+    Example: hash(customer_id) % N
+4. Key-based
+    Uses a specific key (like primary key) to distribute rows
+
+Why horizontal partitioning is used
+1. Improves performance : Queries scan fewer rows
+2. Better scalability : Large datasets can be spread across disks or servers
+3. Easier maintenance : Old partitions can be archived or dropped
+4. Load balancing : Reads and writes are distributed
+
+--------------------------------------------------------------------------------------------------------------------------
+*** Sharding Ways Server Level 
+1. Logical Sharding : Logical sharding divides data into partitions (logical shards) within a single database instance, using schema
+design (like tenant IDs) for separation
+
+2. Physical Sharding : physical sharding distributes these logical shards across multiple, separate server instances (physical
+shards) for true horizontal scaling, improving performance and handling massive data by moving to different machines, with a 
+coordinator layer managing access
+
+
+-------------------
+1. Algorithm Sharding : Algorithm sharding means the algorithm itself is designed to operate on separate shards independently. Each
+shard runs the same algorithm, but only on its own subset of data. It runs inside the server itself , server decides which 
+database it have to lookup for . 
+
+Pros
+✅ High parallelism
+✅ Simple mental model
+✅ Easy to scale horizontally
+
+Cons
+❌ Hard to handle uneven data distribution
+❌ Some algorithms don’t shard cleanly (e.g., global graph algorithms)
+
+2. Dynamic Sharding : Dynamic sharding means shards are created, merged, split, or reassigned at runtime based on system conditions 
+like load, data size, or traffic. It means , there is seperate lookup servers which decides where to redirect db request . 
+
+Pros
+✅ Handles uneven load (hot spots)
+✅ Better resource utilization
+✅ Scales automatically
+
+Cons
+❌ More complex to implement
+❌ Re-sharding can be expensive
+❌ Requires coordination and metadata consistency
+
+
+*************************************************** Ways of Sharding ********************************************
+Link : https://medium.com/@bhat_aparna1/database-sharding-sharding-methods-benefits-drawbacks-and-alternatives-197a54943c18
+
+1. Hash Based  Sharding
+2. Range Based Sharding
+3. Directory Based Sharding
+4. Geographical Based Sharding
+5. Random Sharding
+
+Disadvantage of Sharding 
+1. To Apply Joins 
+2. Caching issue 
+3. Increased infrastructure costs: 
+4. Query overhead
+
+
 
 
 
