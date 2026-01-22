@@ -1,0 +1,42 @@
+
+Database : There are broadly two categories of databases 
+
+1. SQL DB - In Relational format mostly . It is vertically scalable 
+    Eg : MariaDB , IBM2 , SQLlite , PostgreSQL , OracleDB , MySQL 
+
+2. NoSQL DB - In collection form , graph form , table can also be there . It is horizontally scalable mostly . 
+    Broadly there are 4 types :   
+      1. Document DB : Store in collection and document format : Eg : MongoDB , CouchDB 
+
+      2. Time Series DB : TSDB eg : Influx DB 
+      3. Columnar DB : Eg : Cassandra 
+      4. Graph DB : Neo4j , Neptune 
+      5. Key Value DB : Redis and Dynamo DB 
+
+--- Decision of Database should be based on below few criteria 
+  . Use Cases 
+  . Availability 
+  . Consistency
+  . Scalability 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
