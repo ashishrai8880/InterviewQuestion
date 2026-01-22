@@ -17,5 +17,474 @@
       Client   <---------->  Web Server <----------->  Application Server  <-----------> Database
 
 
+    *********************************************************************************************************************
+ ************************************************************Cache Eviction Policy ********************************
+
+Medium Link : https://medium.com/@premchandu.in/7-cache-eviction-strategies-you-should-know-0bc4f08fd414
+
+It basically means , which should be put in cache and which should be removed . Because we can have limited cache space . 
+There are multiple ways of it . 
+
+1. Least Recently Used (LRU) - LRU evicts the item that hasn’t been used for the longest time.
+The idea is simple: if you haven’t accessed an item in a while, it’s less likely to be accessed again soon.
+
+    How it Works
+        - Access Tracking: LRU keeps track of when each item in the cache was last accessed. This can be done using various data                 structures, such as a doubly linked list or a combination of a hash map and a queue.
+        - Cache Hit (Item Found in Cache): When an item is accessed, it is moved to the most recently used position in the tracking               data structure (e.g., moving it to the front of a list).
+        - Cache Miss (Item Not Found in Cache):
+        - If the item isn’t in the cache and the cache has free space, it is added directly.
+        - If the cache is full, the least recently used item is evicted to make space for the new item.
+        - Eviction: The item that has been accessed least recently (tracked at the beginning of the list) is removed from the cache.
+
+
+ ## Implementatioin
+
+    
+class LRUCache {
+  constructor(capacity) {
+    this.capacity = capacity;
+    this.cache = new Map();
+  }
+
+  get(key) {
+    if (!this.cache.has(key)) {
+      return -1;
+    }
+
+    // Move key to the end to mark it as recently used
+    const value = this.cache.get(key);
+    this.cache.delete(key);
+    this.cache.set(key, value);
+
+    return value;
+  }
+
+  put(key, value) {
+    // If key exists, remove it first
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
+    }
+
+    // If capacity exceeded, remove least recently used item
+    if (this.cache.size >= this.capacity) {
+      const lruKey = this.cache.keys().next().value;
+      this.cache.delete(lruKey);
+    }
+
+    // Insert the new key-value pair
+    this.cache.set(key, value);
+  }
+}
+
+
+const lru = new LRUCache(2)
+
+lru.put(1, 1);
+lru.put(2, 2);
+
+console.log(lru.get(1)); // 1
+
+lru.put(3, 3); // Evicts key 2
+
+console.log(lru.get(2)); // -1 (not found)
+
+lru.put(4, 4); // Evicts key 1
+
+
+## Explantion : next() method is magical method . One more thing , map maintains the order inside it unlike other programing 
+language . so logic is , when insertion in map is greater than capacity , then simply it takes out first insertion and delete it . 
+
+
+******** 2. LFU Least Frequently Used : LFU evicts the item with the lowest access frequency. It assumes that items accessed less 
+frequently in the past are less likely to be accessed in the future.
+Unlike LRU, which focuses on recency, LFU emphasizes frequency of access.
+
+## Implementation
+
+class LFUCache {
+  constructor(capacity) {
+    this.capacity = capacity;
+    this.size = 0;
+
+    this.minFreq = 0;
+    this.keyToValFreq = new Map(); // key -> { value, freq }
+    this.freqToKeys = new Map();   // freq -> Map of keys
+  }
+
+  get(key) {
+    if (!this.keyToValFreq.has(key)) {
+      return -1;
+    }
+
+    const entry = this.keyToValFreq.get(key);
+    this._updateFreq(key, entry);
+
+    return entry.value;
+  }
+
+  put(key, value) {
+    if (this.capacity === 0) return;
+
+    if (this.keyToValFreq.has(key)) {
+      const entry = this.keyToValFreq.get(key);
+      entry.value = value;
+      this._updateFreq(key, entry);
+      return;
+    }
+
+    if (this.size >= this.capacity) {
+      this._evictLFU();
+    }
+
+    // Insert new key
+    this.keyToValFreq.set(key, { value, freq: 1 });
+
+    if (!this.freqToKeys.has(1)) {
+      this.freqToKeys.set(1, new Map());
+    }
+
+    this.freqToKeys.get(1).set(key, true);
+    this.minFreq = 1;
+    this.size++;
+  }
+
+  _updateFreq(key, entry) {
+    const freq = entry.freq;
+
+    // Remove from old frequency list
+    const keys = this.freqToKeys.get(freq);
+    keys.delete(key);
+
+    if (keys.size === 0) {
+      this.freqToKeys.delete(freq);
+      if (this.minFreq === freq) {
+        this.minFreq++;
+      }
+    }
+
+    // Add to new frequency list
+    entry.freq++;
+    const newFreq = entry.freq;
+
+    if (!this.freqToKeys.has(newFreq)) {
+      this.freqToKeys.set(newFreq, new Map());
+    }
+
+    this.freqToKeys.get(newFreq).set(key, true);
+  }
+
+  _evictLFU() {
+    const keys = this.freqToKeys.get(this.minFreq);
+    const lfuKey = keys.keys().next().value;
+
+    keys.delete(lfuKey);
+    if (keys.size === 0) {
+      this.freqToKeys.delete(this.minFreq);
+    }
+
+    this.keyToValFreq.delete(lfuKey);
+    this.size--;
+  }
+}
+
+
+********* 3. FIFO (First In First Out ) : FIFO evicts the item that was added first, regardless of how often it’s accessed.
+FIFO operates under the assumption that items added earliest are least likely to be needed as the cache fills up.
+
+****** 4. Random Replacement (RR) : RR cache eviction strategy is the simplest of all: when the cache is full, it evicts a random
+item to make space for a new one. 
+It doesn’t track recency, frequency, or insertion order, making it a lightweight approach with minimal computational overhead.
+
+****** 5. Most Recently Used (MRU)  : MRU is the opposite of Least Recently Used (LRU). In MRU, the item that was accessed most 
+recently is the first to be evicted when the cache is full.
+
+The idea behind MRU is that the most recently accessed item is likely to be a temporary need and won’t be accessed again soon, so 
+evicting it frees up space for potentially more valuable data.
+
+******** 6. Time to Live (TTL) : TTL is a cache eviction strategy where each cached item is assigned a fixed lifespan. Once an item’s
+lifespan expires, it is 
+automatically removed from the cache, regardless of access patterns or frequency.
+
+******** 7. Two-Tiered Caching
+Two-Tiered Caching combines two layers of cache — usually a local cache (in-memory) and a remote cache (distributed or shared).
+
+The local cache serves as the first layer (hot cache), providing ultra-fast access to frequently used data, while the remote cache 
+acts as the second layer (cold cache) for items not found in the local cache but still needed relatively quickly.
+
+********** REDIS has all its cache eviction policy inbuilt . No need to develope custom logic **********************
+
+**** Cache Invalidation : Cache invalidation is a state where we push away the data from the cache memory. When the data present in 
+cache is outdated. We perform this operation of pushing back or flushing the data from the cache. Otherwise, it will cause data 
+inconsistency.
+
+
+*********************************************************************************************************************************
+**************************************************** Cache Update Strategies ****************************************************
+
+Medium : https://medium.com/@mmoshikoo/cache-strategies-996e91c80303
+
+1. Write Through Cache : Data is written to cache and database at the same time . Write operation is synchronous .
+Client → Cache → Database
+
+Key Characteristics
+    Cache always has latest data
+    Slower writes (because DB write is required)
+    Very safe and simple
+
+Pros
+    ✅ Strong consistency
+    ✅ Easy to implement
+    ✅ Cache never stale
+
+Cons
+    ❌ Higher write latency
+    ❌ Database load increases
+
+Common Use Cases
+    Banking systems
+    Financial transactions
+    Systems requiring strong consistency .
+
+2. Write Back Cache / Write Behind / Lazy Write (db me baad me write hoga) :  Data is written only to cache . Database update happens later (asynchronously)
+
+    Client → Cache → (Later) Database
+
+Key Characteristics
+    Cache marked as dirty
+    DB updated after delay or eviction
+
+Pros
+    ✅ Very fast writes
+    ✅ Reduced DB load
+
+Cons
+    ❌ Risk of data loss if cache crashes
+    ❌ More complex (dirty tracking, flush logic)
+
+Common Use Cases
+    High-write systems
+    Analytics
+    Event processing
+
+3. Write-Around Cache / Cache Aside / Read Around : Data is written directly to DB . Cache is skipped on write . Cache updated only on read . When data is requested, the application checks the cache first. If the data is not in the cache, it is retrieved from the 
+database and stored in the cache for future use. 
+
+    Client → Database
+    Cache ← (On Read)
+
+Key Characteristics
+    Cache may not have newly written data
+    Avoids cache pollution
+
+Pros
+    ✅ Prevents useless cache entries
+    ✅ Good for write-heavy workloads
+
+Cons
+    ❌ First read is always a cache miss
+    ❌ Slightly stale cache possible
+
+Common Use Cases
+Data written once, read rarely
+Large objects
+Logging systems
+
+4. Write-Invalidate : On write, cache entry is invalidated . Fresh data loaded on next read
+
+Key Characteristics
+    Common in distributed caches
+    Ensures readers fetch latest data
+
+Pros
+    ✅ Avoids stale data
+    ✅ Simple consistency model
+
+Cons
+    ❌ Cache miss on next read
+    ❌ Extra DB reads
+
+Common Use Cases
+    Distributed systems
+    Multi-node caches
+
+***********************************************************************************************************************************
+1. Distributed Caching : Distributed caching is a technique where cache data is spread across multiple servers within a network,
+enhancing performance and scalability by reducing load on primary data stores. It improves application responsiveness by storing
+frequently accessed data closer to the application, reducing latency and improving overall system efficiency.
+
+2. Centralised Caching : A centralised cache is a caching approach where one shared cache system stores frequently used data and is 
+accessed by multiple applications, services, or servers.
+
+Instead of each server keeping its own cache, everyone reads from and writes to the same central cache.
+
+How it works (simple view)
+    Data is stored in a single cache location
+    Multiple clients or servers query that cache
+    If the data is found (a cache hit), it’s returned quickly
+    If not (a cache miss), the data is fetched from the main data source and then stored in the cache
+
+Why use a centralised cache?
+
+Advantages
+    ✅ Consistent data across all services
+    ✅ Reduced load on databases
+    ✅ Easier cache management
+    ✅ Better memory utilization than per-server caches
+
+Disadvantages
+    ❌ Single point of failure (unless replicated)
+    ❌ Network latency (cache is accessed over the network)
+    ❌ Scalability limits if not designed properly
+
+
+***** Cache Coherency *********
+
+Modern CPUs are multi-core.
+Each core usually has its own cache (L1, sometimes L2), and all cores share the same main memory (RAM).
+
+The problem
+If multiple cores cache the same memory location, they might end up with different values.
+
+Example:
+    Core 1 reads x = 10 → stores it in its cache
+    Core 2 also reads x = 10 → stores it in its cache
+    Core 1 updates x = 20 (only its cache changes)
+    Core 2 still thinks x = 10
+
+👉 Now the system is inconsistent.
+    Cache coherency ensures that all cores see a consistent view of memory.
+
+2. What cache coherency guarantees
+A cache-coherent system ensures:
+Writes by one core become visible to others
+No core uses stale (old) data
+Memory behaves as if there is a single, shared value for each address
+
+Important note:
+Cache coherency ≠ memory consistency
+Coherency is about one memory location; consistency is about ordering of multiple memory operations.
+
+
+****************************** Difference between Redis and Memecache **********************************
+
+One Major difference is , redis offer persistent storage while memecache does not offer . Most of the companies started using 
+redis as a database . 
+
+*************************************************************************************************************
+********************************* PROXY ******************************
+
+A proxy server acts as a middle layer between your device and the internet, hiding your real IP address and improving online privacy.
+It routes your requests through another server, offering security, anonymity, and control.
+
+Instead of a client (like your browser) talking directly to a website or backend server, it talks to a proxy, which then forwards the
+request on its behalf.
+
+Client → Proxy → Server
+Server → Proxy → Client
+
+Why Proxies Are Used
+    Common reasons include:
+    Security (hide internal systems)
+    Privacy (hide client identity)
+    Performance (caching)
+    Control (filtering, logging, rate-limiting)
+    Load balancing
+
+1. Forward Proxy (Client-side Proxy) 
+A forward proxy sits in front of the client and represents the client.
+It is typically used when clients want controlled access to the internet.
+
+Key Idea
+👉 The server does NOT know the real client
+👉 The client knows the proxy
+
+Client → Forward Proxy → Internet Server
+Example:
+Your Browser → Corporate Proxy → google.com
+
+Real-Life Example
+Company network where:
+    Employees access the internet
+    All traffic goes through a proxy
+    Certain websites are blocked
+    Activity is logged
+
+Common Use Cases
+    Internet access control (schools, offices)
+    Content filtering (block social media)
+    Anonymity (hide IP address)
+    Caching frequently accessed websites
+
+Client requests https://example.com
+↓
+Forward Proxy sends request on behalf of client
+↓
+example.com responds to proxy
+↓
+Proxy sends response back to client
+
+2. Reverse Proxy (Server-side Proxy)
+A reverse proxy sits in front of one or more servers and represents the server(s).
+Clients think they are talking to the real server, but they’re actually talking to the reverse proxy.
+
+Key Idea
+👉 The client does NOT know about backend servers
+👉 The server knows the proxy
+
+Client → Reverse Proxy → Backend Server(s)
+Example:
+Browser → NGINX → App Server
+
+Real-Life Example
+    A website like amazon.com
+    Users connect to Amazon
+    Traffic first hits a reverse proxy
+    Proxy distributes traffic to many backend services
+
+Common Use Cases
+    Load balancing
+    SSL termination (HTTPS handling)
+    Security (hide backend servers)
+    Caching
+    Rate limiting    
+    API gateway functionality
+
+Client requests https://myapp.com
+↓
+Reverse Proxy receives request
+↓
+Chooses a backend server
+↓
+Forwards request
+↓
+Returns response to client
+
+
+***********************************************************************************************************************
+************************************** Load Balancing Strategies *******************************************
+
+1. Round Robin Strategies
+2. Least Connection Strategies
+3. Weighted Round Robin
+4. Weighted Least Connection
+5. Geographical Based Connection
+6. Content Based 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
