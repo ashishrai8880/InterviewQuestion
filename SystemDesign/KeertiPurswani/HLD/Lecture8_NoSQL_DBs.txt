@@ -1,0 +1,106 @@
+
+
+Row Oriented DB and Column Oriented DB 
+
+Link : https://www.geeksforgeeks.org/dbms/difference-between-row-oriented-and-column-oriented-data-stores-in-dbms/
+
+1. Row Oriented : In a row-oriented database, data is stored and retrieved row by row, meaning all attributes of a row 
+are stored together in the same physical block.
+  -  Optimized for retrieving entire rows of data.
+  -  Commonly used in traditional RDBMS systems for Online Transaction Processing (OLTP) workloads.
+
+Advantages
+    1. Effective for OLTP: Optimized for frequent inserts, updates, and deletes.
+    2. Full Row Retrieval: Efficient when querying all attributes of a single row.
+    3. Easy to Understand and Use: Familiar to users of traditional relational databases.
+Disadvantages
+    1. Inefficient for Analytics: Queries needing only some columns are slower.
+    2. Higher Storage Requirements: Less opportunity for columnar compression.
+    3. Scaling Limitations: Performance may degrade as data size grows.
+
+2. Column Oriented DB : In a column-oriented database, data is stored column by column rather than row by row.
+    - Optimized for retrieving specific columns of data.
+    - Commonly used in Online Analytical Processing (OLAP) systems and data warehouses.
+
+Advantages
+    1. Optimized for OLAP: Ideal for analytical queries on large datasets.
+    2. Faster Queries on Selected Columns: Only relevant data is scanned.
+    3. Storage Efficiency: Columnar compression reduces space requirements.
+Disadvantages
+    1. Complex Full Row Retrieval: Combining multiple columns may require more processing.
+    2. Less Suitable for OLTP: Frequent inserts, updates, or deletes are less efficient.
+    3. Query Complexity: May require specialized query languages or optimization techniques.
+
+
+****************** Multilevel Indexing : Multilevel indexing with B-trees is like adding a GPS to your database searches.
+Instead of scanning row by row or even searching a single large index, you can dive through multiple levels of indexes to
+find the exact data you need, fast and efficiently.
+
+Basically indexing of even indexing . It uses B-Tree Binary Balanced Tree or Balanced Binary Tree . 
+
+
+***************************************************************************************************************************
+******************************************************** MONGO DB *********************************************************
+Link : https://medium.com/@michael_hoeller/mongodb-built-for-consistency-availability-and-partition-tolerance-fdc3abf51ea0
+
+MongoDB is a document-oriented NoSQL database that stores data in BSON (Binary JSON) format.
+It is schema-flexible, horizontally scalable, and designed for high availability.
+
+Document Structure
+  Data stored as documents (JSON-like)
+  Documents grouped into collections
+  No fixed schema (schema-on-read)
+
+Schema Characteristics
+  ✅ Flexible schema
+  ✅ Nested objects & arrays
+  ❌ No joins like RDBMS (limited via $lookup)
+  ❌ No strong schema enforcement (unless using validation rules)
+
+3. Use Cases (Very Important for HLD)
+Best Use Cases
+  ✔ Content Management Systems
+  ✔ User profiles & personalization
+  ✔ Product catalogs
+  ✔ Event logging & analytics
+  ✔ IoT & time-series data
+  ✔ Real-time applications (chat, gaming)
+  ✔ Microservices data store
+
+Avoid MongoDB When
+  ❌ Complex multi-row ACID transactions needed
+  ❌ Heavy joins & relational queries
+  ❌ Banking / accounting systems (strict consistency)
+
+4. Availability vs Consistency (CAP Theorem)
+MongoDB is CP by default but configurable.
+
+5. Scalability : Horizontally scalable (sharding) . It can vertically scalable as well , just need to increase RAM and CPU . 
+
+6. Read/Write Performance : MongoDB is read-optimized by default — but it can handle high writes too if designed correctly.
+    Why MongoDB is Read-Optimized
+      ✔ Powerful indexing (B-Tree indexes)
+      ✔ In-memory caching (WiredTiger cache)
+      ✔ Flexible schema → fewer joins
+      ✔ Secondary replicas can serve reads
+      ✔ Document model reduces read amplification
+
+Write Capability (Not Weak, Just Trade-offs)
+MongoDB can handle high write throughput, but:
+  Write Constraints
+      ❌ All writes go to Primary only
+      ❌ Journaling adds write latency
+      ❌ Replication acknowledgment (majority writes) slows writes
+      ❌ Indexes increase write cost
+
+
+
+
+
+
+
+
+
+
+
+
