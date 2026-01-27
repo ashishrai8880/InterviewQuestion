@@ -1,0 +1,350 @@
+
+Class : A blueprint/template that defines properties (data) and methods (behavior).
+        Used to create multiple objects with the same structure.
+
+Object : A real instance of a class.
+        Represents an entity with state + behavior.
+
+1. Encapsulation : It is wrapping up of data and member function into single unit . Encapsulation is the practice of hiding 
+internal object state and exposing behavior through well-defined methods to protect business invariants.
+Encapsulation = Data hiding + controlled access
+
+  PROS : 
+      Prevents invalid state changes
+      Improves maintainability
+      Enables business rule enforcement
+      Reduces tight coupling
+      Makes code safe for change 
+
+  Problem (Without Encapsulation ❌)
+      If order status is public:
+      Any service can directly set order to DELIVERED
+      Business rules can be bypassed
+      Leads to inconsistent states
+
+class Order {
+    private status; // private field (ES2022)
+
+    constructor(orderId) {
+        this.orderId = orderId;
+        this.#status = "CREATED";
+    }
+
+    confirmOrder() {
+        if (this.#status !== "CREATED") {
+            throw new Error("Order cannot be confirmed");
+        }
+        this.#status = "CONFIRMED";
+    }
+
+    markDelivered() {
+        if (this.#status !== "PICKED_UP") {
+            throw new Error("Order not picked up yet");
+        }
+        this.#status = "DELIVERED";
+    }
+
+    getStatus() {
+        return this.#status;
+    }
+}
+
+status is private
+State change happens only via business methods
+Rules are enforced inside the class
+
+        -> Another Example: Uber Ride Fare
+        Encapsulation Idea
+        Fare calculation logic should not be exposed
+        Only final fare should be accessible
+
+class Ride {
+    private double baseFare;
+    private double distance;
+    private double surgeMultiplier;
+
+    public Ride(double baseFare, double distance, double surgeMultiplier) {
+        this.baseFare = baseFare;
+        this.distance = distance;
+        this.surgeMultiplier = surgeMultiplier;
+    }
+
+    public double calculateFare() {
+        return (baseFare + distance * 10) * surgeMultiplier;
+    }
+}
+
+👉 Caller cannot manipulate fare logic, only consume result.
+
+
+-------------------- 2. Polymorphism  : The word polymorphism means having many forms . Same interface, different behavior
+Different objects respond differently to the same method call
+
+Why Polymorphism matters in LLD (Big Tech Angle)
+      Eliminates if-else / switch explosion
+      Makes system open for extension
+      Enables plug-and-play behaviors
+      Core foundation for design patterns
+
+interface PaymentMethod {
+    void pay(double amount);
+}
+
+class UpiPayment implements PaymentMethod {
+    public void pay(double amount) {
+        System.out.println("Paid " + amount + " via UPI");
+    }
+}
+
+class CardPayment implements PaymentMethod {
+    public void pay(double amount) {
+        System.out.println("Paid " + amount + " via Card");
+    }
+}
+
+Client Code (Polymorphism in action)
+class PaymentService {
+    public void processPayment(PaymentMethod paymentMethod, double amount) {
+        paymentMethod.pay(amount); // polymorphic call
+    }
+}
+
+✅ No if (type == UPI)
+✅ New payment methods don’t change existing code
+
+Two Types of Polymorphism
+1. Run time (Method overriding) : When child class and parent class have same method and same number of parameter 
+then at run time , controller knows which should be executes . 
+
+2. Compile time (Method Overloading) : When child class and parent class have same method and they are different by number 
+parameter . 
+
+
+-----------------------3. Abstraction : Expose what to do, hide how it is done . Focuses on behavior, not implementation
+              Client interacts with interfaces / abstract classes
+              Implementation details can change without affecting client code
+              “Abstraction separates usage from implementation.”
+
+Real Product Example: Uber Ride Booking
+          High-level Flow
+          User books a ride
+          System assigns a driver
+          System calculates fare
+
+👉 Client does not care:
+          How driver is assigned
+          How fare is calculated
+          Which algorithm is used
+
+
+class RideService {
+    bookRide(pickup, drop) {
+        throw new Error("Method not implemented");
+    }
+}
+
+class BikeRideService extends RideService {
+    bookRide(pickup, drop) {
+        console.log(`Booking BIKE from ${pickup} to ${drop}`);
+    }
+}
+
+class SedanRideService extends RideService {
+    bookRide(pickup, drop) {
+        console.log(`Booking SEDAN from ${pickup} to ${drop}`);
+    }
+}
+
+# client side
+class RideController {
+    constructor(rideService) {
+        this.rideService = rideService;
+    }
+
+    book(pickup, drop) {
+        this.rideService.bookRide(pickup, drop);
+    }
+}
+
+const rideService = new BikeRideService(); // concrete
+const controller = new RideController(rideService); // abstraction
+controller.book("delhi" , "gurgaon")
+
+Access Modifier , private member cannot be accessed by outside member and public will be accessible to all . 
+and protected member in java can only be accessed withing package . 
+
+--------- 4. Inheritance : There can be Buy Order and Sell Order but there should be one parent class which is Order .
+
+1. Method Overloading : Uber Fare Calculation
+
+class FareCalculator {
+
+    double calculateFare(double distance) {
+        return distance * 10;
+    }
+
+    double calculateFare(double distance, double surgeMultiplier) {
+        return distance * 10 * surgeMultiplier;
+    }
+
+    double calculateFare(double distance, double surgeMultiplier, double discount) {
+        return (distance * 10 * surgeMultiplier) - discount;
+    }
+}
+
+** Javascript does not support Method Overloading . 
+
+
+2. Method Overriding : Swiggy Payment Processing
+
+interface PaymentMethod {
+    void pay(double amount);
+}
+
+class UpiPayment implements PaymentMethod {
+    @Override
+    public void pay(double amount) {
+        System.out.println("Paid via UPI: " + amount);
+    }
+}
+
+class CardPayment implements PaymentMethod {
+    @Override
+    public void pay(double amount) {
+        System.out.println("Paid via Card: " + amount);
+    }
+}
+
+In Javascript 
+
+class PaymentMethod {
+    pay(amount) {
+        console.log("Generic payment of", amount);
+    }
+}
+
+class UpiPayment extends PaymentMethod {
+    pay(amount) {
+        console.log("Paid via UPI:", amount);
+    }
+}
+
+class CardPayment extends PaymentMethod {
+    pay(amount) {
+        console.log("Paid via Card:", amount);
+    }
+}
+👉 Yes, these are separate classes
+👉 Both override pay() from PaymentMethod
+
+3️⃣ This Is NOT Polymorphism ❌
+const upi = new UpiPayment();
+upi.pay(100);
+
+4️⃣ This IS Runtime Polymorphism ✅
+let paymentMethod; // parent reference
+
+paymentMethod = new UpiPayment();
+paymentMethod.pay(100); // UPI implementation
+
+paymentMethod = new CardPayment();
+paymentMethod.pay(100); // Card implementation
+
+What’s happening internally?
+        Variable paymentMethod is not tied to a class
+        At runtime, it holds different objects
+        JS decides which method to execute at runtime
+
+        👉 Same method call
+        👉 Different behavior
+        👉 Runtime polymorphism
+
+=========================================== Abstract Class and Interface ===============================================
+
+An interface defines a contract.
+        Tells WHAT a class must do
+        Does not care HOW
+        A class can implement multiple interfaces
+        Used to achieve abstraction + polymorphism
+
+interface PaymentMethod {
+    void pay(double amount);
+}
+
+class UpiPayment implements PaymentMethod {
+    public void pay(double amount) {
+        System.out.println("Paid via UPI");
+    }
+}
+
+class CardPayment implements PaymentMethod {
+    public void pay(double amount) {
+        System.out.println("Paid via Card");
+    }
+}
+
+2️⃣ Abstract Class
+What it is
+An abstract class is a partial implementation.
+  Can have:
+      Abstract methods (no body)
+      Concrete methods (with logic)
+  Can have state (fields)
+  A class can extend only one abstract class
+👉 Used when classes share common code + behavior
+
+abstract class Ride {
+    protected double baseFare;
+
+    public Ride(double baseFare) {
+        this.baseFare = baseFare;
+    }
+
+    abstract double calculateFare(double distance);
+
+    public void startRide() {
+        System.out.println("Ride started");
+    }
+}
+
+class BikeRide extends Ride {
+    public BikeRide() {
+        super(20);
+    }
+
+    @Override
+    double calculateFare(double distance) {
+        return baseFare + distance * 8;
+    }
+}
+
+
+4️⃣ When to Use What (THIS is what interviewers want)
+Use Interface when:
+      You want multiple inheritance
+      You want to define capabilities
+      You want loose coupling
+      Example: PaymentMethod , NotificationService , SearchStrategy
+
+Use Abstract Class when:
+      You want to share code + state
+      Classes are closely related
+      Example : Ride , BaseController , BaseService
+
+7️⃣ One-Line Interview Answers ⭐
+Interface: “An interface defines a contract that multiple unrelated classes can implement.”
+Abstract class: “An abstract class provides a base with shared behavior and forces subclasses to implement missing parts.”
+
+
+********************************************************************************************************************
+Dependency Inversion Principle DIP in SOLID
+      High-level modules should not depend on low-level modules.
+      Both should depend on abstractions.
+      Abstractions should not depend on details.
+      Details should depend on abstractions.
+
+
+
+
+
+
