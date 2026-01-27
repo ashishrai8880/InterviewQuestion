@@ -343,8 +343,66 @@ Dependency Inversion Principle DIP in SOLID
       Abstractions should not depend on details.
       Details should depend on abstractions.
 
+1️⃣ What Are High-Level vs Low-Level Modules?
+High-level module
+        Contains business logic
+        Example: OrderService , PaymentService , RideController
+Low-level module
+        Contains implementation details
+        Example: UpiPayment , CardPayment , MySQLOrderRepository
+
+2️⃣ Problem Without DIP ❌ (Very Common)
+Swiggy Payment (Bad Design)
+Java
+class PaymentService {
+    private UpiPayment upiPayment = new UpiPayment();
+
+    public void processPayment(double amount) {
+        upiPayment.pay(amount);
+    }
+}
+
+Why this is bad?
+PaymentService depends on UpiPayment
+Adding Card/Wallet requires code change
+
+Violates:
+DIP , Open/Closed Principle , Hard to test
+
+3️⃣ Apply Dependency Inversion ✅
+Step 1: Introduce Abstraction
+interface PaymentMethod {
+    void pay(double amount);
+}
+
+Step 2: Low-level modules depend on abstraction
+class UpiPayment implements PaymentMethod {
+    public void pay(double amount) {
+        System.out.println("Paid via UPI");
+    }
+}
+
+class CardPayment implements PaymentMethod {
+    public void pay(double amount) {
+        System.out.println("Paid via Card");
+    }
+}
+
+Step 3: High-level module depends on abstraction
+class PaymentService {
+    private PaymentMethod paymentMethod;
+
+    public PaymentService(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public void processPayment(double amount) {
+        paymentMethod.pay(amount);
+    }
+}
 
 
-
-
+💥 This is Dependency Inversion
+After ✅
+PaymentService → PaymentMethod ← UpiPayment
 
