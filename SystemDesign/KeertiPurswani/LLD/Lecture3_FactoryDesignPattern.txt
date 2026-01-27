@@ -1,0 +1,461 @@
+
+1. Simple Factory Design Pattern : Simple Factory is a creational design pattern that provides a single place to create objects
+instead of creating them directly using new everywhere in your code.
+
+👉 You ask the factory for an object
+👉 The factory decides which class to instantiate
+👉 You get the object without worrying about the creation logic
+
+👉👉👉 What problem does it solve?
+Problem without Factory ❌
+When you create objects directly:
+
+Car car = new Sedan();
+// later
+car = new SUV();
+// later
+car = new Truck();
+
+Issues:
+      Lots of new keywords scattered everywhere
+      Code tightly coupled to concrete classes
+      Hard to maintain when new types are added
+      Violates Open/Closed Principle
+
+Solution with Simple Factory ✅
+      Centralizes object creation
+      Client code depends on interfaces, not concrete classes
+      Adding a new type means changing only the factory
+
+#Example
+
+interface PaymentMethod{
+    processPayment(amount);
+}
+
+class CreditCardPayment implements PaymentMethod{
+    processPayment(amount){
+        console.log(`Payment of ${amount} from Credit Card`);
+    }
+}
+
+class DebitCardPayment implements PaymentMethod{
+    processPayment(amount){
+        console.log(`Payment of ${amount} from Debit Card`);
+    }
+}
+
+class WalletPayment implements PaymentMethod{
+    processPayment(amount){
+        console.log(`Payment of ${amount} from Wallet`);
+    }
+}
+
+class PaymentFactory{
+    static getPaymentMethod(type : string) {
+        switch (type){
+            case 'credit' :
+                return new CreditCardPayment();
+            case 'debit' :
+                return new DebitCardPayment();
+            case 'wallet' :
+                return new DebitCardPayment();
+            default : 
+                throw new Error("Unknown payment type")
+        }
+        
+    }
+}
+
+const creditPay = PaymentFactory.getPaymentMethod('debit');
+creditPay.processPayment(34);
+
+=====> Output : Payment of 34 from Debit Card
+
+##### Other Example 2 : In a ride-booking system like Uber or Ola, the user can select from different types of rides 
+like Economy, Premium, Luxury, and Pool rides. The price, features, and availability might vary depending on the ride
+type. Instead of creating different instances directly in the client, we can use the Simple Factory to instantiate the
+correct ride type.
+
+public interface Ride {
+    void bookRide();
+    void calculateFare();
+}
+
+public class EconomyRide implements Ride {
+    @Override
+    public void bookRide() {
+        System.out.println("Booking an Economy Ride");
+    }
+
+    @Override
+    public void calculateFare() {
+        System.out.println("Calculating fare for Economy Ride");
+    }
+}
+
+public class PremiumRide implements Ride {
+    @Override
+    public void bookRide() {
+        System.out.println("Booking a Premium Ride");
+    }
+
+    @Override
+    public void calculateFare() {
+        System.out.println("Calculating fare for Premium Ride");
+    }
+}
+
+public class RideFactory {
+
+    public static Ride getRide(String type) {
+        if (type.equalsIgnoreCase("economy")) {
+            return new EconomyRide();
+        } else if (type.equalsIgnoreCase("premium")) {
+            return new PremiumRide();
+        } else if (type.equalsIgnoreCase("luxury")) {
+            return new LuxuryRide();
+        } else if (type.equalsIgnoreCase("pool")) {
+            return new PoolRide();
+        }
+
+        throw new IllegalArgumentException("Unknown ride type");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        // User selects "premium" ride type
+        Ride ride = RideFactory.getRide("premium");
+        ride.bookRide();
+        ride.calculateFare();
+    }
+}
+
+
+########### Example 3 : Scenario 3: Hotel Booking System (e.g., Oyo)
+In a hotel booking platform like Oyo, a user can choose from different types of rooms: Standard, Deluxe, Suite, etc. 
+The features and price vary based on the room type. We can use a Simple Factory to create the appropriate room based on 
+user selection.
+
+public interface Room {
+    void bookRoom();
+    void displayDetails();
+}
+
+public class StandardRoom implements Room {
+    @Override
+    public void bookRoom() {
+        System.out.println("Booking Standard Room");
+    }
+
+    @Override
+    public void displayDetails() {
+        System.out.println("Standard Room: Basic amenities.");
+    }
+}
+
+public class DeluxeRoom implements Room {
+    @Override
+    public void bookRoom() {
+        System.out.println("Booking Deluxe Room");
+    }
+
+    @Override
+    public void displayDetails() {
+        System.out.println("Deluxe Room: Extra amenities.");
+    }
+}
+
+public class RoomFactory {
+
+    public static Room getRoom(String type) {
+        if (type.equalsIgnoreCase("standard")) {
+            return new StandardRoom();
+        } else if (type.equalsIgnoreCase("deluxe")) {
+            return new DeluxeRoom();
+        } else if (type.equalsIgnoreCase("suite")) {
+            return new SuiteRoom();
+        }
+
+        throw new IllegalArgumentException("Unknown room type");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        // User selects "deluxe" room
+        Room room = RoomFactory.getRoom("deluxe");
+        room.bookRoom();
+        room.displayDetails();
+    }
+}
+
+Oyo can easily add new types of rooms like Penthouse, Studio, etc., by just updating the factory and adding a new class.
+Client code remains simple, just asking the factory for a room type.
+
+
+********* 
+In above example , we basically created a class which is only responsible for creating object of related class . 
+We don't need to create object of class by using 'new' keyword everywhere . Client code will not know how it is 
+creating the object of that class . 
+
+But here there is still one problem , when there is new payment options comes like cheque payment , then we have to 
+add one more case inside switch block , also need to create a new class for cheque . Altering existing class method
+for new case violates Open/Closed principle of SOLID . To solve this we have another design patter which is 
+slightly modification of it which is Factory Method Design Pattern . 
+
+
+***********************************************************************************************************************
+**************************************************** Factory Method ***************************************************
+
+To solve problem in above pattern . 
+Factory Method is a creational design pattern where:
+      Object creation is delegated to subclasses
+      The base class defines a factory method
+      Subclasses decide which concrete object to create
+
+Problem with Simple Factory in large systems ❌
+In very large systems (Uber, Swiggy, Oyo):
+      Too many if / else or switch statements in one factory
+      Factory becomes God Class
+      Different teams may own different creation logic
+      Adding new types requires modifying the same factory
+This violates Open/Closed Principle.
+
+3. When to use Factory Method (Interview Gold)
+        Use Factory Method when:
+        You don’t know exact object type at compile time
+        Creation logic varies by context / region / business rule
+        Different teams own different product variants
+        You want to follow Open/Closed Principle strictly
+
+interface PaymentMethod {
+    processPayment(amount: number): void;
+}
+
+class CreditCardPayment implements PaymentMethod {
+    processPayment(amount: number): void {
+        console.log(`Payment of ${amount} from Credit Card`);
+    }
+}
+
+class DebitCardPayment implements PaymentMethod {
+    processPayment(amount: number): void {
+        console.log(`Payment of ${amount} from Debit Card`);
+    }
+}
+
+class WalletPayment implements PaymentMethod {
+    processPayment(amount: number): void {
+        console.log(`Payment of ${amount} from Wallet`);
+    }
+}
+
+
+abstract class PaymentFactory{
+    
+    abstract createPaymentMethod() : PaymentMethod ;
+    
+    // optional common logic
+    makePayment(amount: number): void {
+        const paymentMethod = this.createPaymentMethod();
+        paymentMethod.processPayment(amount);
+    }
+    
+}
+
+class CreditCardPaymentFactory extends PaymentFactory{
+    createPaymentMethod() : PaymentMethod {
+        return new CreditCardPayment();
+    }
+}
+
+class DebitCardPaymentFactory extends PaymentFactory {
+    createPaymentMethod() : PaymentMethod {
+        return new DebitCardPayment()
+    }
+}
+
+class WalletPaymentFactory extends PaymentFactory {
+    createPaymentMethod(): PaymentMethod {
+        return new WalletPayment();
+    }
+}
+
+const creditFactory = new CreditCardPaymentFactory();
+creditFactory.makePayment(100);
+
+#### Output : Payment of 100 from Credit Card
+
+
+
+************ Example 2 : Real-World Example #1: Swiggy / Zomato – Payment by Region
+Problem Context
+Swiggy operates in:
+        India → UPI, Wallet, COD
+        US → Credit Card, PayPal
+        Europe → SEPA, Credit Card
+👉 Payment creation depends on region
+
+Step 1: Payment Interface
+public interface Payment {
+    void pay(double amount);
+}
+
+Step 2: Concrete Payments
+public class UpiPayment implements Payment {
+    public void pay(double amount) {
+        System.out.println("Paying via UPI: " + amount);
+    }
+}
+
+public class CreditCardPayment implements Payment {
+    public void pay(double amount) {
+        System.out.println("Paying via Credit Card: " + amount);
+    }
+}
+
+public class PaypalPayment implements Payment {
+    public void pay(double amount) {
+        System.out.println("Paying via PayPal: " + amount);
+    }
+}
+
+Step 3: Abstract Factory Creator
+
+public abstract class PaymentService {
+
+    // Factory Method
+    protected abstract Payment createPayment();
+
+    public void processPayment(double amount) {
+        Payment payment = createPayment();
+        payment.pay(amount);
+    }
+}
+
+Step 4: Region-Specific Implementations
+
+public class IndiaPaymentService extends PaymentService {
+
+    @Override
+    protected Payment createPayment() {
+        return new UpiPayment();
+    }
+}
+
+public class USPaymentService extends PaymentService {
+
+    @Override
+    protected Payment createPayment() {
+        return new PaypalPayment();
+    }
+}
+
+Step 5: Client Code
+
+public class Main {
+    public static void main(String[] args) {
+
+        PaymentService paymentService = new IndiaPaymentService();
+        paymentService.processPayment(500);
+    }
+}
+
+Why this is Factory Method?
+✔ Base class defines factory method
+✔ Subclasses decide which payment to create
+✔ No if/else logic
+✔ Easily extensible per region
+
+
+
+################### Example 3 : Real-World Example #2: Uber / Ola – Ride Allocation Strategy
+Problem Context
+Uber has different ride allocation rules:
+        City rides
+        Outstation rides
+        Airport rides
+Each has different driver selection logic
+
+public interface Ride {
+    void assignDriver();
+}
+
+public class CityRide implements Ride {
+    public void assignDriver() {
+        System.out.println("Assigning nearby city driver");
+    }
+}
+
+public class OutstationRide implements Ride {
+    public void assignDriver() {
+        System.out.println("Assigning long-distance driver");
+    }
+}
+
+public class AirportRide implements Ride {
+    public void assignDriver() {
+        System.out.println("Assigning airport-special driver");
+    }
+}
+
+public abstract class RideBooking {
+
+    protected abstract Ride createRide();
+
+    public void bookRide() {
+        Ride ride = createRide();
+        ride.assignDriver();
+    }
+}
+
+public class CityRideBooking extends RideBooking {
+    protected Ride createRide() {
+        return new CityRide();
+    }
+}
+
+public class AirportRideBooking extends RideBooking {
+    protected Ride createRide() {
+        return new AirportRide();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        RideBooking booking = new AirportRideBooking();
+        booking.bookRide();
+    }
+}
+
+“Uber uses Factory Method to let each booking flow decide the ride creation logic independently.”
+
+7. Simple Factory vs Factory Method (Interview Table)
+Feature	                                    Simple Factory	                                  Factory Method
+Pattern Type	                              Informal	                                        GoF Pattern
+Creation Logic	                            Centralized	                                      Distributed
+Extensibility	                              ❌ Needs modification	                            ✅ Extension
+Uses Inheritance	                          ❌	                                              ✅
+Best For	                                  Small systems	                                    Large systems
+Open/Closed Principle	                      Weak	                                            Strong
+
+Simple Factory centralizes object creation using conditionals, while
+Factory Method delegates object creation to subclasses, enabling better scalability and adherence to the Open/Closed Principle.
+
+
+
+
+
+
+
+
+
+
+
+
+
