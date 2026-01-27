@@ -1,0 +1,234 @@
+
+1️⃣ IS-A Relationship (Inheritance) : “IS-A represents inheritance where a subclass is a specialized form of its parent.”
+What it means
+IS-A = inheritance
+If you can say “A is a B” and it always makes sense → IS-A
+
+Implemented using:
+    extends (class)
+    implements (interface)
+Enables polymorphism
+Strong coupling
+
+class Ride {
+    calculateFare(distance) {
+        throw new Error("Not implemented");
+    }
+}
+
+class BikeRide extends Ride {
+    calculateFare(distance) {
+        return distance * 8;
+    }
+}
+
+✔ BikeRide IS-A Ride . ✔ Valid inheritance
+
+2️⃣ HAS-A Relationship (Composition) : “HAS-A represents composition where a class uses another class as a dependency.”
+What it means
+HAS-A = composition / aggregation
+
+If you can say
+“A has a B” → HAS-A
+
+    Implemented by holding a reference
+    More flexible than inheritance
+    Preferred in LLD (composition over inheritance)
+
+Example: Uber Ride HAS-A PaymentMethod
+class Ride {
+    private PaymentMethod paymentMethod;
+
+    public Ride(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public void pay(double amount) {
+        paymentMethod.pay(amount);
+    }
+}
+
+✔ Ride HAS-A PaymentMethod
+✔ Payment method can change at runtime
+
+5️⃣ Side-by-Side Comparison (Interview Table ⭐)
+Aspect	                  IS-A	                  HAS-A
+Meaning	                  Inheritance	            Composition
+Keyword	                  extends / implements	  instance variable
+Coupling	                Tight	                  Loose
+Flexibility	              Low	                    High
+LLD preference	          ⚠️ Careful	            ✅ Preferred
+
+
+
+******************************************** Aggregation Vs Composition ***********************************************
+
+1️⃣ Aggregation (Weak HAS-A)
+What it means . Aggregation = “uses but does not own”
+Child object can exist independently
+Parent and child have separate life-cycles
+Represented as a weak association
+
+👉 Think: borrowed dependency
+Uber Example: Ride Aggregates Driver
+Driver exists even if ride is cancelled
+Ride just refers to driver
+
+class Driver {
+    String name;
+}
+class Ride {
+    private Driver driver;
+
+    public Ride(Driver driver) {
+        this.driver = driver;
+    }
+}
+✔ Driver exists independently
+✔ Ride does not control driver life-cycle
+
+2️⃣ Composition (Strong HAS-A) ⭐⭐⭐
+What it means . Composition = “owns and manages”
+Child object cannot exist without parent
+Parent controls creation + destruction
+Strong life-cycle dependency
+👉 Think: part of
+
+Swiggy Example: Order Composed of OrderItems
+    OrderItems have no meaning without Order
+    Deleting order deletes items
+
+class OrderItem {
+    String name;
+    int quantity;
+
+    OrderItem(String name, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+}
+class Order {
+    private List<OrderItem> items = new ArrayList<>();
+
+    public void addItem(String name, int quantity) {
+        items.add(new OrderItem(name, quantity));
+    }
+}
+✔ Order creates OrderItem
+✔ Order owns OrderItem
+
+3️⃣ Key Difference (Interview Table ⭐)
+Aspect	                            Aggregation	                                            Composition
+Relationship	                      Weak HAS-A	                                            Strong HAS-A
+Ownership	                          ❌ No	                                                  ✅ Yes
+Life-cycle	                        Independent	                                            Dependent
+Creation	                          External	                                              Inside parent
+Deletion	                          Independent	                                            Cascades
+
+
+4️⃣ Visual Mental Model 🧠
+Aggregation
+Ride ─────▶ Driver
+
+Composition
+Order ◼────▶ OrderItem
+
+(Black diamond = composition in UML)
+
+5️⃣ Real Product Mapping (Interview Gold)
+Order → OrderItem → Composition
+Order → DeliveryPartner → Aggregation
+Restaurant → Menu → Composition
+Restaurant → Address → Aggregation
+
+8️⃣ One-Line Interview Answers ⭐
+
+Aggregation: “Aggregation represents a HAS-A relationship where the child object has an independent life-cycle.”
+Composition: “Composition represents a strong HAS-A relationship where the child object’s life-cycle is bound to the parent.”
+
+
+*******************************************************************************************************************
+UML - Unified Modelling Language 
+UML is a standardized visual language to design and communicate system structure and behavior.
+
+UML Diagram Categories
+UML diagrams are broadly divided into 2 categories:
+
+1️⃣ Structural Diagrams (Static view)
+👉 Show structure of the system
+
+2️⃣ Behavioral Diagrams (Dynamic view)
+👉 Show how system behaves over time
+
+1️⃣ Structural UML Diagrams (VERY IMPORTANT)
+🔥 1. Class Diagram (MOST IMPORTANT)
+What it shows
+    Classes
+    Fields
+    Methods
+    Relationships
+
+Example (Order system)
++------------------+
+|     Order        |
++------------------+
+| - orderId        |
+| - status         |
++------------------+
+| + confirm()      |
+| + cancel()       |
++------------------+
+
+Symbols
+Symbol	        Meaning
++	              public
+-	              private
+#	              protected
+
+Relationships (Interview Gold ⭐)
+1️⃣ Association
+Order -------- Customer
+➡ “Order is associated with Customer”
+
+2️⃣ Aggregation (Weak HAS-A)
+Ride ◇------ Driver
+➡ White diamond
+➡ Driver exists independently
+
+3️⃣ Composition (Strong HAS-A)
+Order ◆------ OrderItem
+➡ Black diamond
+➡ Order owns OrderItem
+
+4️⃣ Inheritance (IS-A)
+BikeRide ───▷ Ride
+➡ Hollow triangle arrow
+
+5️⃣ Interface Implementation
+UpiPayment ──▷ PaymentMethod
+➡ Dashed line + hollow triangle
+
+
+2️⃣ Behavioral UML Diagrams
+🔥 1. Sequence Diagram (EXTREMELY IMPORTANT)
+What it shows
+      Method calls
+      Order of interactions
+      Time flow (top → bottom)
+
+Example: Swiggy Order Placement
+      User → OrderController → OrderService → PaymentService
+
+Symbols
+Symbol	                        Meaning
+Vertical line	                  Lifeline
+Solid arrow	                    Sync call
+Dashed arrow	                  Return
+Activation bar	                Method execution
+
+
+
+
+
+
+
