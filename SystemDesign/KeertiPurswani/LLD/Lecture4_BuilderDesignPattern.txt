@@ -1,0 +1,76 @@
+
+1. Builder Design Pattern 
+Builder Pattern is a creational design pattern used to construct complex objects step by step.
+It separates object construction from object representation, allowing you to create different variants of an object using the
+same construction process .
+
+“Builder pattern is used when an object has many optional parameters or complex construction logic, and we want readable, 
+flexible, and immutable object creation.”
+
+----- First: What problem are we really solving?
+
+Imagine you have an object with many fields:
+        Some are required
+        Some are optional
+        Different use cases need different combinations
+
+Example : Some are required and some are optional
+HttpRequest(
+  url,
+  method,
+  headers,
+  queryParams,
+  body,
+  timeout,
+  authToken,
+  retryCount,
+  cacheEnabled
+)
+
+new HttpRequest(a, b, c, d, e, f, g, h)
+Problems:
+        You don’t know what f or g means
+        Easy to swap values accidentally
+        Adding a new field breaks many places
+
+This is called the Telescoping Constructor Problem.
+
+Option 2: Multiple constructors
+        HttpRequest(url, method)
+        HttpRequest(url, method, headers)
+        HttpRequest(url, method, headers, body)
+        HttpRequest(url, method, headers, body, timeout)
+
+Problems:
+        Too many constructors
+        Hard to maintain
+        Still confusing
+
+Option 3: Setters (common but dangerous)
+HttpRequest req = new HttpRequest();
+req.setUrl(url);
+req.setMethod(method);
+req.setTimeout(30);
+
+Problems:
+        Object can be in invalid state
+        Not immutable
+        Easy to forget required fields
+
+HttpRequest request = HttpRequest.builder()
+    .url("api/users")
+    .method("POST")
+    .timeout(30)
+    .build();
+
+What problem Builder solves (in ONE LIST)
+
+Builder pattern solves:
+          Too many constructor parameters
+          Unreadable object creation
+          Invalid or half-built objects
+          Need for immutability
+          Complex creation logic
+
+
+
