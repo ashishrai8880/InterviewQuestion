@@ -330,9 +330,78 @@ method buildDesktop .
 
 
 
+************************************************************************************************************************
+********************************************* Prototype Design Pattern *************************************************
+
+The Prototype pattern is about creating new objects by cloning existing ones, instead of creating them from scratch.
+
+You use it when:
+        Object creation is expensive or complex
+        You want to avoid re-running heavy setup logic
+        You want to create objects that are similar but slightly customized
 
 
+Real-World Example: API Client Configuration in an Enterprise System
 
+Imagine a company with multiple microservices.
+Each service needs an API client with: Auth headers, Retry logic, Timeout settings, Logging, Environment-specific configuration
+Creating this from scratch every time is error-prone and expensive.
+
+
+interface ApiClientPrototype<T>{
+    clone() : T ;
+    display() : void ;
+}
+
+class ApiClient implements ApiClientPrototype<ApiClient>{
+    baseUrl: string;
+    timeout: number;
+    headers: Record<string, string>;
+    retryCount: number;
+    
+    constructor( baseUrl: string, timeout: number, headers: Record<string, string>,
+        retryCount: number ) 
+    {
+        this.baseUrl = baseUrl;
+        this.timeout = timeout;
+        this.headers = headers;
+        this.retryCount = retryCount;
+    }
+    
+    clone() : ApiClient{
+        return new ApiClient(this.baseUrl , this.timeout , { ...this.headers}  , this.retryCount) // in header we did deep copy because by default javascript send variable (object , array) as call by reference .
+    }
+    
+    display(){
+        console.log(`Base URL : `,this.baseUrl);
+        console.log(`Timeout : `,this.timeout);
+        console.log(`Headers : `,this.headers);
+        console.log(`Retry Count : `,this.retryCount);
+        console.log(`-----------------------------------------------------`)
+    }
+}
+
+const baseApiClient = new ApiClient(
+  "https://api.company.com",
+  5000,
+  {
+    Authorization: "Bearer BASE_TOKEN",
+    "Content-Type": "application/json"
+  },
+  3
+);
+
+const billingService = baseApiClient.clone();
+billingService.baseUrl = "https://api.billingservice.com";
+billingService.headers.Authorization = 'Billing Service Token'
+billingService.display()
+
+const userService = baseApiClient.clone();
+userService.baseUrl = "https://api.userservice.com";
+userService.display();
+
+Here in above code , ApiClient would be almost same for most of the micro services , there might be slight changes , so instead 
+of creating complete object from scratch , we have used clone or Prototype design pattern to get complete object as it is . 
 
 
 
