@@ -72,5 +72,292 @@ Builder pattern solves:
           Need for immutability
           Complex creation logic
 
+When to Use Builder Pattern (Say This in Interview)
+        ✅ Object has many optional parameters
+        ✅ Object creation involves complex validation
+        ✅ You want immutable objects
+        ✅ You want readable and maintainable construction
+
+const request = HttpRequest
+  .builder("https://api.company.com/users", "POST")
+  .setHeaders({ Authorization: "Bearer token" })
+  .setBody(JSON.stringify({ name: "John" }))
+  .setTimeout(60)
+  .build();
+
+
+********** Example : Suppose we have to make Desktop object . But There is multiple things in desktop like 
+ram , processor , mother board etc . For different brand dekstop , there are multiple variatioins also . 
+
+
+
+class Desktop{
+    private motherboard !: string ;
+    private processor !: string ;
+    private memory !: string ;
+    private storage !: string ;
+    private graphicsCard !: string ;
+    
+    display() : void{
+        console.log(` ---- Desktop Specs ----- `);
+        console.log(` Motherboard : `,this.motherboard);
+        console.log(` Processor : `,this.processor);
+        console.log(` memory : `,this.memory);
+        console.log(` storage : `,this.storage);
+        console.log(` Graphic card : `,this.graphicsCard);
+        console.log(` -------------------------------------------- `) ;
+    }
+    
+    setMotherBoard (motherboard : string) : void {
+        console.log(motherboard)
+        this.motherboard = motherboard ;
+    }
+    
+    setProcessor (processor : string) : void {
+        this.processor = processor ;
+    }
+    
+    setMemory (memory : string) : void {
+        this.memory = memory ;
+    }
+    
+    setStorage (storage : string) : void {
+        this.storage = storage ;
+    }
+    
+    setGraphics (graphicsCard : string) : void {
+        this.graphicsCard = graphicsCard ;
+    }
+}
+
+abstract class DesktopBuilder {
+    
+    protected desktop : Desktop = new Desktop() ;
+    
+    abstract buildMotherBoard( motherboard : string ) : DesktopBuilder ;
+    abstract buildProcessor(processor : string) : DesktopBuilder ;
+    abstract buildMemory( memory : string ) : DesktopBuilder ;
+    abstract buildStorage( storage : string ) : DesktopBuilder ;
+    abstract buildGraphics( graphics : string ) : DesktopBuilder ;
+    
+}
+
+// Concrete Class
+class DellDestopBuilder extends DesktopBuilder {
+    
+    buildMotherBoard(mb : string) : DesktopBuilder {
+        this.desktop.setMotherBoard(mb);
+        return this ;
+    }
+    
+    buildProcessor(processor) : DesktopBuilder {
+        this.desktop.setProcessor(processor);
+        return this ;
+    }
+    
+    buildMemory(memory) : DesktopBuilder {
+        this.desktop.setMemory(memory);
+        return this ;
+    }
+    
+    buildStorage(storage) : DesktopBuilder {
+        this.desktop.setStorage(storage);
+        return this ;
+    }
+    
+    buildGraphics(graphics) : DesktopBuilder {
+        this.desktop.setGraphics(graphics);
+        return this ;
+    }
+    
+    getDetails(): void{
+        this.desktop.display();
+    }
+}
+
+const dellDesktop = new DellDestopBuilder();
+dellDesktop.buildMotherBoard("Dell Motherboard").buildProcessor("Dell Processor").buildMemory("Dell 8 GB RAM").buildStorage("Dell 256 GB SSD").buildGraphics("Dell 4 GB GPU");
+dellDesktop.getDetails();
+
+So In above code , we create seperate concrete class which is implementing one abstract class . This abstract class
+contains all the method which have to be implemented by child class . 
+To make it more optimize we will create Director class . 
+
+class Desktop {
+    private motherboard!: string;
+    private processor!: string;
+    private memory!: string;
+    private storage!: string;
+    private graphicsCard!: string;
+
+    display(): void {
+        console.log("Desktop Specs:");
+        console.log("Motherboard:", this.motherboard);
+        console.log("Processor:", this.processor);
+        console.log("Memory:", this.memory);
+        console.log("Storage:", this.storage);
+        console.log("Graphics Card:", this.graphicsCard);
+        console.log("----------------------");
+    }
+
+    getMotherboard(): string {
+        return this.motherboard;
+    }
+
+    setMotherboard(motherboard: string): void {
+        this.motherboard = motherboard;
+    }
+
+    getProcessor(): string {
+        return this.processor;
+    }
+
+    setProcessor(processor: string): void {
+        this.processor = processor;
+    }
+
+    getMemory(): string {
+        return this.memory;
+    }
+
+    setMemory(memory: string): void {
+        this.memory = memory;
+    }
+
+    getStorage(): string {
+        return this.storage;
+    }
+
+    setStorage(storage: string): void {
+        this.storage = storage;
+    }
+
+    getGraphicsCard(): string {
+        return this.graphicsCard;
+    }
+
+    setGraphicsCard(graphicsCard: string): void {
+        this.graphicsCard = graphicsCard;
+    }
+}
+
+abstract class DesktopBuilder {
+    protected desktop: Desktop = new Desktop();
+
+    abstract buildMotherboard(): void;
+    abstract buildProcessor(): void;
+    abstract buildMemory(): void;
+    abstract buildStorage(): void;
+    abstract buildGraphicsCard(): void;
+
+    getDesktop(): Desktop {
+        return this.desktop;
+    }
+}
+
+class DellDesktopBuilder extends DesktopBuilder {
+    buildMotherboard(): void {
+        this.desktop.setMotherboard("Dell Motherboard");
+    }
+
+    buildProcessor(): void {
+        this.desktop.setProcessor("Dell Processor");
+    }
+
+    buildMemory(): void {
+        this.desktop.setMemory("32GB DDR4 RAM");
+    }
+
+    buildStorage(): void {
+        this.desktop.setStorage("1TB SSD + 2TB HDD");
+    }
+
+    buildGraphicsCard(): void {
+        this.desktop.setGraphicsCard("NVIDIA RTX 3080");
+    }
+}
+
+class HpDesktopBuilder extends DesktopBuilder {
+    buildMotherboard(): void {
+        this.desktop.setMotherboard("HP Motherboard");
+    }
+
+    buildProcessor(): void {
+        this.desktop.setProcessor("Intel Core i5");
+    }
+
+    buildMemory(): void {
+        this.desktop.setMemory("16GB DDR4 RAM");
+    }
+
+    buildStorage(): void {
+        this.desktop.setStorage("512GB SSD");
+    }
+
+    buildGraphicsCard(): void {
+        this.desktop.setGraphicsCard("Integrated Graphics");
+    }
+}
+
+
+class DesktopDirector {
+    
+    buildDesktop( builder : DesktopBuilder ) : Desktop {
+        builder.buildMotherboard();
+        builder.buildProcessor();
+        builder.buildMemory();
+        builder.buildStorage();
+        builder.buildGraphicsCard();
+        
+        return builder.getDesktop();
+    }
+    
+}
+
+const director = new DesktopDirector();
+
+const dellBuilder = new DellDesktopBuilder();
+const dellDesktop = director.buildDesktop(dellBuilder);
+dellDesktop.display();
+
+const hpBuilder = new HpDesktopBuilder();
+const hpDesktop = director.buildDesktop(hpBuilder);
+hpDesktop.display()
+
+
+######### Explanation : In above code , we just have to make object of specific builder class and pass it to director class
+method buildDesktop . 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
