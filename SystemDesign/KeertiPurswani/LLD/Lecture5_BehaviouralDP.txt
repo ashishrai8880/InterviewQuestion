@@ -1,20 +1,302 @@
 
 ********************************************** SingleTon Design Pattern *************************************************
+1️⃣ What is the Singleton Pattern?
+
+Singleton = exactly ONE instance of a class for the entire application.
+
+Why use it?
+      Shared resources (DB connection, logger, config manager)
+      Global state (but use sparingly 👀)
+      Avoid expensive object creation multiple times
+
+Core rules
+      Constructor is private
+      Class controls its own instance
+      Public method to access that instance
+
+In Java 
+2️⃣ Basic Singleton (Single-threaded idea)
+
+class Singleton {
+    private static Singleton instance;
+
+    private Singleton() {} // private constructor
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+}
+
+❌ Problem:
+In multithreading, two threads can enter getInstance() at the same time and create two instances.
+
+3️⃣ Why Multithreading Breaks Singleton
+
+Imagine this:
+Thread A → instance == null ✔
+Thread B → instance == null ✔
+Thread A → new Singleton()
+Thread B → new Singleton()
+Boom 💥 two objects. Singleton violated.
+
+4️⃣ How to Make Singleton Thread-Safe in Java
+
+✅ Option 1: Synchronized Method (Simple, but slow)
+class Singleton {
+    private static Singleton instance;
+
+    private Singleton() {}
+
+    public static synchronized Singleton getInstance() {  // basically synchronised = lock()
+        // lock()
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        // unlock()
+        return instance;
+    }
+}
+
+✔ Thread-safe
+❌ Every call is synchronized → performance hit
+
+✅ Option 2: Double-Checked Locking (Best balance)
+
+class Singleton {
+    private static volatile Singleton instance;
+
+    private Singleton() {}
+
+    public static Singleton getInstance() {
+        if (instance == null) {               // 1st check
+            // lock()
+            synchronized (Singleton.class) {    // lock
+                if (instance == null) {       // 2nd check
+                    instance = new Singleton();
+                }
+            } 
+            // unlock()
+        }
+        return instance;
+    }
+}
+
+Why this works:
+        volatile prevents instruction reordering
+        Synchronization happens only once
+        Fast after initialization
+        ✔ Thread-safe
+        ✔ High performance
+        ✅ Most commonly used
+
+
+5️⃣ Lazy Initialization vs Eager Initialization
+✅ : Eager Initialization (Thread-safe by default)
+class Singleton {
+    private static final Singleton INSTANCE = new Singleton();
+
+    private Singleton() {}
+
+    public static Singleton getInstance() {
+        return INSTANCE;
+    }
+}
+
+In Eager Initialisation : Object/Instance of class is created inside class only while variable declaration and 
+initialisation . Object is created at class loading time .
+
+Pros
+  Thread-safe
+  Simple
+
+Cons
+  Object created even if unused
+  Not ideal for expensive resources
+
+✅ : Lazy Initialization : As we saw above , all are lazy initialisation . here object will create only when getInstance()
+method will get callled somewhere in client code when it is needed . Otherwise there will not be any object of that class .
+
+Pros
+    Saves memory
+    Delays heavy object creation
+
+Cons
+    Needs synchronization in multithreading
+    More complex
+
+
+------------- In Typescript
+class Singleton {
+    private static instance: Singleton;
+
+    private constructor() {}
+
+    static getInstance(): Singleton {
+        if (!Singleton.instance) {
+            Singleton.instance = new Singleton();
+        }
+        return Singleton.instance;
+    }
+}
 
 
 
 *********************************************** Behavioural Design Pattern ***********************************************
 *********************************************** 1. Observer Design Pattern *************************************************
+Medium Link =>> https://devcookies.medium.com/observer-design-pattern-a-complete-guide-with-examples-ec40648749ff
+
+The Observer Design Pattern is one of the most commonly used behavioral design patterns in software development. It is 
+particularly useful when you want to establish a one-to-many relationship between objects. This allows an object (known as
+the subject) to notify other objects (known as observers) when there is a change in its state. The Observer pattern is 
+widely used in event-driven programming, GUIs, and even in messaging systems like Kafka.
+
+Why Use the Observer Pattern?
+The Observer Pattern helps with:
+         - Decoupling: It decouples the subject from its observers, meaning the subject doesn’t need to know who or how many 
+observers there are.
+         - Event handling: Whenever the state of the subject changes, all dependent observers are notified automatically.
+
+        - Dynamic relationships: New observers can be added or removed at runtime without affecting the subject.
+
+There are three main components:
+    Subject: The object that holds the state and notifies the observers.
+    Observer: Objects that listen for state changes in the subject.
+    ConcreteSubject: The class that implements the Subject interface.
+    ConcreteObserver: The class that implements the Observer interface and responds to changes in the subject.
 
 
+Real-World Example
+Imagine you’re working on a weather application. The weather station (Subject) collects data such as temperature and 
+humidity. You have multiple displays (Observers) that should automatically update whenever the weather data changes. Instead
+of having the displays continually check for new data, they can simply be notified by the weather station when there’s a 
+change.
 
+### Implementation 
 
+// Observer interface
+interface Observer {
+    update(order: Order): void;
+}
 
+// Customer observer
+class Customer implements Observer {
+    private name: string;
 
+    constructor(name: string) {
+        this.name = name;
+    }
 
+    update(order: Order): void {
+        console.log(
+            `Hello, ${this.name}! Order #${order.getId()} is now ${order.getStatus()}.`
+        );
+    }
+}
 
+// Restaurant observer
+class Restaurant implements Observer {
+    private restaurantName: string;
 
+    constructor(name: string) {
+        this.restaurantName = name;
+    }
 
+    update(order: Order): void {
+        console.log(
+            `Restaurant ${this.restaurantName}: Order #${order.getId()} is now ${order.getStatus()}.`
+        );
+    }
+}
+
+// Delivery driver observer
+class DeliveryDriver implements Observer {
+    private driverName: string;
+
+    constructor(name: string) {
+        this.driverName = name;
+    }
+
+    update(order: Order): void {
+        console.log(
+            `Driver ${this.driverName}: Order #${order.getId()} is now ${order.getStatus()}.`
+        );
+    }
+}
+
+// Call center observer
+class CallCenter implements Observer {
+    update(order: Order): void {
+        console.log(
+            `Call center: Order #${order.getId()} is now ${order.getStatus()}.`
+        );
+    }
+}
+
+// Subject (Order)
+class Order {
+    private id: number;
+    private status: string;
+    private observers: Observer[] = [];
+
+    constructor(id: number) {
+        this.id = id;
+        this.status = "Order Placed";
+    }
+
+    getId(): number {
+        return this.id;
+    }
+
+    getStatus(): string {
+        return this.status;
+    }
+
+    setStatus(newStatus: string): void {
+        this.status = newStatus;
+        this.notifyObservers();
+    }
+
+    attach(observer: Observer): void {
+        this.observers.push(observer);
+    }
+
+    detach(observer: Observer): void {
+        this.observers = this.observers.filter(o => o !== observer);
+    }
+
+    private notifyObservers(): void {
+        for (const observer of this.observers) {
+            observer.update(this);
+        }
+    }
+}
+
+// Main execution
+const order1 = new Order(123);
+
+// Create observers
+const customer1 = new Customer("Customer 1");
+const restaurant1 = new Restaurant("Rest 1");
+const driver1 = new DeliveryDriver("Driver 1");
+const callCenter = new CallCenter();
+
+// Attach observers
+order1.attach(customer1);
+order1.attach(restaurant1);
+order1.attach(driver1);
+order1.attach(callCenter);
+
+// Simulate order status updates
+order1.setStatus("Out for Delivery");
+
+// Detach an observer
+order1.detach(callCenter);
+
+// Simulate more updates
+order1.setStatus("Delivered");
 
 
 
