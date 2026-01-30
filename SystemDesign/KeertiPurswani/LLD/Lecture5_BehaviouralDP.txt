@@ -299,6 +299,383 @@ order1.detach(callCenter);
 order1.setStatus("Delivered");
 
 
+*************************************************************************************************************************
+********************************************* Command Design Pattern ****************************************************
+
+In real systems, you often have this situation:
+      A UI / API / service layer triggers actions
+      The actual business logic is elsewhere
+      You want to:
+            Decouple the request from the execution
+            Queue, log, retry, undo, or audit actions
+            Avoid massive if/else or switch statements
+            Change behavior without changing the caller
+
+-------Without Command (Typical Mess)
+
+function handleAction(action: string) {
+    if (action === "CREATE_ORDER") {
+        // create order logic
+    } else if (action === "CANCEL_ORDER") {
+        // cancel order logic
+    } else if (action === "REFUND_ORDER") {
+        // refund logic
+    }
+}
+
+❌ Tight coupling
+❌ Hard to extend
+❌ No easy undo / retry / queue
+❌ Violates Open–Closed Principle
+
+2️⃣ What the Command Pattern Is
+      Command Pattern encapsulates a request as an object.
+
+This means:
+      Each action = its own command object
+      Caller doesn’t know how it’s done
+      Caller only knows: “execute this command”
+
+Participants
+      Command interface – defines execute()
+      Concrete Commands – actual actions
+      Receiver – does the real work
+      Invoker – triggers the command
+      Client – wires everything together
+
+4️⃣ Step-by-Step TypeScript Implementation
+
+1️⃣ Command Interface
+interface Command {
+    execute(): Promise<void>;
+}
+
+2️⃣ Receiver (Business Logic)
+class OrderService {
+    async placeOrder(orderId: string) {
+        console.log(`Order ${orderId} placed`);
+    }
+
+    async cancelOrder(orderId: string) {
+        console.log(`Order ${orderId} cancelled`);
+    }
+
+    async refundOrder(orderId: string) {
+        console.log(`Order ${orderId} refunded`);
+    }
+}
+
+3️⃣ Concrete Commands
+Each command represents one business action.
+
+class PlaceOrderCommand implements Command {
+    constructor(
+        private orderService: OrderService,
+        private orderId: string
+    ) {}
+
+    async execute(): Promise<void> {
+        await this.orderService.placeOrder(this.orderId);
+    }
+}
+
+class CancelOrderCommand implements Command {
+    constructor(
+        private orderService: OrderService,
+        private orderId: string
+    ) {}
+
+    async execute(): Promise<void> {
+        await this.orderService.cancelOrder(this.orderId);
+    }
+}
+
+class RefundOrderCommand implements Command {
+    constructor(
+        private orderService: OrderService,
+        private orderId: string
+    ) {}
+
+    async execute(): Promise<void> {
+        await this.orderService.refundOrder(this.orderId);
+    }
+}
+
+Each command:
+      Has one responsibility
+      Is easy to test
+      Easy to extend
+
+4️⃣ Invoker (API / Controller / Job Runner)
+class CommandExecutor {
+    async run(command: Command): Promise<void> {
+        // Cross-cutting concerns go here
+        console.log("Command started");
+
+        await command.execute();
+
+        console.log("Command finished");
+    }
+}
+
+5️⃣ Client Wiring (API Layer Example)
+
+const orderService = new OrderService();
+const executor = new CommandExecutor();
+
+const command = new PlaceOrderCommand(orderService, "ORD-123");
+
+await executor.run(command);
+
+
+Tomorrow, you add a new command?
+👉 Zero change to executor
+👉 Zero change to existing commands
+
+5️⃣ What Problem Did Command Actually Solve?
+✅ Decoupling
+      Invoker doesn’t care what the command does.
+
+✅ Open–Closed Principle
+      Add new behavior by adding new classes.
+
+✅ Undo / Retry / Queue Support
+Because commands are objects:
+      Store them
+      Serialize them   
+      Retry on failure     
+      Push to queues
+
+---------------- UML 
+@startuml
+interface Command {
+    +execute()
+}
+
+class ConcreteCommand {
+    -receiver: Receiver
+    +execute()
+}
+
+class Receiver {
+    +action()
+}
+
+class Invoker {
+    -command: Command
+    +setCommand(Command)
+    +invoke()
+}
+
+class Client
+
+Client --> ConcreteCommand : creates
+ConcreteCommand ..|> Command
+ConcreteCommand --> Receiver : calls
+Invoker --> Command : invokes
+@enduml
+
++------------------+
+|     Command      |
+|------------------|
+| + execute()      |
++------------------+
+          ^
+          |
++-------------------------+
+|   ConcreteCommand       |
+|-------------------------|
+| - receiver: Receiver   |
+| + execute()             |
++-------------------------+
+          |
+          v
++------------------+
+|    Receiver      |
+|------------------|
+| + action()       |
++------------------+
+
++------------------+
+|     Invoker      |
+|------------------|
+| - command        |
+| + invoke()       |
++------------------+
+
+Client ---> ConcreteCommand
+Invoker ---> Command
+
+
+-------------------------------- Example 2 ------------------------------
+
+// Receiver: RideService
+class RideService {
+    requestRide(passenger: string, srcLoc: string, destLoc: string): void {
+        console.log(
+            `Requesting a ride for passenger: ${passenger} from ${srcLoc} to ${destLoc}`
+        );
+        // Additional ride request processing logic here
+    }
+
+    cancelRide(passenger: string): void {
+        console.log(`Canceling the ride for passenger: ${passenger}`);
+        // Additional cancellation logic here
+    }
+}
+
+// Command interface
+interface Command {
+    execute(): void;
+}
+
+// Concrete Command: RideRequestCommand
+class RideRequestCommand implements Command {
+    constructor(
+        private receiver: RideService,
+        private passenger: string,
+        private srcLoc: string,
+        private destLoc: string
+    ) {}
+
+    execute(): void {
+        this.receiver.requestRide(this.passenger, this.srcLoc, this.destLoc);
+    }
+}
+
+// Concrete Command: CancelRideCommand
+class CancelRideCommand implements Command {
+    constructor(
+        private receiver: RideService,
+        private passenger: string
+    ) {}
+
+    execute(): void {
+        this.receiver.cancelRide(this.passenger);
+    }
+}
+
+// Invoker: RideRequestInvoker
+class RideRequestInvoker {
+    processRequest(command: Command): void {
+        command.execute();
+    }
+}
+
+// Client code (equivalent to main method)
+const rideService = new RideService();
+const rideRequestInvoker = new RideRequestInvoker();
+
+const request1: Command = new RideRequestCommand(
+    rideService,
+    "Keerti",
+    "Sarjapur",
+    "Koramangala"
+);
+
+const request2: Command = new RideRequestCommand(
+    rideService,
+    "Amit",
+    "Koramangala",
+    "Indiranagar"
+);
+
+const cancel1: Command = new CancelRideCommand(
+    rideService,
+    "Keerti"
+);
+
+// Process requests
+rideRequestInvoker.processRequest(request1);
+rideRequestInvoker.processRequest(request2);
+rideRequestInvoker.processRequest(cancel1);
+
+
+
+UML 
+@startuml
+interface Command {
+    +execute()
+}
+
+class RideRequestCommand {
+    -receiver: RideService
+    -passenger: String
+    -srcLoc: String
+    -destLoc: String
+    +execute()
+}
+
+class CancelRideCommand {
+    -receiver: RideService
+    -passenger: String
+    +execute()
+}
+
+class RideService {
+    +requestRide(passenger, srcLoc, destLoc)
+    +cancelRide(passenger)
+}
+
+class RideRequestInvoker {
+    +processRequest(command)
+}
+
+class Client
+
+Command <|.. RideRequestCommand
+Command <|.. CancelRideCommand
+
+RideRequestCommand --> RideService
+CancelRideCommand --> RideService
+
+RideRequestInvoker --> Command
+Client --> RideRequestCommand
+Client --> CancelRideCommand
+Client --> RideRequestInvoker
+@enduml
+
+
+
+
+            +------------------+
+            |     Command      |
+            |------------------|
+            | + execute()      |
+            +------------------+
+                 ^        ^
+                 |        |
++----------------------+   +----------------------+
+| RideRequestCommand   |   | CancelRideCommand    |
+|----------------------|   |----------------------|
+| - receiver           |   | - receiver           |
+| - passenger          |   | - passenger          |
+| - srcLoc             |   |                      |
+| - destLoc            |   |                      |
+| + execute()          |   | + execute()          |
++----------+-----------+   +----------+-----------+
+           |                          |
+           v                          v
+      +-------------------------------+
+      |          RideService          |
+      |-------------------------------|
+      | + requestRide()               |
+      | + cancelRide()                |
+      +-------------------------------+
+
++----------------------------+
+|   RideRequestInvoker       |
+|----------------------------|
+| + processRequest(Command) |
++----------------------------+
+
+Client --> Commands
+Client --> Invoker
+Invoker --> Command
+
+
+
+
 
 
 
