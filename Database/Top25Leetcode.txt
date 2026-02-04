@@ -1,0 +1,414 @@
+
+
+
+
+=======> 7. Highest Salary Per Department 
+
+Topic : Corelated Subquery : So Inner query will be completely dependent on Outer Query . Can be used as alternate of
+Group By clause in some case also . 
+Eg : Tables (very small & real)
+employees table
+emp_id	          name	                dept	              salary
+1	                Alice	                HR	                5000
+2	                Bob	                  HR	                7000
+3	                Carol	                IT	                9000
+4	                Dave	                IT	                6000
+5	                Eve	                  IT	                8000
+
+👉 Question:
+“Show me employees who earn more than the average salary of their own department.”
+Key point:
+The “average” is different for each department.
+
+So you cannot calculate one single average and compare everyone to it.
+What we want (expected result)
+
+Let’s calculate manually:
+HR department
+    Salaries: 5000, 7000
+    Average = 6000
+    Above avg → Bob
+
+IT department
+    Salaries: 9000, 6000, 8000
+    Average = 7666
+    Above avg → Carol
+
+----------Correlated subquery (the SQL)
+SELECT e1.name, e1.dept, e1.salary
+FROM employees e1
+WHERE e1.salary >
+      (SELECT AVG(e2.salary)
+       FROM employees e2
+       WHERE e2.dept = e1.dept);
+
+--------------How it REALLY works (row by row – think loop)
+Step 1: Pick ONE row from outer query
+Outer query (e1) picks:
+
+Alice | HR | 5000
+
+Step 2: Run subquery USING Alice’s department
+Subquery becomes:
+
+SELECT AVG(salary)
+FROM employees
+WHERE dept = 'HR';
+
+Result = 6000
+Now SQL checks:
+
+Is 5000 > 6000 ? ❌ No
+
+➡ Alice is skipped
+
+Step 3: Next outer row
+Bob | HR | 7000
+
+Subquery becomes:
+
+SELECT AVG(salary)
+FROM employees
+WHERE dept = 'HR';
+
+Result = 6000
+
+Check:
+Is 7000 > 6000 ? ✅ Yes
+
+➡ Bob is included
+
+Step 4: Next row
+Carol | IT | 9000
+
+Subquery becomes:
+
+SELECT AVG(salary)
+FROM employees
+WHERE dept = 'IT';
+
+Result = 7666
+
+Check:
+Is 9000 > 7666 ? ✅ Yes
+
+➡ Carol is included
+
+Now Actual Leetcode Question : https://leetcode.com/problems/department-highest-salary/
+
++--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| id           | int     |
+| name         | varchar |
+| salary       | int     |
+| departmentId | int     |
++--------------+---------+
+id is the primary key (column with unique values) for this table.
+departmentId is a foreign key (reference columns) of the ID from the Department table.
+Each row of this table indicates the ID, name, and salary of an employee. It also contains the ID of their department.
+ 
+
+Table: Department
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| id          | int     |
+| name        | varchar |
++-------------+---------+
+id is the primary key (column with unique values) for this table. It is guaranteed that department name is not NULL.
+Each row of this table indicates the ID of a department and its name.
+ 
+
+Write a solution to find employees who have the highest salary in each of the departments.
+
+Return the result table in any order.
+
+The result format is in the following example.
+
+ 
+
+Example 1:
+
+Input: 
+Employee table:
++----+-------+--------+--------------+
+| id | name  | salary | departmentId |
++----+-------+--------+--------------+
+| 1  | Joe   | 70000  | 1            |
+| 2  | Jim   | 90000  | 1            |
+| 3  | Henry | 80000  | 2            |
+| 4  | Sam   | 60000  | 2            |
+| 5  | Max   | 90000  | 1            |
++----+-------+--------+--------------+
+Department table:
++----+-------+
+| id | name  |
++----+-------+
+| 1  | IT    |
+| 2  | Sales |
++----+-------+
+Output: 
++------------+----------+--------+
+| Department | Employee | Salary |
++------------+----------+--------+
+| IT         | Jim      | 90000  |
+| Sales      | Henry    | 80000  |
+| IT         | Max      | 90000  |
++------------+----------+--------+
+Explanation: Max and Jim both have the highest salary in the IT department and Henry has the highest salary in the Sales department.
+
+Solution 1 : Using Corelated Subquery
+
+          select d.name AS Department,
+              e.name AS Employee,
+              e.salary AS Salary
+          from Employee as e
+          join Department as d 
+          on e.departmentId = d.id 
+          where e.salary in
+          (
+              select max(e2.salary)
+              from Employee as e2
+              where e.departmentId = e2.departmentId
+          )
+
+Solution 2 : Using JOIN and GROUP BY
+
+          select 
+              d.name AS Department,
+              e.name AS Employee,
+              e.salary AS Salary
+          from Employee as e
+          join (
+              select departmentId , max(salary) as max_salary
+              from Employee 
+              group by departmentId
+          ) as m 
+          on e.departmentId = m.departmentId and e.salary = m.max_salary
+          join Department as d
+          on e.departmentId = d.id
+
+Solution 3 : Using Window Function 
+
+          SELECT
+              d.name AS Department,
+              e.name AS Employee,
+              e.salary AS Salary
+          FROM (
+              SELECT *,
+                     MAX(salary) OVER (PARTITION BY departmentId) AS max_salary
+              FROM Employee
+          ) e
+          JOIN Department d
+              ON e.departmentId = d.id
+          WHERE e.salary = e.max_salary;
+
+Solution 4 : Using RANK and DenseRank()
+
+          SELECT
+              d.name AS Department,
+              e.name AS Employee,
+              e.salary AS Salary
+          FROM (
+              SELECT *,
+                     DENSE_RANK() OVER (
+                         PARTITION BY departmentId
+                         ORDER BY salary DESC
+                     ) AS rnk
+              FROM Employee
+          ) e
+          JOIN Department d
+              ON e.departmentId = d.id
+          WHERE e.rnk = 1;
+
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+
+8. https://leetcode.com/problems/group-sold-products-by-the-date/description/
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| sell_date   | date    |
+| product     | varchar |
++-------------+---------+
+There is no primary key (column with unique values) for this table. It may contain duplicates.
+Each row of this table contains the product name and the date it was sold in a market.
+ 
+
+Write a solution to find for each date the number of different products sold and their names.
+
+The sold products names for each date should be sorted lexicographically.
+
+Return the result table ordered by sell_date.
+
+The result format is in the following example.
+
+ 
+
+Example 1:
+
+Input: 
+Activities table:
++------------+------------+
+| sell_date  | product     |
++------------+------------+
+| 2020-05-30 | Headphone  |
+| 2020-06-01 | Pencil     |
+| 2020-06-02 | Mask       |
+| 2020-05-30 | Basketball |
+| 2020-06-01 | Bible      |
+| 2020-06-02 | Mask       |
+| 2020-05-30 | T-Shirt    |
++------------+------------+
+Output: 
++------------+----------+------------------------------+
+| sell_date  | num_sold | products                     |
++------------+----------+------------------------------+
+| 2020-05-30 | 3        | Basketball,Headphone,T-shirt |
+| 2020-06-01 | 2        | Bible,Pencil                 |
+| 2020-06-02 | 1        | Mask                         |
++------------+----------+------------------------------+
+
+Solution : Using string_agg
+        SELECT
+            sell_date,
+            COUNT(product) AS num_sold,
+            STRING_AGG(product, ',' ORDER BY product) AS products
+        FROM (
+            SELECT DISTINCT sell_date, product
+            FROM Activities
+        ) t
+        GROUP BY sell_date
+        ORDER BY sell_date;
+
+Explanation : STRING_AGG . Link : https://www.geeksforgeeks.org/sql-server/how-to-use-string_agg-to-concatenate-strings-in-sql-server/
+This functioin basically used to concatenate string . Used with GROUP BY clause . 
+
+
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+https://leetcode.com/problems/market-analysis-i/description/
+
+Table: Users
+
++----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| user_id        | int     |
+| join_date      | date    |
+| favorite_brand | varchar |
++----------------+---------+
+user_id is the primary key (column with unique values) of this table.
+This table has the info of the users of an online shopping website where users can sell and buy items.
+ 
+
+Table: Orders
+
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| order_id      | int     |
+| order_date    | date    |
+| item_id       | int     |
+| buyer_id      | int     |
+| seller_id     | int     |
++---------------+---------+
+order_id is the primary key (column with unique values) of this table.
+item_id is a foreign key (reference column) to the Items table.
+buyer_id and seller_id are foreign keys to the Users table.
+ 
+
+Table: Items
+
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| item_id       | int     |
+| item_brand    | varchar |
++---------------+---------+
+item_id is the primary key (column with unique values) of this table.
+ 
+
+Write a solution to find for each user, the join date and the number of orders they made as a buyer in 2019.
+
+Return the result table in any order.
+
+The result format is in the following example.
+
+ 
+
+Example 1:
+
+Input: 
+Users table:
++---------+------------+----------------+
+| user_id | join_date  | favorite_brand |
++---------+------------+----------------+
+| 1       | 2018-01-01 | Lenovo         |
+| 2       | 2018-02-09 | Samsung        |
+| 3       | 2018-01-19 | LG             |
+| 4       | 2018-05-21 | HP             |
++---------+------------+----------------+
+Orders table:
++----------+------------+---------+----------+-----------+
+| order_id | order_date | item_id | buyer_id | seller_id |
++----------+------------+---------+----------+-----------+
+| 1        | 2019-08-01 | 4       | 1        | 2         |
+| 2        | 2018-08-02 | 2       | 1        | 3         |
+| 3        | 2019-08-03 | 3       | 2        | 3         |
+| 4        | 2018-08-04 | 1       | 4        | 2         |
+| 5        | 2018-08-04 | 1       | 3        | 4         |
+| 6        | 2019-08-05 | 2       | 2        | 4         |
++----------+------------+---------+----------+-----------+
+Items table:
++---------+------------+
+| item_id | item_brand |
++---------+------------+
+| 1       | Samsung    |
+| 2       | Lenovo     |
+| 3       | LG         |
+| 4       | HP         |
++---------+------------+
+Output: 
++-----------+------------+----------------+
+| buyer_id  | join_date  | orders_in_2019 |
++-----------+------------+----------------+
+| 1         | 2018-01-01 | 1              |
+| 2         | 2018-02-09 | 2              |
+| 3         | 2018-01-19 | 0              |
+| 4         | 2018-05-21 | 0              |
++-----------+------------+----------------+
+
+
+Solution : 
+        SELECT
+            u.user_id AS buyer_id,
+            u.join_date,
+            COUNT(o.order_id) AS orders_in_2019
+        FROM Users u
+        LEFT JOIN Orders o
+            ON u.user_id = o.buyer_id
+           AND o.order_date >= DATE '2019-01-01'
+           AND o.order_date <  DATE '2020-01-01'
+        GROUP BY u.user_id, u.join_date;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
