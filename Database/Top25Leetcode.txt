@@ -576,19 +576,85 @@ where t.num = t.prev1 and t.prev1 = t.prev2 ;
 
 --------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------
-13: 
+13:  https://leetcode.com/problems/duplicate-emails/submissions/1908957016/
+Write a solution to report all the duplicate emails. Note that it's guaranteed that the email field is not NULL.
 
+Return the result table in any order.
 
+The result format is in the following example.
+
+ 
+
+Example 1:
+
+Input: 
+Person table:
++----+---------+
+| id | email   |
++----+---------+
+| 1  | a@b.com |
+| 2  | c@d.com |
+| 3  | a@b.com |
++----+---------+
+Output: 
++---------+
+| Email   |
++---------+
+| a@b.com |
++---------+
+Explanation: a@b.com is repeated two times.
+
+Solution : 
+
+select email as Email
+from Person
+group by email
+having count(*) > 1
 
 --------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------
-14. 
+14. https://leetcode.com/problems/not-boring-movies/description/
 
 
+Write a solution to report the movies with an odd-numbered ID and a description that is not "boring".
+
+Return the result table ordered by rating in descending order.
+
+The result format is in the following example.
+
+Example 1:
+
+Input: 
+Cinema table:
++----+------------+-------------+--------+
+| id | movie      | description | rating |
++----+------------+-------------+--------+
+| 1  | War        | great 3D    | 8.9    |
+| 2  | Science    | fiction     | 8.5    |
+| 3  | irish      | boring      | 6.2    |
+| 4  | Ice song   | Fantacy     | 8.6    |
+| 5  | House card | Interesting | 9.1    |
++----+------------+-------------+--------+
+Output: 
++----+------------+-------------+--------+
+| id | movie      | description | rating |
++----+------------+-------------+--------+
+| 5  | House card | Interesting | 9.1    |
+| 1  | War        | great 3D    | 8.9    |
++----+------------+-------------+--------+
+Explanation: 
+We have three movies with odd-numbered IDs: 1, 3, and 5. The movie with ID = 3 is boring so we do not include it in the answer.
+
+Solution : 
+
+select * 
+from Cinema as c 
+where mod(id , 2) = 1 and c."description" <> 'boring'
+order by rating  desc 
 
 --------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------
-15.
+15. https://leetcode.com/problems/rising-temperature/description/
 
 
 
