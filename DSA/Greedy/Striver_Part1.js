@@ -117,4 +117,213 @@ class Solution {
     }
 }
 
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------
+/**
+3. https://www.geeksforgeeks.org/problems/-minimum-number-of-coins4426/1
+https://leetcode.com/problems/coin-change/description/
+Given an infinite supply of each denomination of Indian currency { 1, 2, 5, 10 } and a target value n. Find the minimum
+number of coins and/or notes needed to make the change for Rs n. 
+Examples:
+Input: n = 39
+Output: 6
+Explaination: 39 can be formed using 3 coins of 10 rupees, 1 coin of 5 rupees and 2 coins of 2 rupees so minimum coins 
+required are 6.
+ * @param {number} n
+ * @returns {number}
+ */
+class Solution {
+    findMin(n) {
+        // code here
+        const coin = [1,2,5,10];
+        let i = coin.length - 1 ;
+        let res = 0 ;
+        
+        while(n != 0 && i>=0 ){
+            res = res + Math.floor(n/coin[i]) ;
+            n = n%coin[i];
+            i-=1 ;
+        }
+        
+        return res ;
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------
+/**
+4. Leetcode : https://leetcode.com/problems/lemonade-change/description/
+
+At a lemonade stand, each lemonade costs $5. Customers are standing in a queue to buy from you and order one at a time
+(in the order specified by bills). Each customer will only buy one lemonade and pay with either a $5, $10, or $20 bill. 
+You must provide the correct change to each customer so that the net transaction is that the customer pays $5.
+
+Note that you do not have any change in hand at first.
+Given an integer array bills where bills[i] is the bill the ith customer pays, return true if you can provide every
+customer with the correct change, or false otherwise.
+
+Example 1:
+
+Input: bills = [5,5,5,10,20]
+Output: true
+Explanation: 
+From the first 3 customers, we collect three $5 bills in order.
+From the fourth customer, we collect a $10 bill and give back a $5.
+From the fifth customer, we give a $10 bill and a $5 bill.
+Since all customers got correct change, we output true.
+ * @param {number[]} bills
+ * @return {boolean}
+ */
+var lemonadeChange = function(bills) {
+    
+    let five = 0 ;
+    let ten = 0 ;
+
+    for(const bill of bills){
+        if(bill == 5){
+            five++ ;
+        }
+
+        if(bill == 10){
+            if(five > 0){
+                ten++ ;
+                five-- ;
+            }
+            else{
+                return false ;
+            }
+        }
+
+        if(bill == 20){
+            if(ten > 0 && five > 0){
+                ten-- ;
+                five-- ;
+            }
+            else if(five >= 3){
+                five -= 3 ;
+            }
+            else {
+                return false ;
+            }
+        }
+    }
+    return true ;
+};
+
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------
+/**
+5. Leetcode : https://leetcode.com/problems/valid-parenthesis-string/description/
+
+Given a string s containing only three types of characters: '(', ')' and '*', return true if s is valid.
+
+The following rules define a valid string:
+
+Any left parenthesis '(' must have a corresponding right parenthesis ')'.
+Any right parenthesis ')' must have a corresponding left parenthesis '('.
+Left parenthesis '(' must go before the corresponding right parenthesis ')'.
+'*' could be treated as a single right parenthesis ')' or a single left parenthesis '(' or an empty string "".
+
+Example 1:
+Input: s = "()"
+Output: true
+
+Example 2:
+Input: s = "(*)"
+Output: true
+
+Example 3:
+Input: s = "(*))"
+Output: true
+
+ * @param {string} s
+ * @return {boolean}
+
+ Below Approach can throw TLE . Approach : Use Recursion for every '*' try all 3 ways by putting '(' , ')' , '' . 
+ Time Complexity: O(3n) the worst case, every '*' can be replaced with '(', ')' or an empty string. For each '*',
+ we have 3 choices, so with k '*' characters, we make 3k recursive calls. If the input string has length n, and all are '*', 
+ the time complexity becomes exponential.
+
+Space Complexity: O(n) ,This is due to the maximum depth of the recursive call stack. At most, there are n recursive calls 
+at any time (one for each character).
+ */
+var checkValidString = function(s) {
+    
+    const util = (i , openCount)=>{
+        if(openCount < 0) return false ;
+        if(i == len) return openCount == 0 ;
+
+        const ch = s[i];
+        if(ch == '('){
+            return util(i+1 ,openCount+1 ) ; 
+        }
+
+        if(ch == ')'){
+            return util(i+1 ,openCount-1 ) ; 
+        }
+
+        if(ch == '*'){
+            return util(i+1 , openCount) || util(i+1 , openCount+1) || util(i+1 , openCount-1)
+        }
+    }
+
+    const len = s.length ;
+    return util(0 , 0 )
+
+};
+
+/**
+Optimized Version
+ */
+var checkValidString = function(s) {
+        let minOpen = 0;
+
+        let maxOpen = 0;
+
+        for (let i = 0; i < s.length; i++) {
+
+            let c = s[i];
+
+            if (c === '(') {
+                minOpen++;
+                maxOpen++;
+            }
+
+            else if (c === ')') {
+                minOpen--;
+                maxOpen--;
+            }
+
+            else {
+                minOpen--;     
+                maxOpen++;      
+            }
+
+            if (maxOpen < 0) return false;
+
+            if (minOpen < 0) minOpen = 0;
+        }
+
+        return minOpen === 0;
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
