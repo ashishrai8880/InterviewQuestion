@@ -309,14 +309,207 @@ var checkValidString = function(s) {
 };
 
 
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------
+// 6. N Meetings in a room https://www.geeksforgeeks.org/problems/n-meetings-in-one-room-1587115620/1
+
+/**
+You are given timings of n meetings in the form of (start[i], end[i]) where start[i] is the start time of meeting i and end[i] is the finish time of meeting i.
+Return the maximum number of meetings that can be accommodated in a single meeting room, when only one meeting can be held in the meeting room at a particular time. 
+
+Note: The start time of one chosen meeting can't be equal to the end time of the other chosen meeting.
+
+Examples :
+
+Input: start[] = [1, 3, 0, 5, 8, 5], end[] =  [2, 4, 6, 7, 9, 9]
+Output: 4
+Explanation: Maximum four meetings can be held with given start and end timings. The meetings are - (1, 2), (3, 4), (5,7) and (8,9)
+Input: start[] = [10, 12, 20], end[] = [20, 25, 30]
+Output: 1
+Explanation: Only one meetings can be held with given start and end timings.
+Input: start[] = [1, 2], end[] = [100, 99]
+Output: 1
+
+Approach : Greedy . Just sort by end time , always we will be wanting less time and early ending meeting should be schedule in room . 
+ */
+
+class Solution {
+    maxMeetings(start, end) {
+        // code here
+        
+        let meetings = [] ;
+        const len = start.length ;
+        
+        for(let i =0 ; i<len ; i++){
+            meetings.push([end[i] , start[i] , i]);
+        }
+        
+        meetings.sort((a,b)=>a[0]-b[0]);
+        
+        let lastEnd = -1 ;
+        let res = [];
+        for(const meet of meetings){
+            // const [e , s] = meet ;
+            if(meet[1] > lastEnd){
+                res.push(meet);
+                lastEnd = meet[0] ;
+            }
+        }
+        return res.length ;
+        
+    }
+} 
 
 
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------
+/** JUMP GAME
+7. Leetcode : https://leetcode.com/problems/jump-game/
+Problem Statement: Given an array where each element represents the maximum number of steps you can jump forward from that element, return true
+if we can reach the last index starting from the first index. Otherwise, return false.
+
+Example 1:
+Input: nums = [2,3,1,1,4]
+Output: true
+Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index.
+
+Example 2:
+Input: nums = [3,2,1,0,4]
+Output: false
+Explanation: You will always arrive at index 3 no matter what. Its maximum jump length is 0, which makes it impossible to reach the last index.
+
+Time Complexity : Without DP would be 2^n and with DP it will become n ^ 2 ;
+
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var canJump = function(nums) {
+    
+    const util = (i)=>{
+        if(i >= len-1){
+            return true ;
+        }
+
+        if(dp[i] != -1) return dp[i];
+
+        const n = nums[i];
+        for(let j = 1 ; j<= n ; j++){
+            if(util(i+j) == true) return true ;
+        }
+
+        dp[i] = false ;
+        return dp[i];
+    }
+
+    const len = nums.length ;
+    let dp = Array.from({length : len } , ()=>-1)
+    return util(0)
+};
 
 
+/**
+Optimized Way : Very simple , just check maximum index it can reach from each index . There can be only one breaking , if anywhere there is 0  , it will be 
+stopping to reaching at end . Suppose if every number is positive then it will definitely reach . So need to find maximum index it can reach from any index 
+and if at any point if maxReach is smaller than index , it means there would be some stoppage or breaker which making answer false . 
+ */
+var canJump = function(nums) {
+    
+    let maxReach = 0 ;
+
+    for(let i = 0  ; i<nums.length ; i++){
+        const e = nums[i];
+
+        if(maxReach < i){
+            return false ;
+        }
+        maxReach = Math.max( maxReach , e+i );
+    }
+
+    return true ;
+};
 
 
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------
+/**
+JUMP GAME 2
+Leetcode : https://leetcode.com/problems/jump-game-ii/
 
+You are given a 0-indexed array of integers nums of length n. You are initially positioned at index 0.
 
+Each element nums[i] represents the maximum length of a forward jump from index i. In other words, if you are at index i,
+you can jump to any index (i + j) where:
+
+0 <= j <= nums[i] and
+i + j < n
+Return the minimum number of jumps to reach index n - 1. The test cases are generated such that you can reach index n - 1.
+
+Example 1:
+Input: nums = [2,3,1,1,4]
+Output: 2
+Explanation: The minimum number of jumps to reach the last index is 2. Jump 1 step from index 0 to 1, then 3 steps to the last index.
+
+Example 2:
+Input: nums = [2,3,0,1,4]
+Output: 2
+ 
+ * @param {number[]} nums
+ * @return {number}
+
+ Brute Force : Use Recursioin and DP . Check all possible ways . 
+ 
+ Time Complexity:O(2^N), where N is the number of elements in the array. This is because, from each index, the function recursively explores all possible
+ jump lengths, leading to an exponential number of recursive calls.
+Space Complexity:O(N), due to the maximum depth of the recursion stack in the worst case. No extra data structures are used except the recursive call stack.
+
+With DP : Time Complexity: O(N2) ,We use two nested loops where outer loop runs for N elements and inner can go up to N in worst case.
+Space Complexity:O(N) ,We use an extra DP array of size N to store the minimum jumps to reach each index.
+ */
+var jump = function(nums) {
+    
+    const util = (i)=>{
+        if(i >= len-1){
+            return 0 ;
+        }
+
+        if(dp[i] != -1) return dp[i];
+
+        const n = nums[i];
+        let moves = Infinity ;
+        for(let j = 1 ; j<=n ; j++){
+           moves = Math.min(moves , 1 + util(i+j)) ;
+        }
+        return dp[i] = moves ;
+    }
+
+    const len = nums.length ;
+    let dp = Array.from({length : len },()=>-1)
+    return util(0)
+};
+
+/**
+Optimized Approach : Visit Striver sheet once . It is easy one . Basically it is finding range of index from where it can jump optimally . For example from index 0 it can 
+jump from 1 to nums[0] . So for each range it is increasing moves variable . 
+ * @param {number[]} nums
+ * @return {number}
+ */
+var jump = function(nums) {
+    
+    let moves = 0 ; 
+    let maxRange = 0 ;
+    let currEnd = 0 ;
+
+    for(let i = 0 ; i<nums.length - 1 ;i++){
+        maxRange = Math.max(maxRange , i+nums[i]);
+
+        if(currEnd == i){
+            currEnd = maxRange ;
+            moves += 1;
+        }
+    }
+    return moves ;
+
+};
 
 
 
