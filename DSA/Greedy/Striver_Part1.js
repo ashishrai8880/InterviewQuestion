@@ -432,7 +432,7 @@ var canJump = function(nums) {
 //---------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------
 /**
-JUMP GAME 2
+8. JUMP GAME 2
 Leetcode : https://leetcode.com/problems/jump-game-ii/
 
 You are given a 0-indexed array of integers nums of length n. You are initially positioned at index 0.
@@ -510,6 +510,231 @@ var jump = function(nums) {
     return moves ;
 
 };
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------
+// User function Template for javascript
+/**
+9. Shortest Job First : https://www.geeksforgeeks.org/problems/shortest-job-first/1
+
+Geek is a software engineer. He is assigned with the task of calculating average waiting time of all the processes
+by following shortest job first policy.
+
+The shortest job first (SJF) or shortest job next, is a scheduling policy that selects the waiting process with the
+smallest execution time to execute next.
+
+Given an array of integers bt of size n. Array bt denotes the burst time of each process. Calculate the average
+waiting time of all the processes and return the nearest integer which is smaller or equal to the output.
+
+Note: Consider all process are available at time 0.
+
+Example 1:
+
+Input:
+n = 5
+bt = [4,3,7,1,2]
+Output: 4
+Explanation: After sorting burst times by shortest job policy, calculated average waiting time is 4.
+Example 2:
+
+Input:
+n = 4
+arr = [1,2,3,4]
+Output: 2
+Explanation: After sorting burst times by shortest job policy, calculated average waiting time is 2.
+
+ * @param {TreeNode} bt
+ * @returns {number}
+ */
+
+class Solution {
+    // Function to solve the given problem.
+    solve(bt) {
+        // your code here
+        
+        let waitTime = 0 ;
+        let totalTime = 0 ;
+        const len = bt.length ;
+        bt.sort((a,b)=>a-b);
+        
+        for(let i = 0 ; i<len ; i++){
+            waitTime += totalTime ;
+            totalTime += bt[i];
+        }
+        
+        return Math.floor(waitTime/len)
+        
+    }
+}
+
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------
+/**
+10. Leetcode : https://leetcode.com/problems/merge-intervals/
+Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the
+non-overlapping intervals that cover all the intervals in the input.
+
+Example 1:
+Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].
+
+Example 2:
+Input: intervals = [[1,4],[4,5]]
+Output: [[1,5]]
+Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+
+Example 3:
+Input: intervals = [[4,7],[1,4]]
+Output: [[1,7]]
+Explanation: Intervals [1,4] and [4,7] are considered overlapping.
+
+ * @param {number[][]} intervals
+ * @return {number[][]}
+ */
+var merge = function(intervals) {
+    
+    intervals.sort((a,b)=>a[0]-b[0]);
+    let res = [];
+    let i = 0 ;
+    const n = intervals.length ;
+
+    while(i<n){
+        const start = intervals[i][0];
+        let end = intervals[i][1];
+
+        let j = i+1 ;
+
+        while(j<n && intervals[j][0]  <= end ){
+            end = Math.max(end , intervals[j][1]);
+            j+=1 ;
+        }
+        res.push([start,end]);
+        i=j;
+    }
+    return res ;
+};
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------
+/** Minimum Removal of interval to make it non overlapping . 
+12 : Leetcode : https://leetcode.com/problems/non-overlapping-intervals/description/
+Given an array of intervals intervals where intervals[i] = [starti, endi], return the minimum number of intervals you need
+to remove to make the rest of the intervals non-overlapping.
+
+Note that intervals which only touch at a point are non-overlapping. For example, [1, 2] and [2, 3] are non-overlapping.
+
+Example 1:
+Input: intervals = [[1,2],[2,3],[3,4],[1,3]]
+Output: 1
+Explanation: [1,3] can be removed and the rest of the intervals are non-overlapping.
+
+Example 2:
+Input: intervals = [[1,2],[1,2],[1,2]]
+Output: 2
+Explanation: You need to remove two [1,2] to make the rest of the intervals non-overlapping.
+
+Example 3:
+Input: intervals = [[1,2],[2,3]]
+Output: 0
+Explanation: You don't need to remove any of the intervals since they're already non-overlapping.
+
+ Logic : Easy one , use greedy , no overthinking . As last one , just keep minimum 'end' value . Because minimum 'end' value 
+ or short range will remove minimum interval . If range is big , then will need to remove maximum interval . 
+ * @param {number[][]} intervals
+ * @return {number}
+ */
+var eraseOverlapIntervals = function(intervals) {
+    
+    intervals.sort((a,b)=>a[0]-b[0]);
+
+    let i = 0 ;
+    const n = intervals.length ;
+    let res = 0 ;
+
+    while(i < n){
+        const start = intervals[i][0];
+        let end = intervals[i][1];
+
+        let j = i+1 ;
+
+        while(j < n && end > intervals[j][0]){
+            res += 1 ;
+            end = Math.min(end , intervals[j][1]);
+            j += 1 ;
+        }
+        i = j ;
+    }
+    return res ;
+};
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------
+/** Insert Interval
+13. Leetcode : https://leetcode.com/problems/insert-interval/description/
+You are given an array of non-overlapping intervals intervals where intervals[i] = [starti, endi] represent the start and the end of the ith interval and intervals is sorted in ascending order by starti. You are also given an interval newInterval = [start, end] that represents the start and end of another interval.
+
+Insert newInterval into intervals such that intervals is still sorted in ascending order by starti and intervals still does not have any overlapping intervals (merge overlapping intervals if necessary).
+
+Return intervals after the insertion.
+
+Note that you don't need to modify intervals in-place. You can make a new array and return it.
+
+Example 1:
+
+Input: intervals = [[1,3],[6,9]], newInterval = [2,5]
+Output: [[1,5],[6,9]]
+Example 2:
+
+Input: intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
+Output: [[1,2],[3,10],[12,16]]
+Explanation: Because the new interval [4,8] overlaps with [3,5],[6,7],[8,10].
+ 
+ * @param {number[][]} intervals
+ * @param {number[]} newInterval
+ * @return {number[][]}
+ */
+var insert = function(intervals, newInterval) {
+    
+    intervals.push(newInterval);
+    intervals.sort((a,b)=>a[0]-b[0]);
+
+    // now merge intervals
+    const n = intervals.length ;
+
+    let i = 0 ;
+    let res = [];
+
+    while(i<n){
+        const start = intervals[i][0];
+        let end = intervals[i][1];
+
+        let j = i ;
+
+        while(j < n && end >= intervals[j][0]){
+            end = Math.max(end , intervals[j][1]);
+            j+=1 ;
+        }
+        i = j ;
+        res.push([start , end]);
+    }
+
+    return res ;
+};
+
+
+
+
+
+
+
+
+
 
 
 
