@@ -677,9 +677,12 @@ var eraseOverlapIntervals = function(intervals) {
 //----------------------------------------------------------------------------------------------------------------------------
 /** Insert Interval
 13. Leetcode : https://leetcode.com/problems/insert-interval/description/
-You are given an array of non-overlapping intervals intervals where intervals[i] = [starti, endi] represent the start and the end of the ith interval and intervals is sorted in ascending order by starti. You are also given an interval newInterval = [start, end] that represents the start and end of another interval.
+You are given an array of non-overlapping intervals intervals where intervals[i] = [starti, endi] represent the start and
+the end of the ith interval and intervals is sorted in ascending order by starti. You are also given
+an interval newInterval = [start, end] that represents the start and end of another interval.
 
-Insert newInterval into intervals such that intervals is still sorted in ascending order by starti and intervals still does not have any overlapping intervals (merge overlapping intervals if necessary).
+Insert newInterval into intervals such that intervals is still sorted in ascending order by starti and intervals
+still does not have any overlapping intervals (merge overlapping intervals if necessary).
 
 Return intervals after the insertion.
 
@@ -728,7 +731,124 @@ var insert = function(intervals, newInterval) {
 };
 
 
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------
+/** Candy
+14. Leetcode :  https://leetcode.com/problems/candy/
 
+There are n children standing in a line. Each child is assigned a rating value given in the integer array ratings.
+
+You are giving candies to these children subjected to the following requirements:
+
+Each child must have at least one candy.
+Children with a higher rating get more candies than their neighbors.
+Return the minimum number of candies you need to have to distribute the candies to the children.
+
+Example 1:
+Input: ratings = [1,0,2]
+Output: 5
+Explanation: You can allocate to the first, second and third child with 2, 1, 2 candies respectively.
+
+Example 2:
+Input: ratings = [1,2,2]
+Output: 4
+Explanation: You can allocate to the first, second and third child with 1, 2, 1 candies respectively.
+The third child gets 1 candy because it satisfies the above two conditions.
+ 
+
+Constraints:
+
+n == ratings.length
+1 <= n <= 2 * 104
+0 <= ratings[i] <= 2 * 104
+
+Logic : Easy question . First just consider from left side and then from right side candy . 
+Then at any point just check ,, what is maximum candy can be assigned at that point . That would be the answer . 
+
+ * @param {number[]} ratings
+ * @return {number}
+ */
+var candy = function(ratings) {
+    
+    let res = 0 ;
+    const n = ratings.length ;
+    let left = Array.from({length : n} , ()=>0);
+    let right = Array.from({length : n} , ()=>0);
+    left[0] = 1 ;
+    right[n-1] = 1 ;
+    
+    let i = 1 ;
+    for( ; i<n ; i++){
+        if(ratings[i-1] < ratings[i]){
+            left[i] = left[i-1] + 1 ;
+        }
+        else{
+            left[i] = 1 ;
+        }
+
+        const j = n-i-1  ;
+
+        if(ratings[j] > ratings[j+1]){
+            right[j] = right[j+1] + 1 ;
+        }
+        else{
+            right[j] =  1; 
+        }
+    }
+
+    for(i = 0 ; i<n ; i++){
+        res = res + Math.max(left[i] , right[i]);
+    }
+
+    return res ;
+
+};
+
+// Optimized Approach : Just watch striver video once . Very good explanation 
+/*
+https://www.youtube.com/watch?v=IIqVFvKE6RY
+Use Slope concept . When it is increasing , start allocating values in ascending order . 
+When it is decreasing , then instead of decrease allocation value , we should start increasing value from 1 . 
+Because at the end we just want sum of all candy . Like 1,2,3,4,5 sum would be equal to 5,4,3,2,1 . 
+But But But , there can be edge case also . Suppose till increase value is 4 (1,2,3,4) but while decreasing
+value can be -3 or (1,2,3,4,5,6,7,8) . So Ideally at peak , value should have been 8 but we took 4 only while previous
+increasing slope . 
+*/
+
+var candy = function(ratings) {
+    
+    const n = ratings.length ;
+    let res = n ;
+    let i = 1 ;
+
+    while(i < n){
+
+        while(i<n && ratings[i] == ratings[i-1]){
+            i+=1 ; 
+            continue ;
+        }
+
+        let up = 0 ;
+
+        while(i<n && ratings[i] > ratings[i-1]){
+            i+=1 ;
+            up += 1;
+            res += up ;
+        }
+
+        let down = 0 ;
+
+        while(i<n && ratings[i] < ratings[i-1]){
+            i+=1 ;
+            down += 1 ;
+            res += down ;
+        }
+
+        res = res - Math.min(up , down)
+    }
+
+    return res ;
+};
 
 
 
