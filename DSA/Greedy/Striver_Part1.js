@@ -851,9 +851,101 @@ var candy = function(ratings) {
 };
 
 
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------
+/**
+15. MINIMUM NUMBER OF PLATFORM REQUIRED
+GFG : https://www.geeksforgeeks.org/problems/minimum-platforms-1587115620/1
 
+Given arrival arr[] and departure dep[] times of trains on the same day, find the minimum number of platforms needed
+so that no train waits. A platform cannot serve two trains at the same time; if a train arrives before another departs,
+an extra platform is needed.
 
+Note: Time intervals are in the 24-hour format (HHMM) , where the first two characters represent hour (between 00 to 23 )
+and the last two characters represent minutes (this will be <= 59 and >= 0). Leading zeros for hours less than 10 are optional
+(e.g., 0900 is the same as 900).
 
+Examples:
+Input: arr[] = [900, 940, 950, 1100, 1500, 1800], dep[] = [910, 1200, 1120, 1130, 1900, 2000]
+Output: 3
+Explanation: There are three trains during the time 9:40 to 12:00. So we need a minimum of 3 platforms.
+
+Input: arr[] = [900, 1235, 1100], dep[] = [1000, 1240, 1200]
+Output: 1
+Explanation: All train times are mutually exclusive. So we need only one platform.
+
+Input: arr[] = [1000, 935, 1100], dep[] = [1200, 1240, 1130]
+Output: 3
+Explanation: All 3 trains have to be there from 11:00 to 11:30
+
+ * @param {number[]} arr
+ * @param {number[]} dep
+ * @returns {number}
+
+ Brute Force : Just check for each train , how many it is intersecting . Just suppose , mai train chala rha hu 
+ or mai train leke gya kisi station pe , to us waqt jitne train already stand hogi waha pe . To bas simply
+ arrival time check krna hai sabhi train ka , agar arival time , baanki train k arrival and departure k bich 
+ me hai , iska matlab ek or platform chahiye . 
+ */
+
+class Solution {
+    minPlatform(arr, dep) {
+        // code here
+        let n = arr.length;
+        let res = 0;
+    
+        for (let i = 0; i < n; i++) {
+    
+            let arival = arr[i];
+            let departure = dep[i];
+            let cnt = 1;
+            for (let j = 0; j < n; j++) {
+                if (i !== j)
+
+                    if ( arival >= arr[j] && dep[j] >= arival ) {
+                        cnt++;
+                    }
+            }
+            res = Math.max(cnt, res);
+        }
+        return res;
+    }
+}
+
+/**
+Optimized : No need to take care of arival and departure of each train . Just check , if arrival of i'th train 
+is lesser than departure of j'th train , it means need more platform , otherwise decrement platform count variable
+
+ */
+
+class Solution {
+    minPlatform(arr, dep) {
+        // code here
+        
+        arr.sort((a,b)=>a-b);
+        dep.sort((a,b)=>a-b);
+        
+        const n = arr.length ;
+        let res = 0 ;
+        let i = 0 ;
+        let j = 0 ;
+        let count = 0;
+        
+        while(i<n){
+            if(arr[i] <= dep[j]){
+                count+=1 ;
+                i+=1 ;
+            }
+            else if(arr[i] > dep[j]){
+                count-=1 ;
+                j+=1 ;
+            }
+            res = Math.max( res , count);
+        }
+        
+        return res ;
+    }
+}
 
 
 
