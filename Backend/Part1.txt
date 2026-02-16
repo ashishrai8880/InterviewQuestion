@@ -167,6 +167,31 @@ setImmediate(()=>{
 SetImmediate
 SetTimeout
 
+In Node.js, the output order between setTimeout(..., 0) and setImmediate() is not guaranteed, but most commonly you’ll see:
+// output
+SetTimeout
+SetImmediate
+
+After the main script finishes:
+      The event loop starts
+      It checks the Timers phase first
+      So usually setTimeout runs first
+      Then it moves to Check phase
+      So setImmediate runs second
+
+🚨 When Does setImmediate Run First?
+If you place both inside an I/O callback, like this:
+
+fs.readFile(__filename, () => {
+    setTimeout(() => console.log("timeout"), 0);
+    setImmediate(() => console.log("immediate"));
+});
+
+Because:
+      I/O callbacks run in the Poll phase
+      After Poll, the event loop goes to Check phase
+      So setImmediate runs before going back to Timers
+
 Now it is not always necessary that setImmediate will always comes first . But sometimes setTimeout can also comes first . 
 Ye uncertain hai . Jayadatar case me uper wala hi output rhega . depend krega , event loop kon se phase me hai . 
 agar event loop close cb phase me hai , to pehle settiemout print krega , kyuki iske baad wo timer phase me jayega . 
