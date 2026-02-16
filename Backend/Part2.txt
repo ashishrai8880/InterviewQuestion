@@ -1,0 +1,207 @@
+Question 1 : How would you handle memory leaks in Node.js?
+1️⃣ Understand Common Causes
+Memory leaks in Node.js usually happen due to:
+      🔁 Global variables that are never cleared
+      📦 Large objects kept in memory (arrays, caches growing infinitely)
+      🎧 Unremoved event listeners
+      ⏳ Timers not cleared (setInterval without clearInterval)
+      🔄 Closures holding references to unused objects
+      🗃 Unclosed resources (DB connections, file handles, sockets)
+
+2️⃣ Detect Memory Leaks
+📊 Monitor Memory Usage
+Use built-in tools:
+      console.log(process.memoryUsage());
+
+Key metrics:
+    heapUsed , heapTotal , rss
+If heapUsed keeps growing without stabilizing → possible leak.
+
+🔍 Use Profiling Tools
+
+Chrome DevTools (node --inspect)
+Heap snapshots
+Allocation timeline
+clinic.js
+heapdump
+node --trace-gc
+
+node --inspect app.js
+Then open chrome://inspect in Chrome.
+
+“To handle memory leaks in Node.js, I first monitor memory usage using process.memoryUsage() and profiling tools like
+heap snapshots. I look for continuously growing heap usage. Common causes include global variables, unremoved event
+listeners, large in-memory caches, and unclosed resources. I fix leaks by removing unused references, clearing timers,
+limiting cache size, and properly closing connections. I also use streaming and proper architecture patterns to prevent 
+excessive memory consumption.”
+
+---------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+Question 2 : Explain streams. When would you use them?
+In Node.js, streams are objects that let you read or write data in small chunks instead of loading everything into memory
+at once.
+Instead of:
+fs.readFile()  // Loads entire file into memory
+
+Streams allow
+fs.createReadStream()  // Reads file piece by piece
+So streams are used for handling large data efficiently.
+
+✅ Why Streams Are Important
+Without streams:
+      Entire file/data loads into memory
+      High memory usage
+      Poor performance for large files
+
+With streams:
+      Process data chunk-by-chunk
+      Low memory usage
+      Faster and scalable
+      Supports backpressure handling
+
+✅ Types of Streams in Node.js
+There are 4 types:
+1️⃣ Readable Stream
+Used to read data
+Example: fs.createReadStream()
+
+2️⃣ Writable Stream
+Used to write data
+Example: fs.createWriteStream()
+
+3️⃣ Duplex Stream
+Readable + Writable
+Example: TCP sockets
+
+4️⃣ Transform Stream
+Duplex stream that modifies data on the fly . 
+Example: Compression (gzip)
+
+✅ Example
+const fs = require('fs');
+const readStream = fs.createReadStream('input.txt');
+const writeStream = fs.createWriteStream('output.txt');
+readStream.pipe(writeStream);
+
+✅ When Would You Use Streams?
+📂 1. Large File Processing
+Video files , Log files , CSV files (millions of rows)
+Instead of loading a 2GB file into memory.
+
+🌐 2. Handling HTTP Requests & Responses . In Node.js, request and response objects are streams.
+When uploading/downloading files.
+
+📦 3. Real-time Data Processing
+Chat applications , Live feeds , Data pipelines
+
+🗜 4. Data Transformation
+Compressing files (gzip) , Encrypting/decrypting data, Parsing data
+
+✅ What is Backpressure?
+Backpressure happens when:
+      Data is produced faster than it can be consumed.
+Streams handle this automatically using:
+.pipe()
+Internal buffering
+This prevents memory overflow.
+
+“Streams in Node.js allow us to process data in chunks rather than loading everything into memory. They improve performance
+and reduce memory usage, especially when working with large files or real-time data. Node.js provides Readable, Writable,
+Duplex, and Transform streams. I would use streams when handling large file uploads/downloads, processing big datasets, or
+building real-time applications where efficient memory usage is important.”
+
+// Practical 
+1️⃣ Readable Stream
+👉 Read a large file in chunks
+// readable.js
+const fs = require('fs');
+
+const readStream = fs.createReadStream('input.txt', {
+  encoding: 'utf8',
+  highWaterMark: 16 // 16 bytes per chunk (small for demo)
+});
+
+readStream.on('data', (chunk) => {
+  console.log('Chunk received:');
+  console.log(chunk);
+});
+
+readStream.on('end', () => {
+  console.log('Finished reading file.');
+});
+
+readStream.on('error', (err) => {
+  console.error('Error:', err);
+});
+
+2️⃣ Writable Stream
+👉 Write data to a file in chunks
+
+// writable.js
+const fs = require('fs');
+
+const writeStream = fs.createWriteStream('output.txt');
+
+writeStream.write('Hello\n');
+writeStream.write('This is a writable stream example.\n');
+writeStream.write('Writing data in chunks.\n');
+
+writeStream.end(); // must call end()
+
+writeStream.on('finish', () => {
+  console.log('Finished writing to file.');
+});
+
+3️⃣ Duplex Stream
+👉 Create a simple custom duplex stream
+
+// duplex.js
+const { Duplex } = require('stream');
+
+const duplexStream = new Duplex({
+  write(chunk, encoding, callback) {
+    console.log('Writing:', chunk.toString());
+    callback();
+  },
+
+  read(size) {
+    this.push('Hello from duplex stream!\n');
+    this.push(null); // end
+  }
+});
+
+duplexStream.on('data', (chunk) => {
+  console.log('Reading:', chunk.toString());
+});
+
+duplexStream.write('Test Data');
+duplexStream.end();
+
+4️⃣ Transform Stream
+👉 Modify data while passing through
+Example: Convert text to uppercase
+
+// transform.js
+const { Transform } = require('stream');
+
+const upperCaseTransform = new Transform({
+  transform(chunk, encoding, callback) {
+    const upperCased = chunk.toString().toUpperCase();
+    callback(null, upperCased);
+  }
+});
+
+process.stdin
+  .pipe(upperCaseTransform)
+  .pipe(process.stdout);
+
+Now type something and press Enter → it prints UPPERCASE.
+✔ Reads input
+✔ Transforms it
+✔ Outputs modified data
+
+
+
+
+
+
