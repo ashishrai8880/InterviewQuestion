@@ -200,6 +200,282 @@ Now type something and press Enter → it prints UPPERCASE.
 ✔ Transforms it
 ✔ Outputs modified data
 
+==================================================================================================================
+==================================================================================================================
+Question 3 : What happens internally when you use async/await? 
+Answer : "async/await is syntactic sugar over Promises. Internally, an async function always returns a Promise. When await 
+is encountered, JavaScript pauses the function execution, waits for the Promise to resolve, and resumes execution using the 
+microtask queue."
+
+When you write:
+
+async function example() {
+  return 42;
+}
+
+Internally JavaScript converts it to:
+
+function example() {
+  return Promise.resolve(42);
+}
+
+Every async function always returns a Promise
+Even if you return a normal value
+
+Example : async function test() {
+  console.log("Start");
+
+  const result = await Promise.resolve("Hello");
+
+  console.log(result);
+  console.log("End");
+}
+
+Internally:
+      1. Function starts executing synchronously
+      2. "Start" prints immediately
+      3. When it hits await:
+            1. It pauses execution
+            2. Registers the rest of the function as a .then() callback
+      4. Control returns to the event loop
+      5. When Promise resolves:
+            1. The continuation runs inside the microtask queue
+
+3️⃣ Under the Hood (Desugared Version)
+
+This:
+      const result = await somePromise;
+
+Is roughly equivalent to:
+      somePromise.then(result => {
+        // remaining code
+      });
+
+So await is basically cleaner .then() chaining.
+
+6️⃣ Does await Block the Thread?
+❌ No.
+      It does NOT block the Node.js thread.
+      It only pauses the async function.
+      Other requests can still be processed.
+      That’s why Node.js remains non-blocking.
+
+
+
+==================================================================================================================
+==================================================================================================================
+Question 4 : How do you handle centralized error handling in Express?
+In express 5 , whatever written below works fine . But But , older version of express 4 unable to catch async function
+error , so to handle that , we need to manually call next() method with thrown error to catch it . 
+More and most professional way is the second one . 
+
+Answer :  Basic Implementation 
+import express from "express";
+const app = express();
+const port = 3000;
+
+const catchException = (err, req, res, next) => {
+  console.log("coming inside catchException");
+  return res.status(500).json({
+    message: "INTERNAL SERVER ERROR",
+    error: err.message,
+  });
+};
+
+app.get("/testing", (req, res) => {
+  throw new Error("This is a test error");
+});
+
+app.use(catchException);
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+1️⃣ Why Centralized Error Handling?
+Without centralized handling:
+      Try/catch everywhere ❌
+      Duplicate response logic ❌
+      Inconsistent error formats ❌
+      Hard to log and monitor ❌
+
+Centralized handling gives:
+      ✔ Clean controllers
+      ✔ Consistent error responses
+      ✔ Single place for logging
+      ✔ Easy monitoring (Sentry, etc.)
+
+2️⃣ How Express Handles Errors
+
+In Express.js, an error-handling middleware is defined like this:
+(err, req, res, next)
+⚠️ The 4 parameters are mandatory.
+That’s how Express knows it’s an error middleware.
+
+
+Part 2 : So in express 4 we are unable to catch async function error , but in express 5 it is possible . 
+To handle this case , we have to write catch in every controller callback like below : 
+
+app.get("/testing", (req , res , next)=>{
+      controllerFunction(req , res).catch((err)=>{   // need to write this in every route , because without calling next() method global exception handler won't get trigger . 
+            next(err) 
+      })
+} );
+
+To solve this we wrap this task in seperate function and then call that wrapper function directly , like below . 
+
+const catchAsyncError = (fn) => {
+  return (req, res, next) => {
+    fn(req, res, next).catch((err) => {
+      next(err);
+    });
+  };
+};
+
+It will take controller function as a parameter and return a function , inside that function it has put catch method . 
+Now in our current case , we are sending same error to our customer , but need to send seperate error in different case 
+to make it more better , we should create seperate AppError class that will extend Error class . 
+
+
+====> Complete Implementation <=============
+
+import express from "express";
+const app = express();
+const port = 3000;
+
+const globalExceptionHandler = (err, req, res, next) => {
+  const sendErrorDev = (err, res) => {
+    res.status(err.statusCode).json({
+      status: err.status,
+      error: err,
+      message: err.message,
+      stack: err.stack,
+    });
+  };
+
+  const sendErrorProd = (err, res) => {
+    res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+    });
+  };
+
+  err.statusCode = err.statusCode || 500;
+  err.status = err.status || "error";
+
+  if (process.env.NODE_ENV === "development") {
+    sendErrorDev(err, res);
+  } else {
+    sendErrorProd(err, res);
+  }
+};
+
+const catchAsyncError = (fn) => {
+  return (req, res, next) => {
+    fn(req, res, next).catch((err) => {
+      next(err);
+    });
+  };
+};
+
+const controller = async (req, res) => {
+  //   throw new Error("This is a test error");
+  throw new AppError("User not found", 404);
+};
+
+class AppError extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.message = message;
+    this.status = `${statusCode}`.startsWith("4") ? "fail" : "error";
+    this.statusCode = statusCode;
+    this.isOperational = true; // Used to distinguish known errors from unknown bugs
+
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+app.get("/testing", catchAsyncError(controller));
+
+app.use(globalExceptionHandler);
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+
+=======================================================================================================================
+=======================================================================================================================
+Question 5 : How to make response generic format , it should be same format everywhere ? Respone standardization
+Answer : ✅ Best Practice Approach
+There are 2 professional ways to do this:
+      1️⃣ Create a custom response helper
+      2️⃣ Override res.json() globally
+
+Approach 1 (Recommended): Response Helper Utility
+--Step 1: Create response utility
+
+// utils/responseHandler.js
+const sendResponse = (res, {
+  statusCode = 200,
+  status = "SUCCESS",
+  message = "",
+  data = null
+}) => {
+  return res.status(statusCode).json({
+    STATUS: status,
+    MESSAGE: message,
+    "OB-API": data
+  });
+};
+
+module.exports = sendResponse;
+
+-- Step 2: Use it in routes
+
+const sendResponse = require('./utils/responseHandler');
+
+app.get('/user', (req, res) => {
+  const user = { id: 1, name: "John" };
+
+  sendResponse(res, {
+    statusCode: 200,
+    message: "User fetched successfully",
+    data: user
+  });
+});
+
+---Step 3: Use it in error handler
+app.use((err, req, res, next) => {
+  sendResponse(res, {
+    statusCode: err.statusCode || 500,
+    status: "FAILED",
+    message: err.message,
+    data: null
+  });
+});
+
+🔹 Approach 2: Override res.json() (Advanced)
+If you want FULL control so no one can bypass it:
+
+app.use((req, res, next) => {
+  const oldJson = res.json;
+
+  res.json = function (data) {
+    const formatted = {
+      STATUS: "SUCCESS",
+      MESSAGE: "Request successful",
+      "OB-API": data
+    };
+
+    return oldJson.call(this, formatted);
+  };
+
+  next();
+});
+
+
+
 
 
 
