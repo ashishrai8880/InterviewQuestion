@@ -1,11 +1,92 @@
+// ======================================================== Climbing Stairs =============================================
+/**
+Leetcode : https://leetcode.com/problems/climbing-stairs/
+
+You are climbing a staircase. It takes n steps to reach the top.
+Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
+Example 1:
+Input: n = 2
+Output: 2
+Explanation: There are two ways to climb to the top.
+1. 1 step + 1 step
+2. 2 steps
+
+Example 2:
+Input: n = 3
+Output: 3
+Explanation: There are three ways to climb to the top.
+1. 1 step + 1 step + 1 step
+2. 1 step + 2 steps
+3. 2 steps + 1 step
+ */
+var climbStairs = function(n) {
+    
+    const util = (i)=>{
+        if(i>=n) {
+            return 1;
+        }
+        if(dp[i] != -1) return dp[i]
+        const f = util(i+1);
+        let s = 0 ;
+        if(i+2 <= n){
+            s = util(i+2);
+        }
+        return dp[i] = f+s ;
+    }
+    
+    let dp = Array.from({length : n},()=>-1)
+    return util(0);
+};
+
+/**
+Bottom Up - Iterative Approach 
+ */
+var climbStairs = function(n) {
+    
+    let dp = Array.from({length : n+1 },()=>0);
+    dp[1] = 1 ;
+    dp[2] = 2 ;
+
+    for (let i=3 ; i<=n ; i++ ){
+        dp[i] = dp[i-1] + dp[i-2];
+    }
+
+    return dp[n]
+};
+
 // ===============================================================1. Frog Jump ==============================================================================================
 // GFG : https://www.geeksforgeeks.org/problems/geek-jump/1
 /*
+
+Given an integer array height[] where height[i] represents the height of the i-th stair, a frog starts from the
+first stair and wants to reach the last stair. From any stair i, the frog has two options: it can either jump to 
+the (i+1)th stair or the (i+2)th stair. The cost of a jump is the absolute difference in height between the two stairs.
+Determine the minimum total cost required for the frog to reach the last stair.
+
+Example:
+
+Input: heights[] = [20, 30, 40, 20]
+Output: 20
+Explanation:  Minimum cost is incurred when the frog jumps from stair 0 to 1 then 1 to 3:
+jump from stair 0 to 1: cost = |30 - 20| = 10
+jump from stair 1 to 3: cost = |20 - 30| = 10
+Total Cost = 10 + 10 = 20
+
+Input: heights[] = [30, 20, 50, 10, 40]
+Output: 30
+Explanation: Minimum cost will be incurred when frog jumps from stair 0 to 2 then 2 to 4:
+jump from stair 0 to 2: cost = |50 - 30| = 20
+jump from stair 2 to 4: cost = |40 - 50| = 10
+Total Cost = 20 + 10 = 30
+
 Time Complexity: O(N)
-Reason: The overlapping subproblems will return the answer in constant time O(1). Therefore the total number of new subproblems we solve is ‘n’. Hence total time complexity is O(N).
+Reason: The overlapping subproblems will return the answer in constant time O(1). Therefore the total number 
+of new subproblems we solve is ‘n’. Hence total time complexity is O(N).
 
 Space Complexity: O(N)
-Reason: We are using a recursion stack space(O(N)) and an array (again O(N)). Therefore total space complexity will be O(N) + O(N) ≈ O(N)
+Reason: We are using a recursion stack space(O(N)) and an array (again O(N)). Therefore total space complexity will 
+be O(N) + O(N) ≈ O(N)
 */
 class Solution {
     minCost(height) {
@@ -38,38 +119,38 @@ class Solution {
 
     // Tabulation 
   minCostTabulation(height) {
-        
-        let len = height.length ;
-        let dp = Array.from({length : len+1},()=>-1);
+
+        const n = height.length ;
+        let dp = Array.from({length : n+1},()=>-1);
         dp[0] = 0 ;
-  
-        for(let i=1 ; i<len ; i++){
-            const oneStep = dp[i-1] + Math.abs(height[i]-height[i-1]);
-            let twoStep = Infinity;
-            if(i>=2){
-                twoStep = dp[i-2] + Math.abs(height[i] - height[i-2]);
-            }
+        dp[1] = Math.abs(height[1] - height[0]);
+        
+        for(let i = 2 ; i<n ; i++){
+            // console.log({i})
+            let oneStep = dp[i-1] + Math.abs( height[i] - height[i-1] ) ;
+            let twoStep = dp[i-2] + Math.abs(height[i] - height[i-2]);
             dp[i] = Math.min(oneStep , twoStep);
         }
-        return dp[len-1];
+        
+        return dp[n-1];
+        
     }
 
   minCostTabulationSpaceOptimized(height) {
+         
+        const n = height.length ;
+        if(n < 2) return 0 ;
+        let lastSecond = 0 ;
+        let last = Math.abs(height[1] - height[0]);
         
-        let len = height.length ;
-        let prev1 = 0 ;
-        let prev2 = 0 ;
-        for(let i=1 ; i<len ; i++){
-            const oneStep = prev1 + Math.abs(height[i]-height[i-1]);
-            let twoStep = Infinity;
-            if(i>=2){
-                twoStep = prev2 + Math.abs(height[i] - height[i-2]);
-            }
-            prev2 = prev1 ;
-            prev1 = Math.min(oneStep , twoStep);
-            
+        for(let i = 2 ; i<n ; i++){
+            let oneStep = last + Math.abs( height[i] - height[i-1] ) ;
+            let twoStep = lastSecond + Math.abs(height[i] - height[i-2]);
+            lastSecond = last ;
+            last = Math.min(oneStep , twoStep);
         }
-        return prev1;
+        
+        return last;
     }
 }
 
