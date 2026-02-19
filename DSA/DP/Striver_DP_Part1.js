@@ -365,54 +365,41 @@ Explanation: Geek can perform any activity each day while adhering to the constr
 */
 
 class Solution {
-    // Function to find the maximum points among all the possible ones.
     maximumPoints(arr) {
-        // your code here
-        const len = arr.length ;
-        if(len == 1){
-            return Math.max(arr[0][0] , Math.max(arr[0][1] , arr[0][2 ])  )
-        }
+        // code here
         
-        const util = (row , prev )=>{
-            
-            if(dp[row][prev] !== -1) return dp[row][prev] ;
-            
-            if(row == arr.length-1 ){
-                let max = -Infinity ;
-                arr[len-1].forEach((e , i)=>{
-                    if(i != prev){
-                        max = Math.max(e , max);
-                    }
-                })
-                
-                return max ;
+        const util = (currRow , prev)=>{
+            if(currRow >= row){
+                return 0 ;
             }
             
-            
-            
+            if(  dp[currRow][prev+1] != -1 ){
+                return dp[currRow][prev+1];
+            }
             
             let max = -Infinity ;
-            
-            for(let i=0 ; i< 3 ;i++){
-                if(i != prev){
-                    let res = arr[row][i] + util(row+1 , i);
-                    
-                    max = Math.max(max , res);
+            let j = 0 ;
+            for( ; j<col  ; j++){
+                let res = 0 ;
+                if(j != prev){
+                    res = arr[currRow][j] + util(currRow + 1 , j)
                 }
+                max = Math.max(max , res);
             }
-            dp[row][prev] = max ;
-            return max ;
             
+            return dp[currRow][prev+1] = max ;
         }
         
-        let dp = Array.from({length : len+1} , ()=>{
-            return Array.from({length : 4},()=>-1)
+        const row = arr.length ;
+        const col = arr[0].length ;
+        let dp = Array.from({length : row+1} , ()=>{
+            return Array.from({length : col+1} , ()=>-1)
         })
-        return util(0 , 3);
+        
+        return util(0 , -1);
         
     }
 }
-
 
 // ===============================================================6. Count Unique Path ===========================================================================
 /**
@@ -450,57 +437,51 @@ var uniquePaths = function(m, n) {
     
             const right = util(i , j+1 )  ;
             const down = util(i+1 , j) ;
-            
     
             return dp[i][j] = ( right + down )
         }
-    
     
         let dp = Array.from({length : m+1} , ()=>{
             return Array.from({length : n+1} , ()=>-1)
         })
         
         return util(1,1)  ;
-
 };
-
 
 // ======================================================================== 7. Count Unique Path 2 =============================================================================
 /**
-You are given an m x n integer array grid. There is a robot initially located at the top-left corner (i.e., grid[0][0]). The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]). The robot can only move either down or right at 
+Leetcode : https://leetcode.com/problems/unique-paths-ii/description/
+
+You are given an m x n integer array grid. There is a robot initially located at the top-left corner (i.e., grid[0][0]). 
+The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]). The robot can only move either down or right
+at 
 any point in time.
-An obstacle and space are marked as 1 or 0 respectively in grid. A path that the robot takes cannot include any square that is an obstacle.
+An obstacle and space are marked as 1 or 0 respectively in grid. A path that the robot takes cannot include any square
+that is an obstacle.
 Return the number of possible unique paths that the robot can take to reach the bottom-right corner.
 The testcases are generated so that the answer will be less than or equal to 2 * 109.
  */
 var uniquePathsWithObstacles = function(grid) {
     
     const util = (i , j)=>{
-
-        if(i==row-1 && j==col-1) {
-            if(grid[i][j] == 0) return 1 ;
-            return 0 ;
-        };
-
-        if(i >= row || j>= col || i<0 || j<0 || grid[i][j] ==1) return 0 ;
+        if(i>=r || j>=c) return 0 ;
+        if(arr[i][j] == 1) return 0 ;
+        if(i == r-1 && j==c-1) return 1 ;
 
         if(dp[i][j] != -1) return dp[i][j];
 
-        const right = util(i,j+1);
         const down = util(i+1 , j);
+        const right = util(i , j+1);
 
-        return dp[i][j] = right + down ;
-
+        return dp[i][j] = down + right ;
     }
 
-    const row = grid.length ;
-    const col = grid[0].length ;
-    let dp = Array.from({length : row+1},()=>{
-        return Array.from({length : col+1} , ()=>-1)
+    const r = arr.length ;
+    const c = arr[0].length ;
+    let dp = Array.from({length : r},()=>{
+        return Array.from({length : c},  ()=>-1)
     })
-
-    return util(0 , 0);
-
+    return util(0,0);
 };
 
 
@@ -508,9 +489,11 @@ var uniquePathsWithObstacles = function(grid) {
 /**
 Leetcode : https://leetcode.com/problems/minimum-path-sum/
 Time Complexity: O(N*M) Reason: At max, there will be N*M calls of recursion.
-Space Complexity: O((M-1)+(N-1)) + O(N*M) Reason: We are using a recursion stack space: O((M-1)+(N-1)), here (M-1)+(N-1) is the path length and an external DP Array of size ‘N*M’.
+Space Complexity: O((M-1)+(N-1)) + O(N*M) Reason: We are using a recursion stack space: O((M-1)+(N-1)), here (M-1)+(N-1) is 
+the path length and an external DP Array of size ‘N*M’.
 
-Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path.
+Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of 
+all numbers along its path.
 Note: You can only move either down or right at any point in time.
 
 Example 1:
@@ -678,33 +661,34 @@ Specifically, the next element from position (row, col) will be (row + 1, col - 
  */
 var minFallingPathSum = function(mat) {
     
-    const util = (currRow , prev)=>{
+    const r = arr.length;
+    const c = arr[0].length;
 
-        if(currRow >= row ) return 0 ;
+    let dp = Array.from({ length: r }, () =>
+        Array.from({ length: c }, () => undefined)
+    );
 
-        if(prev != -1 && dp[currRow][prev] != -1) return dp[currRow][prev];
+    const util = (i, j) => {
+        if (j < 0 || j >= c) return Infinity;
 
-        let min = Infinity ;
-        for(let i=0 ; i<col ; i++){
-            if( prev!= -1 && ( i==prev-1 || i==prev || i==prev+1)){
-                const r = mat[currRow][i] + util(currRow+1 , i);
-                min = Math.min(min , r);
-            }
-            if( prev ==-1){
-                const r = mat[currRow][i] + util(currRow+1 , i);
-                min = Math.min(min , r);
-            }
-        }
-        return dp[currRow][prev] = min ;
+        if (i === r - 1) return arr[i][j];
+
+        if (dp[i][j] !== undefined) return dp[i][j];
+
+        const down = util(i + 1, j);
+        const left = util(i + 1, j - 1);
+        const right = util(i + 1, j + 1);
+
+        return dp[i][j] = arr[i][j] + Math.min(down, left, right);
+    };
+
+    let ans = Infinity;
+
+    for (let j = 0; j < c; j++) {
+        ans = Math.min(ans, util(0, j));
     }
 
-    const row = mat.length ;
-    const col = mat[0].length ;
-    let dp = Array.from({length : row},()=>{
-        return Array.from({length : col},()=>-1)
-    })
-    return util(0,-1);
-
+    return ans;
 };
 
 // Tabulation Approach
