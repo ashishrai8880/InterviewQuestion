@@ -109,70 +109,104 @@ Explanation: The entire array can be taken as a subset, giving 1 + 2 + 3 = 6.
  * @param {number[]} arr
  * @param {number} target
  * @return {boolean}
+
+Time Complexity: O(N*K),There are N*K states therefore at max ‘N*K’ new problems will be solved.
+Space Complexity: O(N*K) + O(N),We are using a recursion stack space(O(N)) and a 2D array ( O(N*K)).
  */
 
 class Solution {
     isSubsetSum(arr, sum) {
         // code here
-        
         const n = arr.length;
         
-        let dp = Array.from({ length: n }, () =>
-            Array.from({ length: sum + 1 }, () => -1)
-        );
-        
-        const util = (i, s) => {
-            if (s === sum) return true;
-            if (i >= n || s > sum) return false;
-            if (dp[i][s] !== -1) return dp[i][s];
+        const util = ( i , s)=>{
+            if(s == sum) return true ;
+            if(i>=n) return false ;
             
-            const pick = util(i + 1, s + arr[i]);
+            if(dp[i][s] != -1) return dp[i][s];
             
-            const notPick = util(i + 1, s);
-            
-            return dp[i][s] = pick || notPick;
-        };
-        
-        return util(0, 0);
-        
-    }
-}
-
-/**
-Above is giving TLE , you can use below one . 
- */
-
-class Solution {
-    isSubsetSum(arr, sum) {
-        // code here
-        
-        const n = arr.length;
-        
-        const util = (ind , target)=>{
-            
-            if (target === 0) return true;
-    
-            if (ind === 0) return arr[0] === target;
-    
-            if (dp[ind][target] !== -1) return dp[ind][target] === 1;
-    
-            let notTaken = util(ind - 1, target);
-    
-            let taken = false;
-            if (arr[ind] <= target) {
-                taken = util(ind - 1, target - arr[ind]);
+            const notPick = util(i+1 , s);
+            let pick = false ;
+            if(s+arr[i] <= sum){
+                pick = util(i+1 , arr[i]+s);
             }
-    
-            // Store in DP
-            dp[ind][target] = (notTaken || taken) ? 1 : 0;
-            return notTaken || taken;
             
-            
+            return dp[i][s] = pick || notPick ;
         }
         
         let dp = Array.from({ length: n }, () => Array(sum + 1).fill(-1));
-        return util(n - 1, sum);
         
-        
+        return util(0 , 0)
     }
 }
+
+// ===================================================================================================
+/** Leetcode : https://leetcode.com/problems/partition-equal-subset-sum/description/
+4. Partition Equal subset sum
+
+Given an integer array nums, return true if you can partition the array into two subsets such that 
+the sum of the elements in both subsets is equal or false otherwise.
+
+Example 1:
+Input: nums = [1,5,11,5]
+Output: true
+Explanation: The array can be partitioned as [1, 5, 5] and [11].
+
+Example 2:
+Input: nums = [1,2,3,5]
+Output: false
+Explanation: The array cannot be partitioned into equal sum subsets.
+ 
+
+Constraints:
+
+1 <= nums.length <= 200
+1 <= nums[i] <= 100
+
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var canPartition = function(nums) {
+    
+    const sum = nums.reduce( (prev , curr)=> curr += prev  ) 
+    if(sum%2 != 0) return false ;
+    const target = sum/2 ;
+
+    const len = nums.length ;
+
+    const util = ( i , s )=>{
+
+        if(s==0) return true ;
+
+        if( s< 0 || i >= len) return false ;
+
+        if(dp[i][s] != -1) return dp[i][s] ;
+
+        const pick = util(i+1 , s-nums[i]);
+        const notPick = util(i+1 , s);
+
+        return dp[i][s] = pick || notPick ;
+    }
+    
+    let dp = Array.from({length : len+1} , ()=>{
+        return Array.from({length : target+1} , ()=>-1)
+    })
+    return util(0,target);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
