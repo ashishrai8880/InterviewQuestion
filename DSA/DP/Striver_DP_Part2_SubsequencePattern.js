@@ -85,3 +85,94 @@ var subarraySum = function(nums, k) {
 
 
 };
+
+// =====================================================================================================
+/**
+3. Subset Sum Problem 
+GFG : https://www.geeksforgeeks.org/problems/subset-sum-problem-1611555638/1
+
+Given an array of positive integers arr[] and a value sum, determine if there is a subset of arr[] with sum equal to given sum. 
+
+Examples:
+
+Input: arr[] = [3, 34, 4, 12, 5, 2], sum = 9
+Output: true 
+Explanation: Here there exists a subset with target sum = 9, 4+3+2 = 9.
+
+Input: arr[] = [3, 34, 4, 12, 5, 2], sum = 30
+Output: false
+Explanation: There is no subset with target sum 30.
+
+Input: arr[] = [1, 2, 3], sum = 6
+Output: true
+Explanation: The entire array can be taken as a subset, giving 1 + 2 + 3 = 6.
+ * @param {number[]} arr
+ * @param {number} target
+ * @return {boolean}
+ */
+
+class Solution {
+    isSubsetSum(arr, sum) {
+        // code here
+        
+        const n = arr.length;
+        
+        let dp = Array.from({ length: n }, () =>
+            Array.from({ length: sum + 1 }, () => -1)
+        );
+        
+        const util = (i, s) => {
+            if (s === sum) return true;
+            if (i >= n || s > sum) return false;
+            if (dp[i][s] !== -1) return dp[i][s];
+            
+            const pick = util(i + 1, s + arr[i]);
+            
+            const notPick = util(i + 1, s);
+            
+            return dp[i][s] = pick || notPick;
+        };
+        
+        return util(0, 0);
+        
+    }
+}
+
+/**
+Above is giving TLE , you can use below one . 
+ */
+
+class Solution {
+    isSubsetSum(arr, sum) {
+        // code here
+        
+        const n = arr.length;
+        
+        const util = (ind , target)=>{
+            
+            if (target === 0) return true;
+    
+            if (ind === 0) return arr[0] === target;
+    
+            if (dp[ind][target] !== -1) return dp[ind][target] === 1;
+    
+            let notTaken = util(ind - 1, target);
+    
+            let taken = false;
+            if (arr[ind] <= target) {
+                taken = util(ind - 1, target - arr[ind]);
+            }
+    
+            // Store in DP
+            dp[ind][target] = (notTaken || taken) ? 1 : 0;
+            return notTaken || taken;
+            
+            
+        }
+        
+        let dp = Array.from({ length: n }, () => Array(sum + 1).fill(-1));
+        return util(n - 1, sum);
+        
+        
+    }
+}
