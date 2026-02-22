@@ -63,8 +63,53 @@ To Solve this issue we have multiple locking method which we will discuss later 
   📍 Best Used When - Low contention systems , Web applications , Microservices , Distributed systems \
   Common In - Hibernate , JPA ,MongoDB \
 
-   
+   ---------------------------------------------------------------------------------------------------------------
 
+   🔁 What is Two-Phase Commit (2PC)\
+   Two-Phase Commit is a distributed coordination protocol that ensures all participating systems either commit or roll back together.\
+
+   It is commonly used in distributed databases and transaction managers like: MySQL , PostgreSQL(prepared txn) , oracle db , apache kafka (transactional producers) . \
+
+   🧠 Why Do We Need 2PC?\
+   In a distributed transactions - service A updates db A and service B updates db B . if A commits B fails . \
+   Users A sends 100$ to user B , now suppose deducted from user A but user B didn't get . So need 2 PC here . \
+
+   🏗 Components in 2PC\
+   1. Coordinator (Transaction Manager) - Control the process , makes the final decision .\
+   2. Participants (Resource Manager) - Database or services involved . Vote to commit or abort . \
+
+🚦 The Two Phases Explained\
+🟢 Phase 1: Prepare Phase (Voting Phase) - \
+Step 1 : Coordinator asks all participants - Can you commit ? \
+Step 2 : Each participant : Executes txn locally . writes changes to log . lock resources . \
+Responds - ✅ YES (Ready to commit) or ❌ NO (Cannot commit) . Participants do not commit yet . They only promise \ “If you tell me to commit later, I will.”
+   
+🔵 Phase 2: Commit / Abort Phase\
+Case 1: All participants say YES . Coordinator : writes commit to log . Send commit to everyone . \
+Participants : Permanently commit , release lock . 
+
+Case 2 : Any participant says NO . Coordinator : Writes “abort” to log . Sends ROLLBACK to everyone . \
+Participants undo changes and release locks . 
+```
+Coordinator → PREPARE? → P1
+Coordinator → PREPARE? → P2
+
+P1 → YES
+P2 → YES
+
+Coordinator → COMMIT → P1
+Coordinator → COMMIT → P2
+```
+
+⚠ Problems with 2PC - 2PC is correct but not perfect.\
+1️⃣ Blocking Problem - If coordinator crashes after Phase 1 then participants are stuck  , lock remains held \
+system blocks \
+3️⃣ Not Fully Fault Tolerant - If coordinator dies at wrong time, recovery is complex.\
+2 PC commenly used in banking systems , Enterprise systems , distributed relational dbs . \
+
+Two-Phase Commit ensures atomicity across multiple distributed systems by introducing a prepare phase where all participants agree to commit, followed by a commit/rollback phase controlled by a coordinator. This guarantees that either all systems commit or none do, maintaining consistency.\
+
+Coordinator can be seperate server or it can be inside Application server also depends on requirements .
 
 
 
