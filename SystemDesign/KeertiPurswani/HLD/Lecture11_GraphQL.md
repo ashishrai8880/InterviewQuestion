@@ -90,6 +90,32 @@ module.exports = resolvers;
 It always make POST request on frontend browser with payload . If you see graph ql API call , you \
 will see /graphql endpoint with payload asking for requested keys . 
 
+-------------------------------------------------------------------------------------------------------
+
+E-Tag - When client/browser sends request for some data to server , server sends response with eTag \
+Now there can be multiple hashing technique for generating this eTag (either hash response) . \
+Now client will store this eTag and when next time client request the same API , \
+It will send in request header If-None-Match : eTag . Now server will check if eTag is same which \
+generated before , it means response is not change , and Server will response with statusCode 304 \
+Mean Not Modified . So Now browser will load and render data very fast . \
+If eTag not matched then only server will respond with statusCode 200 . \
+
+---------------------------------------------------------------------------------------------------------
+
+Rate Limiting - It can be done using 2 things \
+
+1. IP Based - But problem is , it is possible many user are siting in same ip / network . Now it is possible that due to other user huge request , rate limit is hit and user which has not used server yet\
+   got 429 too many request response .
+
+2. UserId Based - It works , but in this case , it will fail for Login API , Login API should be free\
+   from rate limiting . \
+
+Solution is to use rate limiting with the combination of both above 2 techniques . \
+Can Apply Different rate limiting for different APIs . \
+
+--------------------------------------------------------------------------------------------------------
+
+
 
 
 
