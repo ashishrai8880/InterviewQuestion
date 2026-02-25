@@ -1,0 +1,163 @@
+
+HLD Of URL Shortener 
+
+1️⃣ Functional Requirements
+Core
+    Shorten a long URL → generate unique short URL
+    Redirect short URL → original long URL
+    Custom alias support (optional)
+    URL expiration (optional)
+    Basic analytics (click count, geo, device)
+
+Non-Functional
+    Handle billions of users
+    Low latency (< 50ms redirect)
+    High availability (99.99%+)
+    Massive scale (10¹²+ URLs)
+    Fault tolerant
+    Horizontally scalable
+
+2️⃣ Capacity Estimation (Example)
+
+Assume:
+    1B new URLs/month
+    100B redirects/month
+    100:1 read/write ratio
+
+Storage:
+    Each record ≈ 500 bytes
+    10B URLs → ~5 TB
+    With replication → ~15 TB+
+
+So we need:
+    Distributed storage
+    Heavy caching layer
+
+3️⃣ High Level Architecture
+
+Client
+   ↓
+DNS
+   ↓
+Load Balancer
+   ↓
+API Servers (Stateless)
+   ↓
+Cache (Redis Cluster)
+   ↓
+Database (Distributed NoSQL)
+   ↓
+Analytics Pipeline
+
+
+There also should be time expiry . 
+🔹 2. ID Generation Strategy (CRITICAL)
+We must generate unique short IDs at massive scale.
+Option A: Auto-increment (Not good at scale ❌)
+Option B: Distributed Counter (Better)
+Option C: Snowflake-style ID Generator (Recommended)
+Inspired by Twitter Snowflake:
+
+```
+64-bit ID:
+| timestamp | machine_id | sequence |
+```
+
+Benefits:
+    Globally unique
+    No DB bottleneck
+    Horizontally scalable
+    Ordered by time
+
+After generating ID → convert to Base62.
+
+Example: 145239845920 → "aZ91Kx" 
+
+Base62 gives: 62^7 ≈ 3.5 trillion combinations .
+
+7 characters are enough for trillions of URLs.
+
+🔹 3. Database Layer
+Recommended: Distributed NoSQL
+Options: Apache Cassandra , Amazon DynamoDB , Google Bigtable .
+
+Why NoSQL?
+Massive write throughput , Horizontal scaling , Partition tolerant , Key-value access pattern .
+
+```
+Table: urls
+----------------------------------------
+short_id (PK)
+long_url
+created_at
+expiry_at
+user_id
+click_count
+```
+Partition by: short_id , Replication factor: 3 .
+
+🔹 4. Cache Layer (Ultra Important) - Use: Redis cluster .
+Flow:
+Redirect request → check Redis
+Cache hit → instant return
+Cache miss → DB → populate cache
+
+🔹 5. Redirect Flow
+User hits:
+https://short.ly/abc123
+Load balancer routes to API
+Check Redis If exists → HTTP 301 redirect
+Else → fetch from DB → cache → redirect
+Latency target: < 20ms from cache
+
+🔹 6. Analytics System (Async)
+DO NOT write analytics synchronously.
+Instead:
+```
+Redirect Service
+     ↓
+Message Queue
+     ↓
+Stream Processor
+     ↓
+Analytics DB
+```
+Use: Apache Kafka Or Amazon Kinesis
+
+Why async?
+Prevent redirect latency increase
+Handle billions of click events
+
+5️⃣ Scaling Strategy
+Horizontal Scaling Everywhere
+Stateless API → Auto-scale
+Redis cluster sharding
+DB sharding by short_id
+Multi-region deployment
+
+8️⃣ Security Considerations
+Rate limiting (prevent abuse)
+Malware scanning
+Blacklist domains
+HTTPS only
+Auth for custom URLs
+CAPTCHA for anonymous usage
+
+9️⃣ High Availability
+Multi-AZ deployment
+DB replication factor ≥ 3
+Cache replication
+Circuit breakers
+Health checks
+
+FOR LLD Go To Article 
+https://devdiaryacademy.medium.com/building-a-production-ready-url-shortener-with-node-js-fc0ed5aac54f
+
+
+
+
+
+
+
+
+
