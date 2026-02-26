@@ -1,0 +1,128 @@
+
+1. OAuth 2.0 
+OAuth 2.0 is an authorization framework that lets a third-party app access a user’s resources without sharing the user’s password.
+The official standard is maintained by the Internet Engineering Task Force (IETF).
+
+🔑 Core Roles in OAuth 2.0
+
+There are 4 main players:
+    Resource Owner → The user
+    Client → The application requesting access
+    Authorization Server → Issues tokens
+    Resource Server → Hosts the protected data (API)
+
+🔄 High-Level OAuth 2.0 Flow (Authorization Code Flow) - This is the most common and secure flow.
+
+Step 1️⃣ – User Clicks “Login with X” - 
+The client app redirects the user to the Authorization Server with: [ client_id , redirect_uri , scope , response_type=code ]
+Example:
+```
+GET /authorize?
+  client_id=abc123
+  &redirect_uri=https://app.com/callback
+  &response_type=code
+  &scope=profile email
+```
+
+Step 2️⃣ – User Authenticates - The user logs in on the Authorization Server. 
+Important:
+      👉 The password is entered ONLY on the Authorization Server.
+      👉 The client app never sees the password.
+
+Step 3️⃣ – Authorization Code Returned - If the user approves access, the Authorization Server redirects back:
+```
+https://app.com/callback?code=AUTH_CODE
+```
+This authorization code is temporary and short-lived.
+
+Step 4️⃣ – Client Exchanges Code for Access Token - The client makes a backend POST request:
+```
+POST /token
+  grant_type=authorization_code
+  code=AUTH_CODE
+  client_secret=SECRET
+```
+The server responds with:
+```
+{
+  access_token: "xyz",
+  refresh_token: "abc",
+  expires_in: 3600
+}
+```
+
+Step 5️⃣ – Client Calls API - The client now calls the Resource Server: 
+```
+GET /userinfo
+Authorization: Bearer ACCESS_TOKEN
+```
+
+OAuth -> Authorised Framework that allows 3rd Party apps to access limited resources for specific period of time on a server without exposing credentials . 
+
+------------------------------------------------------------------------------------------------------
+
+What if jwt token is stolen ?
+1. We can use concept of refresh token . And main token time to live would be 5-15 minutes only so that destructive time for hacker would be less . 
+Flow - 
+
+In Login API server will send accessToken and refreshToken to client 
+Client will store accessToken in localStorage and refreshToken will be set to cookie (httpOnly accesss) in client . 
+Now every time client request for any API , it will use accessToekn for authentication . After 10 minutes or few time , accessToken will get expired . 
+Now client will get 401 , now client will hit /refreshToken API , now this API will give again accessToken . 
+Now client again store this accessTokenn in localStorage and hit same API to server . Now server will give response . 
+
+====> Rotation of Refresh Token 
+What if refresh token which has long time to expiry get stolen . 
+For this , in every /refresh-token API hit , generate refreshToken and accessToken both . set refreshToken inside cookie and accessToken in localStorage . 
+
+🍪 1️⃣ Who Stores Cookies? Server or Client?
+👉 Cookies are stored in the browser (client).
+But…
+👉 They are usually created by the server.
+Here’s how it works:
+When user logs in, server sends this in HTTP response:
+```
+Set-Cookie: refreshToken=abc123;
+ HttpOnly;
+ Secure;
+ SameSite=Strict;
+ Path=/;
+```
+Browser receives this header and:
+Stores the cookie
+Attaches it automatically to future requests
+
+🔐 2️⃣ What Is HttpOnly?
+When a cookie has: HttpOnly
+It means:
+❌ JavaScript cannot read or modify this cookie
+✅ Only the browser can send it in HTTP requests
+
+🧠 Why Was HttpOnly Created?
+To prevent XSS attacks from stealing authentication tokens.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
