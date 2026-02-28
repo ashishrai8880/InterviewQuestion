@@ -1,0 +1,515 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.5.6" pages="4">
+  <diagram name="Whatsapp" id="FDeddbHqX2AxY0cFZ6gO">
+    <mxGraphModel dx="827" dy="439" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); font-family: Verdana;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Functional Requirement&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;ol&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;One to one chat&amp;nbsp; **&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Group Chat&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Status seen&amp;nbsp; **&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Video call **&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Read Reciep&amp;nbsp; **&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Profile&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Notification&amp;nbsp; **&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Voice Notes&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Picture&amp;nbsp;&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Contacts&amp;nbsp;&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Media Upload&amp;nbsp; **&lt;/font&gt;&lt;/li&gt;&lt;/ol&gt;&lt;div&gt;&lt;font face=&quot;Verdana&quot;&gt;Non Functional Requiremet&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;ol&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Reliable&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Low Latency&amp;nbsp;&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Resilient&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Consistent Order&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;Througput&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Verdana&quot;&gt;High Avaialbility&amp;nbsp;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/font&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="370" width="570" x="50" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="Sequence Of Event&lt;div&gt;&lt;ol&gt;&lt;li&gt;User will open Chat APP&lt;/li&gt;&lt;li&gt;Able to see all his messages&amp;nbsp;&lt;/li&gt;&lt;li&gt;Able to see message of one to one chat and group chat&amp;nbsp;&lt;/li&gt;&lt;li&gt;Able to chat and attach media with it&amp;nbsp;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="170" width="560" x="60" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="Capacity Estimation&lt;div&gt;1. Daily Active User is 2 Billion = 2 X 10*^9&lt;/div&gt;&lt;div&gt;Daily Message transfer would be 100 billion&amp;nbsp;&lt;/div&gt;&lt;div&gt;If one chat have 100 bytes and 10% is pics and 5% with video&amp;nbsp;&lt;/div&gt;&lt;div&gt;!pics size is 200KB and 1 video size is 5MB&lt;/div&gt;&lt;div&gt;10 billion pics and 5 billion video&amp;nbsp;&lt;/div&gt;&lt;div&gt;(10 billion X 200 X 10^3 ) + (5 billion X 5 X 10^6) + (100 billion X 100)&lt;/div&gt;&lt;div&gt;(10 ^ 15) + (25 X 10^15) + (10 X 10^12)&lt;/div&gt;&lt;div&gt;10PB + 25 PB + 10TB&lt;/div&gt;&lt;div&gt;35 PB per day message transfer&lt;/div&gt;&lt;div&gt;So for 5 Years = 5 X 365 X 35 PB&amp;nbsp;&lt;/div&gt;&lt;div&gt;70 Exabytes for 5 years .&amp;nbsp;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Bandwidth Estimation&amp;nbsp;&lt;/div&gt;&lt;div&gt;For 1 day it is 35PB&amp;nbsp;&lt;/div&gt;&lt;div&gt;1 million per day something is 11.57 / seconds&amp;nbsp;&lt;/div&gt;&lt;div&gt;&amp;nbsp;35 X 10 ^ 15&amp;nbsp;&lt;/div&gt;&lt;div&gt;35 X 10^9 X 10^6&lt;/div&gt;&lt;div&gt;35 GB X 11.57&amp;nbsp;&lt;/div&gt;&lt;div&gt;350 GB per seconds storage Ingrees&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="330" width="570" x="60" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-5" parent="1" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;spacingTop=3;image=img/lib/active_directory/laptop_client.svg;" value="" vertex="1">
+          <mxGeometry height="50" width="45" x="35" y="1180" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-6" parent="1" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;spacingTop=3;image=img/lib/active_directory/laptop_client.svg;" value="" vertex="1">
+          <mxGeometry height="50" width="45" x="40" y="1310" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-7" parent="1" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;spacingTop=3;image=img/lib/active_directory/laptop_client.svg;" value="" vertex="1">
+          <mxGeometry height="40" width="36" x="44" y="1450" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-11" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.patternFillRect;fillStyle=vert;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;rotation=-90;" value="Load Balancer" vertex="1">
+          <mxGeometry height="46.94" width="427.67" x="-30.54" y="1319.16" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-12" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Connection Handler 1" vertex="1">
+          <mxGeometry height="80" width="80" x="267" y="1146" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-13" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Connection Handler 1" vertex="1">
+          <mxGeometry height="80" width="80" x="267" y="1239.16" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-14" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Connection Handler 1" vertex="1">
+          <mxGeometry height="80" width="80" x="267" y="1350" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-15" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=-0.012;entryY=0.625;entryDx=0;entryDy=0;entryPerimeter=0;" target="gjy7k7bxSLRuD5FBMDMr-12" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="90" y="1220" as="sourcePoint" />
+            <mxPoint x="140" y="1170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-16" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=-0.012;entryY=0.625;entryDx=0;entryDy=0;entryPerimeter=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="91" y="1343.16" as="sourcePoint" />
+            <mxPoint x="267" y="1319.16" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-17" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="gjy7k7bxSLRuD5FBMDMr-14" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="91" y="1474" as="sourcePoint" />
+            <mxPoint x="267" y="1450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-18" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Connection Manager&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Cache Storage&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="140" x="470" y="1209.16" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-19" edge="1" parent="1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.005;entryY=0.173;entryDx=0;entryDy=0;entryPerimeter=0;" target="gjy7k7bxSLRuD5FBMDMr-18" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="347.13" y="1196" as="sourcePoint" />
+            <mxPoint x="397.13" y="1146" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-20" edge="1" parent="1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.005;entryY=0.173;entryDx=0;entryDy=0;entryPerimeter=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="347" y="1273" as="sourcePoint" />
+            <mxPoint x="468.87" y="1310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-21" edge="1" parent="1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.019;entryY=0.868;entryDx=0;entryDy=0;entryPerimeter=0;" target="gjy7k7bxSLRuD5FBMDMr-18" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="340" y="1400" as="sourcePoint" />
+            <mxPoint x="462" y="1437" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-22" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Notifiction&lt;div&gt;Service&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="70" x="590" y="1076" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-23" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Analytics Service" vertex="1">
+          <mxGeometry height="70" width="70" x="600" y="980" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-24" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Kafka" vertex="1">
+          <mxGeometry height="150" width="150" x="380" y="1030" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-26" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="gjy7k7bxSLRuD5FBMDMr-24" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="350" y="1370" as="sourcePoint" />
+            <mxPoint x="306" y="1540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-27" edge="1" parent="1" source="gjy7k7bxSLRuD5FBMDMr-24" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="gjy7k7bxSLRuD5FBMDMr-22" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="230" y="1540" as="sourcePoint" />
+            <mxPoint x="270" y="1555" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-29" edge="1" parent="1" source="gjy7k7bxSLRuD5FBMDMr-24" style="endArrow=classic;html=1;rounded=0;entryX=-0.029;entryY=0.648;entryDx=0;entryDy=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryPerimeter=0;" target="gjy7k7bxSLRuD5FBMDMr-23" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="540" y="1115" as="sourcePoint" />
+            <mxPoint x="580" y="1121" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-30" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="User Service" vertex="1">
+          <mxGeometry height="80" width="80" x="347" y="1470" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-31" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Auth Service" vertex="1">
+          <mxGeometry height="80" width="80" x="470" y="1470" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-32" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Last Seen Service&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="80" x="595" y="1470" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-33" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Media Service" vertex="1">
+          <mxGeometry height="80" width="80" x="280" y="1610" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-34" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="S3/DFS" vertex="1">
+          <mxGeometry height="60" width="60" x="427" y="1630" as="geometry" />
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-35" edge="1" parent="1" source="gjy7k7bxSLRuD5FBMDMr-11" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.091;exitY=1.026;exitDx=0;exitDy=0;exitPerimeter=0;" target="gjy7k7bxSLRuD5FBMDMr-33" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="150" y="1620" as="sourcePoint" />
+            <mxPoint x="326" y="1536" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-38" edge="1" parent="1" source="gjy7k7bxSLRuD5FBMDMr-33" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="gjy7k7bxSLRuD5FBMDMr-34" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="320" y="1650" as="sourcePoint" />
+            <mxPoint x="370" y="1600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-39" edge="1" parent="1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="210" y="1500" as="sourcePoint" />
+            <mxPoint x="347" y="1520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-40" edge="1" parent="1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" target="gjy7k7bxSLRuD5FBMDMr-31" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="350" y="1450" />
+            </Array>
+            <mxPoint x="210" y="1500" as="sourcePoint" />
+            <mxPoint x="357" y="1520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gjy7k7bxSLRuD5FBMDMr-41" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;align=left;" value="Databases&lt;div&gt;User Service - Will NoSqL document based db like mongo , couch db&amp;nbsp;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Message Service - Write heavy db for this NoSQL columinar baseddb like cassandra&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="310" width="310" x="85" y="1820" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="SA6xLb6gohaLz2Ewvg68" name="Uber">
+    <mxGraphModel dx="925" dy="491" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;strokeWidth=6;" value="&lt;h1&gt;UBER HLD&lt;/h1&gt;" vertex="1">
+          <mxGeometry height="30" width="360" x="270" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;" value="Users&lt;div&gt;&lt;ol&gt;&lt;li&gt;Real User who will book cab&lt;/li&gt;&lt;li&gt;Driver User&lt;/li&gt;&lt;/ol&gt;&lt;div&gt;Functional Requirement&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;ol&gt;&lt;li&gt;Book/Search for a cab&amp;nbsp; **&lt;/li&gt;&lt;li&gt;Cab Types&lt;/li&gt;&lt;li&gt;See nearby cabs&amp;nbsp; **&lt;/li&gt;&lt;li&gt;Set availability&amp;nbsp;&lt;/li&gt;&lt;li&gt;Track Ride&amp;nbsp; **&lt;/li&gt;&lt;li&gt;Share Cab&lt;/li&gt;&lt;li&gt;Estimating time of trip&lt;/li&gt;&lt;li&gt;Cancel Ride&amp;nbsp; **&lt;/li&gt;&lt;li&gt;Notification&amp;nbsp; *&lt;/li&gt;&lt;li&gt;Rating System&lt;/li&gt;&lt;li&gt;Payment Support **&lt;/li&gt;&lt;/ol&gt;&lt;div&gt;Non Functional Requirements&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;ol&gt;&lt;li&gt;Resilient System&lt;/li&gt;&lt;li&gt;Highly Scalable&lt;/li&gt;&lt;li&gt;In Payment there should be high consistent&lt;/li&gt;&lt;li&gt;In Cab booking or serach there should be high availability&amp;nbsp;&lt;/li&gt;&lt;li&gt;Low latency&amp;nbsp;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="500" width="490" x="60" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="Sequence of Event&lt;div&gt;&lt;ol&gt;&lt;li&gt;User will open app&lt;/li&gt;&lt;li&gt;Able to search / book cab&amp;nbsp;&lt;/li&gt;&lt;li&gt;Able to track driver location&amp;nbsp;&lt;/li&gt;&lt;li&gt;Payment&amp;nbsp;&lt;/li&gt;&lt;li&gt;Done travel . This is one is from real user side .&amp;nbsp;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="410" x="70" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="Capacity Estimation&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Storage Estimation&lt;br&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;Daily Active User 40 million per day&amp;nbsp;&lt;/li&gt;&lt;li&gt;All over world it has 10 million driver active daily&amp;nbsp;&lt;/li&gt;&lt;li&gt;80 million rides per day&amp;nbsp;&lt;/li&gt;&lt;li&gt;1 rides - destinationdetail , source detail , price , driverId .&amp;nbsp;&lt;/li&gt;&lt;li&gt;driver per unit location is also going to store like latititude and longiturde .&amp;nbsp;&lt;/li&gt;&lt;li&gt;1 unit of loc info let take 20 bytes every 3 second it is sending&amp;nbsp;&lt;/li&gt;&lt;li&gt;10 minutes is sending - 10 X 60 = 600 second / 3 = 200 times .&amp;nbsp;&lt;/li&gt;&lt;li&gt;200 times X 20 bytes = 4k bytes . 4 KB&amp;nbsp;&lt;/li&gt;&lt;li&gt;50 bytes . 5KB for 1 rides data going to store&amp;nbsp;&lt;/li&gt;&lt;li&gt;80 million rides per day&amp;nbsp;&lt;/li&gt;&lt;li&gt;80 X 10^6 X 5 X 10 ^3&lt;/li&gt;&lt;li&gt;400 GB storage per day .&amp;nbsp;&lt;/li&gt;&lt;li&gt;For 5 years - 400 X 5 X 365&amp;nbsp;&lt;/li&gt;&lt;li&gt;8 X 10^14&lt;/li&gt;&lt;li&gt;800 TB&amp;nbsp;&lt;/li&gt;&lt;/ul&gt;&lt;div&gt;Bandwidht Estimation&amp;nbsp;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;400 GB per day&amp;nbsp;&lt;/li&gt;&lt;li&gt;1 million per day = 11.57 ~ 12 per seconds&lt;/li&gt;&lt;li&gt;400 X 10 ^ 3 X 10^6&amp;nbsp;&amp;nbsp;&lt;/li&gt;&lt;li&gt;400 X 10^3 X 12&lt;/li&gt;&lt;li&gt;4.8 X 10^6 bytes per seconds&lt;/li&gt;&lt;li&gt;4.8 MB/seconds storage ingress&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="490" width="670" x="60" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-8" parent="1" style="shape=actor;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="40" y="1580" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-36" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.9;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" target="IKhMA-_tn-GQOmhvnyer-21">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="1650" />
+              <mxPoint x="200" y="1545" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-9" parent="1" style="shape=actor;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="40" y="1635" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-10" parent="1" style="shape=mxgraph.signs.transportation.car_1;html=1;pointerEvents=1;fillColor=#000000;strokeColor=none;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="40" y="1800" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-11" parent="1" style="shape=mxgraph.signs.transportation.car_1;html=1;pointerEvents=1;fillColor=#000000;strokeColor=none;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="40" y="1860" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;rotation=-90;" value="Load Balancer" vertex="1">
+          <mxGeometry height="35" width="465" x="-95" y="1720" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-30" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" target="IKhMA-_tn-GQOmhvnyer-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-13" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Connection Handler" vertex="1">
+          <mxGeometry height="70" width="70" x="210" y="1760" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-31" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="IKhMA-_tn-GQOmhvnyer-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-14" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Connection Handler" vertex="1">
+          <mxGeometry height="70" width="70" x="210" y="1850" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-15" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Connection Manager&lt;div&gt;driverId : connectioHandler&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="160" x="320" y="1755" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-16" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-10" style="endArrow=classic;html=1;rounded=0;exitX=0.99;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="IKhMA-_tn-GQOmhvnyer-13" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="380" y="1710" as="sourcePoint" />
+            <mxPoint x="430" y="1660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-17" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;exitX=0.99;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="67.5" y="1880" as="sourcePoint" />
+            <mxPoint x="207.5" y="1860" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-18" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-13" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" target="IKhMA-_tn-GQOmhvnyer-15" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="380" y="1710" as="sourcePoint" />
+            <mxPoint x="430" y="1660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-19" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-14" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" target="IKhMA-_tn-GQOmhvnyer-15" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="310" y="1860" />
+            </Array>
+            <mxPoint x="290" y="1788" as="sourcePoint" />
+            <mxPoint x="320" y="1810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-33" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" target="IKhMA-_tn-GQOmhvnyer-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Search/Ride Service&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="100" x="220" y="1500" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-22" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-8" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="IKhMA-_tn-GQOmhvnyer-21" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="380" y="1710" as="sourcePoint" />
+            <mxPoint x="450" y="1660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-34" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" target="IKhMA-_tn-GQOmhvnyer-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-35" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="IKhMA-_tn-GQOmhvnyer-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Driver Matching Service Nearest Driver&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="190" x="400" y="1520" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-39" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" target="IKhMA-_tn-GQOmhvnyer-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-24" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Driver Location Service&lt;div&gt;driverId : location&lt;/div&gt;&lt;div&gt;Redis Quadrant {&lt;/div&gt;&lt;div&gt;Driver : []&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;" vertex="1">
+          <mxGeometry height="175" width="175" x="620" y="1690" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-32" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="IKhMA-_tn-GQOmhvnyer-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-25" parent="1" style="rounded=0;whiteSpace=wrap;html=1;rotation=-90;" value="&lt;div&gt;Kafka&lt;/div&gt;" vertex="1">
+          <mxGeometry height="50" width="253.75" x="425" y="1750" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-26" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Driver Priority Service - Rating , no. of rides&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="140" x="650" y="1480" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-27" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0.895;entryY=0.005;entryDx=0;entryDy=0;entryPerimeter=0;" target="IKhMA-_tn-GQOmhvnyer-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-28" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Assignement Service" vertex="1">
+          <mxGeometry height="130" width="130" x="300" y="1960" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-38" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Matched Driver Location Tracker&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="100" x="225" y="1605" as="geometry" />
+        </mxCell>
+        <mxCell id="IKhMA-_tn-GQOmhvnyer-40" edge="1" parent="1" source="IKhMA-_tn-GQOmhvnyer-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.998;entryY=0.176;entryDx=0;entryDy=0;entryPerimeter=0;" target="IKhMA-_tn-GQOmhvnyer-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="z-dZyt9KMnp6TLJ_GtGd" name="Zerodha">
+    <mxGraphModel dx="786" dy="417" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="H5a959Uyj_ecOkFG_Ihk-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;h1&gt;Zerodha HLD&lt;/h1&gt;" vertex="1">
+          <mxGeometry height="40" width="400" x="220" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="Users&lt;div&gt;&lt;ol&gt;&lt;li&gt;Traders only&amp;nbsp;&lt;/li&gt;&lt;/ol&gt;&lt;div&gt;Functional Requirements&amp;nbsp;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;ol&gt;&lt;li&gt;Buy/Sell Stock&lt;/li&gt;&lt;li&gt;Search Stock Price&lt;/li&gt;&lt;li&gt;Payments and Wallet&amp;nbsp;&lt;/li&gt;&lt;li&gt;Watchlist&amp;nbsp;&lt;/li&gt;&lt;li&gt;Reports Generation&lt;/li&gt;&lt;li&gt;Portfolio of stocks and MF&amp;nbsp;&lt;/li&gt;&lt;li&gt;Charts and strategies&lt;/li&gt;&lt;li&gt;Listing of mutual funds and bonds and other assets .&amp;nbsp;&lt;/li&gt;&lt;/ol&gt;&lt;div&gt;Non Functional Requirements&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;ol&gt;&lt;li&gt;Very low latency ( in sense of getting price )&amp;nbsp;&lt;/li&gt;&lt;li&gt;Highly Consistency .&amp;nbsp;&lt;/li&gt;&lt;li&gt;Reports , watch list / search - avaialability&lt;/li&gt;&lt;li&gt;Payments buy sell should be high consistent&amp;nbsp;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="360" width="530" x="30" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="Sequence of Events&lt;div&gt;&lt;ol&gt;&lt;li&gt;User will open app&lt;/li&gt;&lt;li&gt;Able to search for stocks&lt;/li&gt;&lt;li&gt;Able to see its live price and charts&lt;/li&gt;&lt;li&gt;Able to buy / sell stocks&lt;/li&gt;&lt;li&gt;Page which will be promissing of amount transfer after some time .&amp;nbsp;&lt;/li&gt;&lt;li&gt;Option to get credit in your bank account&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="170" width="540" x="30" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-24" edge="1" parent="1" source="PvKUx7To6KxHUwexcF6m-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" target="PvKUx7To6KxHUwexcF6m-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-6" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Actor" vertex="1">
+          <mxGeometry height="30" width="20" x="30" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-22" edge="1" parent="1" source="PvKUx7To6KxHUwexcF6m-7" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=openThin;startFill=0;" target="PvKUx7To6KxHUwexcF6m-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-7" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Actor" vertex="1">
+          <mxGeometry height="30" width="20" x="30" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;rotation=-90;" value="Load Balancer" vertex="1">
+          <mxGeometry height="40" width="350" x="-55" y="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="BSE/NSE" vertex="1">
+          <mxGeometry height="80" width="80" x="680" y="960" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-23" edge="1" parent="1" source="PvKUx7To6KxHUwexcF6m-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="PvKUx7To6KxHUwexcF6m-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Price Tracking Service" vertex="1">
+          <mxGeometry height="50" width="110" x="205" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-20" edge="1" parent="1" source="PvKUx7To6KxHUwexcF6m-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" target="PvKUx7To6KxHUwexcF6m-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-25" edge="1" parent="1" source="PvKUx7To6KxHUwexcF6m-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="PvKUx7To6KxHUwexcF6m-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-26" edge="1" parent="1" source="PvKUx7To6KxHUwexcF6m-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="PvKUx7To6KxHUwexcF6m-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Order Managerment Service" vertex="1">
+          <mxGeometry height="45" width="95" x="205" y="1030" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Risk Managerment Service" vertex="1">
+          <mxGeometry height="45" width="95" x="270" y="1110" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-21" edge="1" parent="1" source="PvKUx7To6KxHUwexcF6m-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="PvKUx7To6KxHUwexcF6m-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Payment Managerment Service" vertex="1">
+          <mxGeometry height="45" width="95" x="270" y="1200" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-19" edge="1" parent="1" source="PvKUx7To6KxHUwexcF6m-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="PvKUx7To6KxHUwexcF6m-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;rotation=-90;" value="KAFKA" vertex="1">
+          <mxGeometry height="35" width="295" x="300" y="1050" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-18" edge="1" parent="1" source="PvKUx7To6KxHUwexcF6m-17" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" target="PvKUx7To6KxHUwexcF6m-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-17" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Exchange Connector" vertex="1">
+          <mxGeometry height="70" width="90" x="510" y="960" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-27" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="Orders&amp;nbsp;&lt;div&gt;&lt;ol&gt;&lt;li&gt;orderId , buy/sell price , Timestamps , quantity , status , bse/nse , order type - These details need to be very high consisitency , but also ever increasing data so need horizontall scalling . So Would go with NoSQL document based DB like MongoDB&amp;nbsp;&lt;/li&gt;&lt;/ol&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;2. Watchlilst - userId , stockId , watchListId - Schema are fixed , and&amp;nbsp; data would also not very huge so would go with SQL database .&amp;nbsp;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="230" width="510" x="50" y="1420" as="geometry" />
+        </mxCell>
+        <mxCell id="PvKUx7To6KxHUwexcF6m-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="Capacity Estimation&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Storage Estimation&lt;br&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;Zerodha has 16 million users on their platform&amp;nbsp;&lt;/li&gt;&lt;li&gt;1 Million active user who trades daily&amp;nbsp;&lt;/li&gt;&lt;li&gt;1 trades take 5 KB of data . stockid , orderId , price , bse/nse , user basic info , payment details .&amp;nbsp;&lt;/li&gt;&lt;li&gt;1 user make 10 trades daily = 10 X 5 KB = 50 KB&lt;/li&gt;&lt;li&gt;For 1 million user = 1 X 10^6 X 50 X 10^3&lt;/li&gt;&lt;li&gt;50 GB storage per day going to store .&amp;nbsp;&lt;/li&gt;&lt;li&gt;For 5 Years = 50 X 5 X 365 GB&amp;nbsp;&lt;/li&gt;&lt;li&gt;100 X 10 ^ 12&lt;/li&gt;&lt;li&gt;100&amp;nbsp; TB of data for 5 years .&amp;nbsp;&lt;/li&gt;&lt;li&gt;There also be user data stored for 16 million user . kyc detail&amp;nbsp; , account detail , personal info . So 5 KB of data . for 16 million&lt;/li&gt;&lt;li&gt;16 X 5 X 10^9 = 80 GB extra data .&amp;nbsp;&lt;/li&gt;&lt;/ul&gt;&lt;div&gt;Bandwidth Estimation&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;50 gb per day .&amp;nbsp;&lt;/li&gt;&lt;li&gt;1 million per day will give 11.57 ~ 12 per second .&amp;nbsp;&lt;/li&gt;&lt;li&gt;50 GB per day = 50 X 10 ^3 X 10 ^ 6&amp;nbsp;&lt;/li&gt;&lt;li&gt;50 X 10^3 X 12&lt;/li&gt;&lt;li&gt;600 X 10 ^ 3&amp;nbsp;&lt;/li&gt;&lt;li&gt;0.6 MB / second .&amp;nbsp;&lt;/li&gt;&lt;li&gt;6 hours run time only .&amp;nbsp;&lt;/li&gt;&lt;li&gt;Need to multiply with 4 . Ao 2.4 MB/second&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="440" width="600" x="50" y="1720" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="vIN-Hwi_cyLbFEXwFhNr" name="Youtube">
+    <mxGraphModel dx="983" dy="521" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;h1&gt;Youtube HLD&lt;/h1&gt;" vertex="1">
+          <mxGeometry height="30" width="410" x="270" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="Actors&amp;nbsp;&lt;div&gt;&lt;ol&gt;&lt;li&gt;User who will just watch videos&amp;nbsp;&lt;/li&gt;&lt;li&gt;Upload who will upload and watch videos&lt;/li&gt;&lt;/ol&gt;&lt;div&gt;Functional Requirements&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;ol&gt;&lt;li&gt;Stream and Watch Video&amp;nbsp; **&amp;nbsp;&lt;/li&gt;&lt;li&gt;Upload a Video&amp;nbsp;&amp;nbsp; **&amp;nbsp;&lt;/li&gt;&lt;li&gt;Search for a Video&amp;nbsp;&amp;nbsp; **&amp;nbsp;&lt;/li&gt;&lt;li&gt;Recommendation&amp;nbsp;&amp;nbsp; **&amp;nbsp;&lt;/li&gt;&lt;li&gt;Like Share Comments and Subscribe Video&amp;nbsp;&amp;nbsp; **&amp;nbsp;&lt;/li&gt;&lt;li&gt;Super Chat&amp;nbsp;&lt;/li&gt;&lt;li&gt;Suppor Devices - Android , Web , iOS , TV&lt;/li&gt;&lt;li&gt;Playlist&lt;/li&gt;&lt;li&gt;Playback Speed&lt;/li&gt;&lt;li&gt;Video Quality&amp;nbsp;&amp;nbsp;&amp;nbsp; **&amp;nbsp;&lt;/li&gt;&lt;li&gt;Captions&lt;/li&gt;&lt;li&gt;Save the last seen video&lt;/li&gt;&lt;li&gt;Subscribe and Notification&lt;/li&gt;&lt;li&gt;Live Streaming&amp;nbsp;&lt;/li&gt;&lt;li&gt;Trending&amp;nbsp;&lt;/li&gt;&lt;li&gt;Forwarding Video&lt;/li&gt;&lt;li&gt;User Profile&amp;nbsp;&amp;nbsp;&amp;nbsp; **&amp;nbsp;&lt;/li&gt;&lt;li&gt;Advertisement&lt;/li&gt;&lt;li&gt;Encoding/Decoding Video&amp;nbsp;&amp;nbsp;&lt;/li&gt;&lt;/ol&gt;&lt;div&gt;Non Functional Requirements&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;ol&gt;&lt;li&gt;Highly Available .&lt;/li&gt;&lt;li&gt;Low Latency&amp;nbsp;&lt;/li&gt;&lt;li&gt;Resilient System&amp;nbsp;&lt;/li&gt;&lt;li&gt;Less Buffering&amp;nbsp;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="530" width="570" x="100" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="Sequence of Event&lt;div&gt;&lt;ol&gt;&lt;li&gt;User will open App&lt;/li&gt;&lt;li&gt;He should able to see few videos as per recommendation&lt;/li&gt;&lt;li&gt;Able to search for some video&lt;/li&gt;&lt;li&gt;Able to stream it&amp;nbsp;&lt;/li&gt;&lt;li&gt;Able to upload video .&amp;nbsp;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="180" width="570" x="100" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="Capacity Estimation&amp;nbsp;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Storage Estimation&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;DAU Daily active user is 2 Billion .&amp;nbsp;&lt;/li&gt;&lt;li&gt;Ratio of user uploading video and just watching is 10:90 .&lt;/li&gt;&lt;li&gt;200 million uploaders&amp;nbsp; are there .&amp;nbsp;&lt;/li&gt;&lt;li&gt;Let&#39;s take 1 video size is of 100MB and there would be transcoding also there&amp;nbsp;&lt;/li&gt;&lt;li&gt;Per user 500 MB of storage .&amp;nbsp;&lt;/li&gt;&lt;li&gt;There will be metadata also like userId , timestamp , transcode option avaiable , description , title , tag . metadata size is 10KB&amp;nbsp; .&amp;nbsp;&lt;/li&gt;&lt;li&gt;200 Million X 500 MB per day&amp;nbsp;&lt;/li&gt;&lt;li&gt;200 X 10 ^ 6 X 500 X 10 ^ 6 Bytes&amp;nbsp;&lt;/li&gt;&lt;li&gt;100 X 10 ^ 15 bytes .&amp;nbsp;&lt;/li&gt;&lt;li&gt;100 PB per day&amp;nbsp;&lt;/li&gt;&lt;li&gt;For 5 Years = 5 X 365 X 100 PB&lt;/li&gt;&lt;li&gt;200 EB for 5 years .&amp;nbsp;&lt;/li&gt;&lt;/ul&gt;&lt;div&gt;Bandwidth Estimation&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;100 PB per day .&amp;nbsp;&lt;/li&gt;&lt;li&gt;1 Million bytes per day will give 11.57 bytes per seconds . ~ 12 bytes per second&lt;/li&gt;&lt;li&gt;100 X 10 ^ 15&amp;nbsp;&lt;/li&gt;&lt;li&gt;100 X 10 ^ 9 X 10^6&amp;nbsp;&lt;/li&gt;&lt;li&gt;100 X 10 ^9 X 12&lt;/li&gt;&lt;li&gt;1.2 X 10 ^12&lt;/li&gt;&lt;li&gt;1.2 GB per seconds going to store data .&amp;nbsp;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="450" width="580" x="100" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-36" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-6" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Actor" vertex="1">
+          <mxGeometry height="30" width="20" x="20" y="1820" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-7" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Actor" vertex="1">
+          <mxGeometry height="30" width="20" x="20" y="1930" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-33" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-44" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" target="4TgJqcuGYvctyIwx8Mhy-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-8" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Actor" vertex="1">
+          <mxGeometry height="30" width="20" x="20" y="2030" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-45" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-9" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Actor" vertex="1">
+          <mxGeometry height="30" width="20" x="20" y="2140" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;rotation=-90;" value="Load Balancer" vertex="1">
+          <mxGeometry height="42.5" width="507.5" x="-140" y="1940" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-37" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Home Service" vertex="1">
+          <mxGeometry height="60" width="110" x="210" y="1730" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-34" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Upload Service" vertex="1">
+          <mxGeometry height="60" width="110" x="210" y="1880" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-24" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-25" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-26" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-28" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;rotation=-90;" value="Kafka" vertex="1">
+          <mxGeometry height="50" width="339.37" x="240" y="1960" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Streaming Service" vertex="1">
+          <mxGeometry height="60" width="110" x="210" y="2040" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-17" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Recommendation Service" vertex="1">
+          <mxGeometry height="60" width="110" x="200" y="2190" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-29" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-30" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-32" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-18" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Transcoding Service" vertex="1">
+          <mxGeometry height="125" width="90" x="489.37" y="1898.75" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-40" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-38">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Transcoding 360P" vertex="1">
+          <mxGeometry height="75" width="90" x="630" y="1850" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-20" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Transcoding 480P" vertex="1">
+          <mxGeometry height="85" width="90" x="630" y="1975" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Transcoding 720P" vertex="1">
+          <mxGeometry height="85" width="90" x="630" y="2100" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-22" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Analytics Service" vertex="1">
+          <mxGeometry height="90" width="100.63" x="478.74" y="1730" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Notification Service" vertex="1">
+          <mxGeometry height="125" width="90" x="489.37" y="2065" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-27" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Copyright Service" vertex="1">
+          <mxGeometry height="125" width="90" x="484.06" y="2200" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-35" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Search Service" vertex="1">
+          <mxGeometry height="60" width="110" x="354.69" y="1600" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-43" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="4TgJqcuGYvctyIwx8Mhy-39">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-47" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" target="4TgJqcuGYvctyIwx8Mhy-23">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="850" y="2200" />
+              <mxPoint x="557" y="2200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-38" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Storage Service" vertex="1">
+          <mxGeometry height="130" width="120" x="790" y="1920" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-39" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="S3 or DFS" vertex="1">
+          <mxGeometry height="75" width="90" x="970" y="1940" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-41" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=-0.011;entryY=0.367;entryDx=0;entryDy=0;entryPerimeter=0;" target="4TgJqcuGYvctyIwx8Mhy-38">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-42" edge="1" parent="1" source="4TgJqcuGYvctyIwx8Mhy-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=-0.004;entryY=0.681;entryDx=0;entryDy=0;entryPerimeter=0;" target="4TgJqcuGYvctyIwx8Mhy-38">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-46" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Recommendation Hadoop Ecosystem" vertex="1">
+          <mxGeometry height="120" width="151" x="740" y="1550" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-48" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Notification URL&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="10" width="160" x="660" y="2220" as="geometry" />
+        </mxCell>
+        <mxCell id="4TgJqcuGYvctyIwx8Mhy-49" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="API Design&lt;div&gt;&lt;ol&gt;&lt;li&gt;Upload API - /upload .&amp;nbsp;&lt;/li&gt;&lt;li&gt;payload - chunks , videoId , userId , title , description&amp;nbsp;&lt;/li&gt;&lt;li&gt;Get Home Page Videos API&lt;/li&gt;&lt;li&gt;Get Recommendation API&lt;/li&gt;&lt;li&gt;Streaming of Videos&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="240" width="750" x="70" y="2450" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
