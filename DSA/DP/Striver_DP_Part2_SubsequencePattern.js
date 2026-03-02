@@ -267,6 +267,9 @@ Thus there are total 6 ways for partition the array arr.
 Input: arr[] = [3, 2, 7, 1], diff = 4  
 Output: 0
 Explanation: There is no possible partition of the array that satisfy the given difference. 
+
+Approach - S1 + S2 = totalSum and S1 - S2 = givenDifference . After solving these two equation
+S1 = (totalSum+givenDifference)/2 . Now need to count subset with given sum S1
 */
 class Solution {
     
