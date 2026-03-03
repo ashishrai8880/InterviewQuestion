@@ -298,9 +298,355 @@ class Solution {
     }
 }
 
+
 // =======================================================================================================================
 /**
-7. Assign Cookies : https://leetcode.com/problems/assign-cookies/description/
+7. Target Sum
+Leetcode : https://leetcode.com/problems/target-sum/
+
+You are given an integer array nums and an integer target.
+
+You want to build an expression out of nums by adding one of the symbols '+' and '-' before each integer in nums and
+then concatenate all the integers.
+
+For example, if nums = [2, 1], you can add a '+' before 2 and a '-' before 1 and concatenate them to build the
+expression "+2-1".
+Return the number of different expressions that you can build, which evaluates to target.
+
+Example 1:
+
+Input: nums = [1,1,1,1,1], target = 3
+Output: 5
+Explanation: There are 5 ways to assign symbols to make the sum of nums be target 3.
+-1 + 1 + 1 + 1 + 1 = 3
++1 - 1 + 1 + 1 + 1 = 3
++1 + 1 - 1 + 1 + 1 = 3
++1 + 1 + 1 - 1 + 1 = 3
++1 + 1 + 1 + 1 - 1 = 3
+Example 2:
+
+Input: nums = [1], target = 1
+Output: 1
+ 
+Constraints:
+1 <= nums.length <= 20
+0 <= nums[i] <= 1000
+0 <= sum(nums[i]) <= 1000
+-1000 <= target <= 1000
+
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ Brute Force  -  Easy One . So Instead of thinking about putting + and - symbol in front of each digit think different . 
+ Because sum can go into negative and if apply dp , it will throw error for negative indexing . 
+
+ Basically S1 + (-S2) = diff . This we want . Because we have to take entire array and put either + or - symbol in front
+  of each element , it means we are dividing array into two halves , one subsequence which has only + symbol and one 
+  is which has only - symbol . So now problem is break down into previous problem 6 . 
+
+  Now there can be few edge case in base condition which is , if element is 0 and we got the target , so it can make two
+  subset one for +0 and one for -0 . 
+ */
+var findTargetSumWays = function(nums, target) {
+     
+    const n = nums.length;
+    let sum = nums.reduce((a,b)=>a+b , 0);
+    let trgt = (target+sum)/2 ;
+    
+    const util = ( i , t ) => {
+
+        if(i == 0){
+            if(t == 0 && nums[i] == 0) return 2 ;  // one for +0 and one for -0
+            else if(t == 0 || t == nums[i]) return 1 ;
+            else return 0 ;
+        }
+
+        const notPick = util(i-1 , t);
+        const pick = util(i-1 , t-nums[i]);
+
+        return pick + notPick ;
+    }
+
+    return util(n-1 , trgt);
+    
+};
+
+// =======================================================================================================================
+/**
+7. Minimum Number of coins needed to make the amount
+Leetcode : https://leetcode.com/problems/coin-change/description/
+
+You are given an integer array coins representing coins of different denominations and an integer amount representing a 
+total amount of money.
+
+Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any
+combination of the coins, return -1.
+
+You may assume that you have an infinite number of each kind of coin.
+
+Example 1:
+Input: coins = [1,2,5], amount = 11
+Output: 3
+Explanation: 11 = 5 + 5 + 1
+
+Example 2:
+Input: coins = [2], amount = 3
+Output: -1
+
+Example 3:
+Input: coins = [1], amount = 0
+Output: 0
+
+Constraints:
+1 <= coins.length <= 12
+1 <= coins[i] <= 231 - 1
+0 <= amount <= 104
+
+Logic - Think like , if you have amount 11 , now you have to check for each condition , saare coins laga k check karna hoga
+
+For Example . Jaise amount 11 hai , or coins [1,2,5] hai , ab 11 k liye 3 option hai . To TC hogi 3^amount. 
+from amount 0 to amount 11 , bich me sabhi k liye saare option try karna hai . 
+And 3 ki jagah lenght of coins avaialable hoga . TC - N ^ Amount !!! . 
+
+Loop niche isiliye lagaya hai , sabhi condition check krne k liye , agar mai coin 1 leta hu to 11-1 = 10 , ab fir se
+10 pe 1 coins apply kr sakta hu . 
+ */
+var coinChange = function(coins, amount) {
+    
+    const n = coins.length ;
+
+    const util = (rem)=>{
+        if(rem == 0){
+            return 0 ;
+        }
+        if(rem < 0) return -1 ;
+
+        if(dp[rem] != undefined) return dp[rem]
+
+        let min = Infinity ;
+
+        for(let i = 0 ; i<n ; i++){
+            const coin = coins[i];
+            const res = util(rem - coin);
+
+            if(res >= 0 && res < min){
+                min = 1 + res ;
+            }
+        }
+
+        dp[rem] = min == Infinity ? -1 : min ;
+        return dp[rem]
+    }
+
+    let dp = Array.from({length : amount+1} , ()=> undefined)
+
+    return util(amount);
+};
+
+
+// =======================================================================================================================
+/**
+8. Find all combination of coin to make amount . 
+Leetcode : https://leetcode.com/problems/coin-change-ii/description/
+
+You are given an integer array coins representing coins of different denominations and an integer amount representing a
+total amount of money.
+
+Return the number of combinations that make up that amount. If that amount of money cannot be made up by any combination
+of the coins, return 0.
+You may assume that you have an infinite number of each kind of coin.
+The answer is guaranteed to fit into a signed 32-bit integer.
+
+Example 1:
+Input: amount = 5, coins = [1,2,5]
+Output: 4
+Explanation: there are four ways to make up the amount:
+5=5
+5=2+2+1
+5=2+1+1+1
+5=1+1+1+1+1
+Example 2:
+
+Input: amount = 3, coins = [2]
+Output: 0
+Explanation: the amount of 3 cannot be made up just with coins of 2.
+Example 3:
+
+Input: amount = 10, coins = [10]
+Output: 1
+ 
+Constraints:
+1 <= coins.length <= 300
+1 <= coins[i] <= 5000
+All the values of coins are unique.
+0 <= amount <= 5000
+
+ Logic - Agar uper wale problem ki tarah solve krenge to , 1 case repeat ho sakta hai . Jaise 1,1,1,2 = 5 now 2,1,1,1 and 
+ 1,2,1,1 and 1,1,2,1 . So isko hum multiple time count kr lenge . Isiliye dp me index bhi lia hai . Agar mai index 1 pe hoon
+ to waha se piche se calculate nahi krna , jisse hum case repetation rok sakte hai . 
+ */
+var change = function(amount, coins) {
+    
+    const n = coins.length ;
+
+    const util = (rem , start)=>{
+        if(rem == 0) {
+            return 1 ;
+        } 
+        if(rem < 0) return -1 ;
+
+        if(dp[rem][start] != undefined){
+            return dp[rem][start];
+        }
+
+        let r = 0 ;
+        for(let i = start ; i<n ; i++){
+            const c = coins[i];
+            const resp = util(rem-c , i);
+            if(resp >= 0){
+                r += resp ;
+            }
+        }
+
+        return dp[rem][start] = r ;
+    }
+
+    let res = 0 ;
+
+    let dp = Array.from({length : amount+1} , ()=>{
+        return Array.from({length : n + 1} , ()=>undefined)
+    })
+
+    return util(amount , 0);
+};
+
+// =======================================================================================================================
+/**
+9. Unbound Knapsack
+GFG : https://www.geeksforgeeks.org/problems/knapsack-with-duplicate-items4201/1
+
+Given a set of items, each with a weight and a value, represented by the array wt[] and val[] respectively. Also, a knapsack with a weight limit capacity.
+Your task is to fill the knapsack in such a way that we can get the maximum profit. Return the maximum profit.
+
+ ********** Note: Each item can be taken any number of times. ***** 
+ Above line is different from 0/1 Knapsack . It 0/1 , if we pick element we simply move forward . 
+
+Examples:
+Input: val[] = [1, 1], wt[] = [2, 1], capacity = 3
+Output: 3
+Explanation: The optimal choice is to pick the 2nd element 3 times.
+
+Input: val[] = [10, 40, 50, 70], wt[] = [1, 3, 4, 5], capacity = 8
+Output: 110
+Explanation: The optimal choice is to pick the 2nd element and the 4th element.
+
+Input: val[] = [6, 8, 7, 100], wt[] = [2, 3, 4, 5], capacity = 1
+Output: 0
+Explanation: We can't pick any element. Hence, total profit is 0.
+Constraints:
+1 ≤ val.size() = wt.size() ≤ 1000
+1 ≤ capacity ≤ 1000
+1 ≤ val[i], wt[i] ≤ 100
+ * @param {number[]} val
+ * @param {number[]} wt
+ * @param {number} capacity
+ * @return {number}
+ */
+
+class Solution {
+    knapSack(val, wt, capacity) {
+        // code here
+        
+        const util = ( i , currWt )=>{
+            if(i < 0) return 0 ;
+            
+            if(dp[i][currWt] != undefined){
+                return dp[i][currWt]
+            }
+            
+            let pick = 0 ;
+            if( currWt - wt[i] >= 0  ){
+                pick = val[i] + util(i , currWt - wt[i] )
+            }
+            
+            let notPick = util(i-1 , currWt);
+            
+            return dp[i][currWt] = Math.max(pick , notPick);
+        }
+        
+        const n = val.length ;
+        let dp = Array.from({length : n+1} , ()=>{
+            return Array.from({length : capacity+1} , ()=>undefined)
+        })
+        return util(n-1 , capacity)
+        
+    }
+}
+
+// =======================================================================================================================
+// 10. Rod Cutting Problem 
+/**
+GFG : https://www.geeksforgeeks.org/problems/rod-cutting0840/1
+
+Given a rod of length n inches and an array price[], where price[i] denotes the value of a piece of length i. 
+Your task is to determine the maximum value obtainable by cutting up the rod and selling the pieces.
+
+Note: n = size of price, and price[] is 1-indexed array.
+
+Example:
+
+Input: price[] = [1, 5, 8, 9, 10, 17, 17, 20]
+Output: 22
+Explanation: The maximum obtainable value is 22 by cutting in two pieces of lengths 2 and 6, i.e., 5 + 17 = 22.
+
+Input: price[] = [3, 5, 8, 9, 10, 17, 17, 20]
+Output: 24
+Explanation: The maximum obtainable value is 24 by cutting the rod into 8 pieces of length 1, i.e, 8*price[1] = 8*3 = 24.
+
+Input: price[] = [3]
+Output: 3
+Explanation: There is only 1 way to pick a piece of length 1.
+Constraints:
+1 ≤ price.size() ≤ 103
+1 ≤ price[i] ≤ 106
+
+LOGIC - Same as previous unbounded knapsack . Just break down into previous one , where profit is the price , maxWeight is 
+the length of price array , and weight of each element would be the index . 
+ */
+
+class Solution {
+    cutRod(price) {
+        // code here
+        const util = ( i , currWt ) => {
+            
+            if(i < 0 || currWt  == 0 ) return 0 ;
+            
+            if(dp[i][currWt] != -1){
+                return dp[i][currWt];
+            }
+            
+            let pick = 0 ;
+            if( currWt - (i + 1) >= 0 ){
+                pick = price[i] + util(i , currWt-(i + 1));
+            }
+            
+            const notPick = util(i-1 , currWt);
+            
+            return dp[i][currWt] = Math.max(pick , notPick)
+        }
+        
+        const n = price.length ;
+        
+        let dp = Array.from({length : n+1 } , ()=>{
+            return Array.from({length : n+1 } , ()=>-1)
+        })
+        return util( n -1 , n)  
+    }
+}
+
+// =======================================================================================================================
+/**
+11. Assign Cookies : https://leetcode.com/problems/assign-cookies/description/
 
 Assume you are an awesome parent and want to give your children some cookies. But, you should give each child at most 
 one cookie.
@@ -344,11 +690,10 @@ var findContentChildren = function(greed , cookie) {
 };
 
 
-
 // =================================================================================================================
 /**
 Find the sum of subsequence which is closed to the given target . 
-5. Leetcode : https://leetcode.com/problems/closest-subsequence-sum/description/
+12. Leetcode : https://leetcode.com/problems/closest-subsequence-sum/description/
 
 You are given an integer array nums and an integer goal.
 
@@ -477,7 +822,7 @@ var minAbsDifference = function(nums, goal) {
 
 // =================================================================================================================
 /**
-6. Leetcode : https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/
+13. Leetcode : https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/
 
 You are given an integer array nums of 2 * n integers. You need to partition nums into two arrays of length n to minimize
 the absolute difference of the sums of the arrays. To partition nums, put each element of nums into one of the two arrays.
