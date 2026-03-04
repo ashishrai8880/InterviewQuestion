@@ -345,10 +345,160 @@ var longestPalindromeSubseq = function(s) {
 };
 
 
+// =================================== 6. Minimum insertion to make string palindrome =====================================
+/**
+Leetcode : https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/
 
+Given a string s. In one step you can insert any character at any index of the string.
+Return the minimum number of steps to make s palindrome.
 
+A Palindrome String is one that reads the same backward as well as forward.
 
+Example 1:
+Input: s = "zzazz"
+Output: 0
+Explanation: The string "zzazz" is already palindrome we do not need any insertions.
 
+Example 2:
+Input: s = "mbadm"
+Output: 2
+Explanation: String can be "mbdadbm" or "mdbabdm".
+
+Example 3:
+Input: s = "leetcode"
+Output: 5
+Explanation: Inserting 5 characters the string becomes "leetcodocteel".
+ 
+Constraints:
+1 <= s.length <= 500
+s consists of lowercase English letters.
+
+Logic - Very Easy . Just find longest palindromic subsequence can be made from string . Then simply subtract it from
+length of string . 
+ */
+var minInsertions = function(s) {
+    
+    const m = s.length ;
+    const s2 = s.split('').reverse().join('');
+
+    let dp = Array.from({length : m+1 } , ()=>{
+        return Array.from({length : m+1} , ()=>-1)
+    })
+
+    const longestPalindromic = ( i , j )=>{
+        if(i< 0 || j<0) return 0 ;
+
+        if(dp[i][j] != -1) return dp[i][j] 
+
+        if(s[i] == s2[j]){
+            return dp[i][j] = 1 + longestPalindromic(i-1 , j-1);
+        }
+
+        return dp[i][j] = Math.max(longestPalindromic(i-1 , j) , longestPalindromic(i,j-1));
+    }
+
+    return m - longestPalindromic(m-1 , m-1)
+};
+
+// =============================== 7. Minimum Operation to make string1 and string2 similar ==============================
+/**
+Leetcode : https://leetcode.com/problems/delete-operation-for-two-strings/description/
+
+Given two strings word1 and word2, return the minimum number of steps required to make word1 and word2 the same.
+
+In one step, you can delete exactly one character in either string.
+
+Example 1:
+Input: word1 = "sea", word2 = "eat"
+Output: 2
+Explanation: You need one step to make "sea" to "ea" and another step to make "eat" to "ea".
+
+Example 2:
+Input: word1 = "leetcode", word2 = "etco"
+Output: 4
+ 
+Constraints:
+1 <= word1.length, word2.length <= 500
+word1 and word2 consist of only lowercase English letters.
+
+Logic - Find just longest common subsequence , it means remaining digits need to be removed to make both string 
+similar . 
+ */
+var minDistance = function(word1, word2) {
+    
+    const m = word1.length ;
+    const n = word2.length ;
+
+    let dp = Array.from({length : m + 1} , ()=>{
+        return Array.from({length : n + 1} , ()=>-1)
+    })
+
+    const longestSubsequence = (i , j)=>{
+        if(i<0 || j<0) return 0 ;
+
+        if(dp[i][j] != -1) return dp[i][j];
+
+        if(word1[i] == word2[j]){
+            return dp[i][j] = 1 + longestSubsequence(i-1 , j-1);
+        }
+
+        return dp[i][j] = Math.max(longestSubsequence(i-1 , j) , longestSubsequence(i , j-1));
+    }
+
+    const lng = longestSubsequence(m-1 , n-1);
+
+    return (m-lng) + (n-lng) ;
+};
+
+// ======================================== 8. Shortest Common Supersequence ==============================================
+/**
+
+Given two strings str1 and str2, return the shortest string that has both str1 and str2 as subsequences. 
+If there are multiple valid strings, return any of them.
+
+A string s is a subsequence of string t if deleting some number of characters from t (possibly 0) results in the string s.
+
+Example 1:
+Input: str1 = "abac", str2 = "cab"
+Output: "cabac"
+Explanation: 
+str1 = "abac" is a subsequence of "cabac" because we can delete the first "c".
+str2 = "cab" is a subsequence of "cabac" because we can delete the last "ac".
+The answer provided is the shortest such string that satisfies these properties.
+
+Example 2:
+Input: str1 = "aaaaaaaa", str2 = "aaaaaaaa"
+Output: "aaaaaaaa"
+
+Logic - Just find LCS between both string , and then return lcs + (m-lcs) + (n-lcs) . 
+This solution is just to return length of shortest common supersequence . But original problem is of returning string . 
+ */
+var shortestCommonSupersequence = function(str1, str2) {
+    
+    const m = str1.length ;
+    const n = str2.length ;
+
+    let dp = Array.from({length : m+1} , ()=>{
+        return Array.from({length : n+1 } , ()=> -1);
+    })
+
+    const longestSubsequence = (i , j)=>{
+        if(i<0 || j<0) return 0 ;
+
+        if(dp[i][j] != -1) return dp[i][j];
+
+        if(str1[i] == str2[j]){
+            return dp[i][j] = 1 + longestSubsequence(i-1 , j-1);
+        }
+
+        return dp[i][j] = Math.max(longestSubsequence(i-1 , j) , longestSubsequence(i,j-1));
+    }
+
+    const lng = longestSubsequence(m-1 , n-1);
+
+    return lng + (m-lng) + (n-lng);
+
+};
 
 
 
