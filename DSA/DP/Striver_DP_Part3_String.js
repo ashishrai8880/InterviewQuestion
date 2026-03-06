@@ -501,6 +501,324 @@ var shortestCommonSupersequence = function(str1, str2) {
 };
 
 
+/**
+Optimized Version - So first need to understand LCS tabulation method very very clearly then only can understand this logic . 
+Basically Pehle dp table banane ka , and last bottom left index se traversing krne ka . Agar character same hai to
+uper i-1 , j-1 pe aao or store krlo wo character ek baar . Agar equal nahi hai , to left and top me se jo bada hai
+waha jao , or jisko chhoda hai use store krlo result string me . 
+ */
+var shortestCommonSupersequence = function(str1, str2) {
+    
+    const m = str1.length ;
+    const n = str2.length ;
+
+    let dp = Array.from({length : m+1} , ()=>{
+        return Array.from({length : n+1 } , ()=>  0 );
+    })
+
+    for(let i = 1 ; i <= m ; i++){
+
+        for(let j=1 ; j<=n ; j++){
+
+            if(str1[i-1] == str2[j-1]){
+                dp[i][j] = 1 + dp[i-1][j-1];
+            }
+            else{
+                dp[i][j] = Math.max(dp[i-1][j] , dp[i][j-1]) ;
+            }
+        }
+    }
+
+    let res = "" ;
+
+    let i = m ;
+    let j = n ;
+
+    while( i > 0 && j > 0 ){
+
+        if( str1[i-1] == str2[j-1] ){
+            res = res + str1[i-1];
+            i = i - 1 ;
+            j = j - 1 ;
+        }
+        
+        else if(   dp[i-1][j] > dp[i][j-1] ){
+            res = res + str1[i-1];
+            i = i - 1 ;
+        }
+
+        else {
+            res = res + str2[j-1];
+            j = j - 1 ;
+        }
+    }
+
+    while(i>0){
+        res = res + str1[i-1];
+        i=i-1 ;
+    }
+
+    while(j>0){
+        res = res + str2[j-1];
+        j=j-1 ;
+    }
+
+    return res.split('').reverse().join('') ;
+};
+
+// ======================================== 9. Distinct Subsequence =====================================================
+/**
+Leetcode : https://leetcode.com/problems/distinct-subsequences/description/
+
+Given two strings s and t, return the number of distinct subsequences of s which equals t.
+The test cases are generated so that the answer fits on a 32-bit signed integer.
+
+Example 1:
+Input: s = "rabbbit", t = "rabbit"
+Output: 3
+Explanation:
+As shown below, there are 3 ways you can generate "rabbit" from s.
+rabbbit
+rabbbit
+rabbbit
+
+Example 2:
+Input: s = "babgbag", t = "bag"
+Output: 5
+Explanation:
+As shown below, there are 5 ways you can generate "bag" from s.
+babgbag
+babgbag
+babgbag
+babgbag
+babgbag
+ 
+Constraints:
+1 <= s.length, t.length <= 1000
+s and t consist of English letters.
+
+Brute Force - Generate all subsequence of s and check whether equal to 't' or not . 
+ */
+var numDistinct = function(s, t) {
+    
+    const m = s.length ;
+
+    const util = (i , st)=>{
+
+        if (i == m){
+            if(st == t){
+                res += 1;
+            }
+            return ;
+        }
+
+        if(i>m) return ;
+
+        util(i+1 , st);
+        util(i+1 , st + s[i]) ;
+    }
+
+    let res = 0 ;
+    util(0,"")
+
+    return res ;
+};
+
+/*
+Optimized Version - Please watch striver video . So logic is , iterate from end of both string . 
+CASE 1 : if char at i and j are same , there will be two case , increment j to next index and second is don't increment j
+and wait for next matching with i 
+CASE 2 : If char at i and j not matching then simply increment i and j will be at same index .
+
+BASE CASE - If j became less than 0 , return 1 it means got 1 situation . If i became less than 0 , it means got no solution .
+
+*/
+var numDistinct = function(s, t) {
+    
+    const m = s.length ;
+    const n = t.length ;
+
+    let dp = Array.from({length : m} , ()=>{
+        return Array.from({length : n} , ()=>-1)
+    })
+
+    const util = (i , j)=>{
+        if(j<0) return 1 ;
+        if(i<0) return 0 ;
+
+        if(dp[i][j] != -1) return dp[i][j]
+
+        if(s[i] == t[j]){
+            const pick = util(i-1 , j-1) ;
+            const notPick = util(i-1 , j);
+            return dp[i][j] = pick + notPick ;
+        }
+        else{
+            return dp[i][j] = util(i-1 , j);
+        }
+    }
+    return util(m-1 , n-1);
+};
+
+// ======================================== 10. Edit Distance ========================================================
+/**
+Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2.
+You have the following three operations permitted on a word:
+Insert a character
+Delete a character
+Replace a character
+ 
+Example 1:
+Input: word1 = "horse", word2 = "ros"
+Output: 3
+Explanation: 
+horse -> rorse (replace 'h' with 'r')
+rorse -> rose (remove 'r')
+rose -> ros (remove 'e')
+
+Example 2:
+Input: word1 = "intention", word2 = "execution"
+Output: 5
+Explanation: 
+intention -> inention (remove 't')
+inention -> enention (replace 'i' with 'e')
+enention -> exention (replace 'n' with 'x')
+exention -> exection (replace 'n' with 'c')
+exection -> execution (insert 'u')
+ 
+Constraints:
+0 <= word1.length, word2.length <= 500
+word1 and word2 consist of lowercase English letters.
+
+LOGIC - Watch Striver Video once . Just need to create recurrence relation and Base CAse . Don't think much . 
+CASE 1 - If character matches no need of any operation , send for next index . 
+CASE 2 - If character don't matches , apply all three operation of add , delete and replace and return minimum of them . 
+NOTE - Hypothetically asume that you have deleted , inserted and replaced by moving index . 
+ */
+var minDistance = function(word1, word2) {
+    
+    let m = word1.length ;
+    let n = word2.length ;
+
+    let dp = Array.from({length : m} , ()=>{
+        return Array.from({length : n} , ()=> -1 );
+    })
+
+    const util = (i , j)=>{
+         // If the second string is empty, the only option is to delete all characters from the first string
+        if(j<0) return i+1 ;
+
+         // If the first string is empty, the only option is to insert all characters from the second string
+        if(i<0) return j+1 ;
+
+        // Check if the result for the current indices is already calculated
+        if(dp[i][j] != -1) return dp[i][j]
+
+        // If the characters at the current positions are the same, no operation is needed
+        if(word1[i] == word2[j]){
+            return dp[i][j] = util(i-1 , j-1);
+        }
+
+        // Minimum of three choices:
+        // 1. Substitute a character in the first string with a character in the second string
+        // 2. Delete a character from the first string
+        // 3. Insert a character into the first string
+        return dp[i][j] = 1 + Math.min( util(i-1 , j) , util(i , j-1) , util(i-1 , j-1) )
+    }
+
+    return util(m-1 , n-1)
+};
+
+// ============================================ 11. Wildcard Matching ==============================================
+/**
+Leetcode : https://leetcode.com/problems/wildcard-matching/description/
+Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*' where:
+
+'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).
+The matching should cover the entire input string (not partial).
+
+Example 1:
+Input: s = "aa", p = "a"
+Output: false
+Explanation: "a" does not match the entire string "aa".
+
+Example 2:
+Input: s = "aa", p = "*"
+Output: true
+Explanation: '*' matches any sequence.
+
+Example 3:
+Input: s = "cb", p = "?a"
+Output: false
+Explanation: '?' matches 'c', but the second letter is 'a', which does not match 'b'.
+ 
+Constraints:
+0 <= s.length, p.length <= 2000
+s contains only lowercase English letters.
+p contains only lowercase English letters, '?' or '*'.
+ */
+var isMatch = function(s, p) {
+    
+    let m = s.length ;
+    let n = p.length ;
+
+    let dp = Array.from({length : m+1} , ()=>{
+        return Array.from({length : n+1} , ()=>-1);
+    })
+
+    const isRemainingAreAsterisk = (idx)=>{
+        for(let i=idx ; i>=0 ; i--){
+            if(p[i] != '*'){
+                return false ;
+            }
+        }
+        return true ;
+    }
+
+    const util = (i , j)=>{
+
+        // Base Case 1: Both pattern and text matched
+        if(i<0 && j<0) return true ;
+
+        // Base Case 2: Pattern exhausted but text remains
+        if(i>=0 && j<0) return false ;
+
+        // Base Case 3: Text exhausted but pattern may have '*'
+        if(i<0 && j>=0) return isRemainingAreAsterisk(j);
+
+        // If already computed, return stored value
+        if(dp[i][j] != -1) return dp[i][j]
+
+        // If characters match or pattern has '?'
+        if(s[i] == p[j] || p[j] == '?' ){
+            return dp[i][j] = util(i-1 , j-1);
+        }
+
+        // If pattern has '*', try both options
+        else if( p[j] == "*" ){
+            const pickAsBlank = util(i , j-1) ;
+            const pickAsCharacter = util(i-1 , j);
+            return  dp[i][j] = pickAsBlank || pickAsCharacter ;
+        }
+        // If characters don't match
+        else{
+            return  dp[i][j] = false ;
+        }
+    }
+    return util(m-1 , n-1);
+};
+
+
+
+
+
+
+
+
+
+
+
 
 
 
