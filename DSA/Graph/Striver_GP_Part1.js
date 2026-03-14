@@ -246,7 +246,85 @@ var floodFill = function(image, sr, sc, color) {
 };
 
 
-// ============================================= 6. 
+// ============================================= 6. Cycle Detection in Undirected Graph ===========================================
+/**
+Very Easy Striver Way . Just maintain parent of node . It can be done in bfs and dfs way both . Just need to check 
+if next neighbour is visited and it is not parent of current node , it means someone elese already visit that node
+and created cycle . 
+ */
+class Solution {
+    isCycle(V, edges) {
+        // Code here
+        
+        let adj = Array.from({length : V} , ()=>[]);
+        
+        edges.forEach((e)=>{
+            const sc = e[0] ;
+            const dst = e[1];
+            adj[sc].push(dst) ;
+            adj[dst].push(sc);
+        })
+        
+        // cycle detection bfs way
+        const bfs = (i)=>{
+            let q = [ [i , -1] ];
+            
+            while(q.length != 0 ){
+                
+                const [v , parent] = q.shift() ;
+                vis[v] = true ;
+                
+                for(const n of adj[v]){
+                    
+                    if(vis[n] == false){
+                        q.push( [n , v] );
+                        vis[n] = true ;
+                    }
+                    
+                    else if(vis[n] == true && n != parent ){
+                        return true ;
+                    }
+                    
+                }
+                
+            }
+            return false ;
+        }
+        
+        // cycle detection dfs way
+        const dfs = (i , parent)=>{
+            
+            const vertex = adj[i] ;
+            vis[i] = true ;
+            
+            for(const n of vertex){
+                
+                if(vis[n] == false){
+                    const res = dfs(n , i) ;
+                    if(res == true) return true ;
+                }
+                
+                else if(vis[n] == true && n != parent ){
+                    return true ;
+                }
+            }
+            
+            return false ;
+        }
+        
+        let vis = Array.from({length : V} , ()=>false);
+        let ans = false ;
+        
+        for(let i =0 ; i<V ; i++){
+            if(vis[i] == false){
+                // ans = bfs(i)
+                ans = dfs(i) ;
+            }
+            if(ans == true) return true ;
+        }
+        return false ;
+    }
+}
 
 
 
