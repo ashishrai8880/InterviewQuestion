@@ -683,7 +683,45 @@ var ladderLength = function( start, end , words ) {
 };
 
 
+// ===================================== 13. BiPartite Graph ==================================================
+/**
+Leetcode : https://leetcode.com/problems/is-graph-bipartite/
 
+Basically Ye pta karna hai , ki kya pure graph ko sirf 2 color de sakte hai . Rules ye hai ki 
+kisi adjacent node ko same color nahi milna chahiye . Isi graph ko Bipartite graph bolenge . 
+Carefully dekhne pe pta chalega ki agar cycle odd ban rahi hai to nahi ho payenga or even ban rahi hai to ho jayega . 
+Normal DFS . 
+ */
+var isBipartite = function(graph) {
+    
+    const dfs = (i , color) =>{
+        isColored[i] = color ;
+        const vertex = graph[i] ;
+
+        for(const v of vertex){
+            if(isColored[v] == -1){
+                const r = dfs(v , 1-color )  // 1-color basically toggling color 0,1 
+                if(r == false) return false ;
+            }
+            else if(isColored[v] == color){
+                return false ;
+            }
+        }
+        return true ;
+    }
+
+    const n = graph.length ;
+    let isColored = Array.from({length : n} , ()=>-1) ;
+
+    for(let i = 0 ; i<n ; i++){
+        if(isColored[i] == -1 ){
+            const r = dfs(i , 0);
+            if(r == false) return false ;
+        }
+    }
+
+    return true ;
+};
 
 
 
