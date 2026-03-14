@@ -496,6 +496,191 @@ class Solution {
 }
 
 
+// ===================================== 9. Surrounded Regions =======================================================
+/**
+Leetcode : https://leetcode.com/problems/surrounded-regions/
+
+Isme ek matrix de rakhi hai , or use X and O hai . Bahot se O milke ek region banate hai . To in region ko X me convert 
+krna hai Bas . 
+Sirf ek edge case hai , agar in region me se kisi bhi 1 cell boundary k pass hogi , to us regioin ko convert nahi kr 
+payenge . Because it is stated that , agar region all four side se completely X se surrounded hai tabhi kr payenge . 
+Or jo boundary pe hai , to uska matlab wo cell 'X' se surrounded nahi hai . 
+
+LOGIC : Simply first boundary traversal krke check krlo O kaha kaha hai . Jaha hai , ussse related region k sabhi cell me
+'B' daal do . Or bas next loop chala k check krlo kaha bach gya 'O' waha sidhe 'X' daal do . 
+
+Time Complexity: O(N × M), since each cell is visited at most once during DFS and once during the final traversal.
+Space Complexity: O(N × M), due to the visited matrix and the recursion stack in the worst case.
+ */
+
+class Solution {
+    fill(grid) {
+       
+        const row = grid.length ;
+        const col = grid[0].length ;
+        
+        const isValid = (i , j)=>{
+            if(i>=0 && i<row && j>=0 && j<col && grid[i][j] == 'O') return true ;
+            return false ;
+        }
+        
+        const dfs = (i , j)=>{
+            grid[i][j] = 'B' ;
+            
+            if(isValid(i+1 , j)){
+                dfs(i+1 , j) ;
+            }
+            
+            if(isValid(i-1 , j)){
+                dfs(i-1 , j) ;
+            }
+            
+            if(isValid(i , j+1)){
+                dfs(i , j+1) ;
+            }
+            
+            if(isValid(i , j-1)){
+                dfs(i , j-1) ;
+            }
+        }
+        
+        for(let i = 0 ; i<row ; i++){
+            if(grid[i][0] == 'O') dfs( i , 0 ) 
+            
+            if(grid[i][col-1] == 'O') dfs(i , col-1) 
+        }
+        
+        for(let i = 0 ; i<col ; i++){
+            if(grid[0][i] == 'O')  dfs( 0 , i )
+            
+            if(grid[row-1][i] == 'O')  dfs( row-1 , i ) 
+        }
+       
+        for(let i = 0 ; i<row ; i++){
+            for(let j = 0 ; j<col ; j++){
+                
+                if(grid[i][j] == 'O' ){
+                    grid[i][j] = 'X'
+                }
+                
+                if(grid[i][j] == 'B' ){
+                    grid[i][j] = 'O'
+                }
+            }
+        }
+    }
+}
+
+// ============================================ 10. Number of Enclaves ==========================================
+/**
+Leetcode : https://leetcode.com/problems/number-of-enclaves/
+
+Same hi hai uper wale jaisa , isme bhi matrix de rakhi hai or batana hai , kitne aaise region hai jo boundary tak 
+nahi jaa payenge . Isme 0 means water and 1 means land . To aaise land k kitne island hai jo boundary tak nahi le jata . 
+
+LOGIC : Waise hi pehle boundary traversal karke un sabko water me change kr denge . Or uske baad jo bach gya 
+land wali jagah usko count krke answer . 
+ */
+var numEnclaves = function(grid) {
+    
+    const row = grid.length ;
+    const col = grid[0].length ;
+
+    const dfs = (i , j)=>{
+
+        if(i < 0 || i >=row || j < 0 || j >= col || grid[i][j] == 0) return 0 ;
+
+        grid[i][j] = 0 ;
+
+        return 1 + dfs(i+1 , j) + dfs(i-1 , j) + dfs(i , j+1) + dfs(i , j-1) ;
+    }
+
+    let ans = 0 ;
+    for(let i=0 ; i<row ; i++){
+        if(grid[i][0] == 1)  dfs(i , 0) 
+
+        if(grid[i][col-1] == 1)  dfs(i , col-1) 
+    }
+
+    for(let i=0 ; i<col ; i++){
+        if(grid[0][i] == 1) dfs( 0 , i) 
+
+        if(grid[row-1][i] == 1)  dfs(row-1 , i) 
+    }
+
+    for(let i= 0 ; i<row ; i++){
+        for(let j = 0 ; j<col ; j++){
+            if(grid[i][j] == 1){
+                ans += 1 ;
+            }
+        }
+    }
+    return ans ;
+};
+
+
+// ============================================ 11. Word Ladder 1 =========================================================
+/**
+Leetcode : https://leetcode.com/problems/word-ladder/description/
+
+Question me Ek array de rakha hai words ka . Or 2 word hai start and end . Start se End tak word ko banane me minimum operation 
+batana hai . Kisi bhi transformation me sirf 1 character hi different ho sakta hai , length same rahega . 
+
+A transformation sequence from word beginWord to word endWord using a dictionary wordList is a sequence of words
+beginWord -> s1 -> s2 -> ... -> sk such that:
+
+Every adjacent pair of words differs by a single letter.
+Every si for 1 <= i <= k is in wordList. Note that beginWord does not need to be in wordList.
+sk == endWord
+Given two words, beginWord and endWord, and a dictionary wordList, return the number of words in the shortest
+transformation sequence from beginWord to endWord, or 0 if no such sequence exists.
+
+Example 1:
+Input: beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]
+Output: 5
+Explanation: One shortest transformation sequence is "hit" -> "hot" -> "dot" -> "dog" -> cog", which is 5 words long.
+
+Example 2:
+Input: beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log"]
+Output: 0
+Explanation: The endWord "cog" is not in wordList, therefore there is no valid transformation sequence.
+
+LOGIC : Isme har ek character k aage saare character replace krke check krna hai . Agar replace k baad aaisa koi 
+word banata hai , jo ki array me hai , it means usko consider krke aage badh sakte hai . Har baar aaise word milne 
+pe steps me +1 kr denge . Jab kabhi bhi ye krte krte newWord == end equal hota hai to steps return kr denge . 
+
+Time Complexity: O(N * L * 26), where N is the number of words in the list and L is the length of each word.
+For each word, we attempt to change each of its L characters to 26 possible letters.
+Space Complexity: O(N * L), for the set storing all words and the queue used for BFS.
+
+ */
+var ladderLength = function( start, end , words ) {
+    
+    let set = new Set( words ) ;
+    let ans = 0 ;
+
+    let q = [ [start , 1] ] ;
+
+    while(q.length != 0){
+        
+        const curr = q.shift() ;
+        const [wrd , step] = curr ;
+
+        if(wrd == end) return step ;
+
+        for(let i= 0 ; i<wrd.length ; i++){
+
+            for(let j = 97 ; j<=122 ; j++){
+                const newWrd = wrd.substring(0,i) + String.fromCharCode(j) + wrd.substring(i+1) ;
+                if(set.has(newWrd)){
+                    set.delete(newWrd) ;
+                    q.push([newWrd , step+1]) ;
+                }
+            }
+        }
+    }
+    return 0 ; 
+};
 
 
 
@@ -503,5 +688,17 @@ class Solution {
 
 
 
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
 
