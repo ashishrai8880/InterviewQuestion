@@ -683,6 +683,80 @@ var ladderLength = function( start, end , words ) {
 };
 
 
+// ======================================12 . Word Ladder 2 =====================================================
+/**
+Leetcode : https://leetcode.com/problems/word-ladder-ii/
+Same like above question , but now need to return sequence also . If multiple exists return all of them . 
+
+Example 1:
+Input: beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]
+Output: [["hit","hot","dot","dog","cog"],["hit","hot","lot","log","cog"]]
+Explanation: There are 2 shortest transformation sequences:
+"hit" -> "hot" -> "dot" -> "dog" -> "cog"
+"hit" -> "hot" -> "lot" -> "log" -> "cog"
+
+Example 2:
+Input: beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log"]
+Output: []
+Explanation: The endWord "cog" is not in wordList, therefore there is no valid transformation sequence.
+
+Below Solution Will give TLE . 
+
+Time Complexity: O(N × L × 26 + S × L) → dominated by generating all transformations (N = words, L = word length, S = number of shortest sequences).
+Space Complexity: O(N × L + S × L) → for queue storing paths, set for unused words, and final sequences.
+ */
+var findLadders = function( start , end , words ) {
+    
+    let set = new Set(words);
+    let ans = [];
+    let q = [[start]];
+    let usedWordsOnLevel = [start];
+    let level = 1;
+    let front = 0;
+
+    while (front < q.length) {
+
+        const path = q[front++];
+        if(ans.length && path.length > ans[0].length) break;
+
+        if (path.length > level) {
+            level++;
+
+            for (const wrd of usedWordsOnLevel) {
+                set.delete(wrd);
+            }
+            usedWordsOnLevel = [];
+        }
+
+        const word = path.at(-1);
+
+        if (word === end) {
+            if (ans.length === 0 || ans[0].length === path.length) {
+                ans.push([...path]);
+            }
+        }
+
+        for (let i = 0; i < word.length; i++) {
+
+            for (let j = 97; j <= 122; j++) {
+
+                const ch = String.fromCharCode(j);
+                if (ch === word[i]) continue;
+
+                const newWord = word.slice(0,i) + ch + word.slice(i+1);
+
+                if (set.has(newWord)) {
+                    path.push(newWord);
+                    usedWordsOnLevel.push(newWord);
+                    q.push([...path]);
+                    path.pop();
+                }
+            }
+        }
+    }
+    return ans;
+};
+
 // ===================================== 13. BiPartite Graph ==================================================
 /**
 Leetcode : https://leetcode.com/problems/is-graph-bipartite/
@@ -724,18 +798,52 @@ var isBipartite = function(graph) {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+// ============================================ 14. Number of Island ===================================================
+/**
+GFG : https://www.geeksforgeeks.org/problems/find-the-number-of-islands/1
+Basically ek grid hai , jisme 'L' means land and 'W' means water hai . Ab ek island bahot se land part se milke banega
+horizontal , vertical and diagonal all side can move . Easy Question . 
+ */
+class Solution {
+    numIslands(grid) {
+        
+        const row = grid.length ;
+        const col = grid[0].length ;
+        
+        const isValid = (i , j)=>{
+            if(i>=0 && i<row && j>=0 && j<col && grid[i][j]=='L') return true ;
+            return false ;
+        }
+        
+        const dfs = (i , j)=>{
+            grid[i][j] = 'W' ;
+            
+            // horizontal and vertical
+            if(isValid(i+1 , j)) dfs(i+1 , j) ;
+            if(isValid(i-1 , j)) dfs(i-1 , j) ;
+            if(isValid(i , j+1)) dfs(i , j+1) ;
+            if(isValid(i , j-1)) dfs(i , j-1) ;
+            
+            // diagonal traversal
+            if(isValid(i-1 , j-1)) dfs(i-1 , j-1) ;
+            if(isValid(i-1 , j+1)) dfs(i-1 , j+1) ;
+            if(isValid(i+1 , j-1 )) dfs(i+1 , j-1) ;
+            if(isValid(i+1 , j+1 )) dfs(i+1 , j+1) ;
+        }
+        
+        let ans = 0 ;
+        
+        for(let i = 0 ; i<row ; i++){
+            for(let j = 0 ; j<col ; j++){
+                if(grid[i][j] == 'L'){
+                    dfs(i , j);
+                    ans += 1 ;
+                }
+            }
+        }
+        return ans ;
+    }
+}
 
 
 
