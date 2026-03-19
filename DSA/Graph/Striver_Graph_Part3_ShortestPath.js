@@ -263,9 +263,230 @@ class Solution {
 }
 
 
+// ======================================== 5. Shortest Path Binary Matrix =============================================
+/**
+Leetcode : https://leetcode.com/problems/shortest-path-in-binary-matrix/
+Question me ek binary matrix de rakha hai . Jaha 0 hai wahi path pe chal sakte hai . 8 directioin me move kar sakta hai.
+Shortest path batana hai first cell se last cell tak ki . from (0,0) to (row-1 , col-1) . 
 
+LOGIC : DFS works but will give TLE , because for every cell it has option 8 . So TC is O (8 ^ N**N ) which is huge . 
 
+ */
+var shortestPathBinaryMatrix = function(grid) {
+    
+    const row = grid.length ;
+    const col = grid[0].length ;
 
+    const isValid = (i,j)=>{
+        if(i>=0 && i<row && j>=0 && j<col && grid[i][j] == 0) return true ;
+        return false ;
+    }
+
+    const dfs = (i,j)=>{
+
+        if(i==row-1 && j==col-1) return 1 ;
+
+        let up = Infinity ;
+        if(isValid(i+1 , j)){
+            grid[i+1][j] = 1 ;
+            up = 1 + dfs(i+1 , j);
+            grid[i+1][j] = 0 ;
+        }
+        
+        let down = Infinity ;
+        if(isValid(i-1 , j)){
+            grid[i-1][j] = 1 ;
+            down = 1 + dfs(i-1 , j);
+            grid[i-1][j] = 0 ;
+        }
+        
+        let left = Infinity ;
+        if(isValid(i , j-1)){
+            grid[i][j-1] = 1 ;
+            left = 1 + dfs(i , j-1);
+            grid[i][j-1] = 0 ;
+        }
+        
+        let right = Infinity ;
+        if(isValid(i , j+1)){
+            grid[i][j+1] = 1 ;
+            right = 1 + dfs(i , j+1);
+            grid[i][j+1] = 0 ;
+        }
+        
+        let lup = Infinity ;
+        if(isValid(i-1 , j-1)){
+            grid[i-1][j-1] = 1 ;
+            lup = 1 + dfs(i-1 , j-1);
+            grid[i-1][j-1] = 0 ;
+        }
+        
+        let rup = Infinity ;
+        if(isValid(i-1 , j+1)){
+            grid[i-1][j+1] = 1 ;
+            rup = 1 + dfs(i-1 , j+1);
+            grid[i-1][j+1] = 0 ;
+        }
+        
+        let lbtm = Infinity ;
+        if(isValid(i+1 , j-1)){
+            grid[i+1][j-1] = 1 ;
+            lbtm = 1 + dfs(i+1 , j-1);
+            grid[i+1][j-1]  = 0 ;
+        }
+        
+        let rbtm = Infinity ;
+        if(isValid(i+1 , j+1)){
+            grid[i+1][j+1] = 1 ;
+            rbtm = 1 + dfs(i+1 , j+1);
+            grid[i+1][j+1] = 0 ;
+        }
+        
+        return Math.min( up , down , left , right , lup , rup , lbtm , rbtm )
+
+    }
+
+    if(grid[0][0] == 1) return -1 ;
+
+    const ans = dfs(0,0) ;
+    return ans == Infinity ? -1 : ans ;
+
+};
+
+// BFS way which is most optimized and it will work 
+/**
+LOGIC  : Apply Dijkstra Algo . Basically matrix k sabhi cell ko graph ki tarah maan lo . 
+ */
+var shortestPathBinaryMatrix = function(grid) {
+    
+    const row = grid.length ;
+    const col = grid[0].length ;
+
+    if(grid[0][0] == 1) return -1 ;
+
+    if(row == 1) return col ;  // edges cases , if only one row , then  one way to reach
+    if(col == 1) return row ;
+
+    const isValid = (i,j)=>{
+        if(i>=0 && i<row && j>=0 && j<col && grid[i][j] == 0) return true ;
+        return false ;
+    }
+
+    let dist = Array.from({length : row} , ()=>{
+        return Array.from({length : col} , ()=>Infinity );
+    })
+
+    dist[0][0] = 0 ;
+    let q = [ [ 1 , 0 , 0 ] ]  // wt , row , col
+
+    while(q.length > 0){
+
+        const curr = q.shift() ;
+        const [wt , i , j] = curr ;
+
+        // move in eight direction as it's neighbours
+        // up
+        if(isValid(i-1 , j) && wt + 1 < dist[i-1][j] ){
+            dist[i-1][j] = wt+1 ;
+            q.push( [wt+1 , i-1 , j] );
+        }
+
+        // down
+        if(isValid(i+1 , j) && wt + 1 < dist[i+1][j] ){
+            dist[i+1][j] = wt+1 ;
+            q.push( [wt+1 , i+1 , j]);
+        }
+
+        // left
+        if(isValid(i , j-1) && wt + 1 < dist[i][j-1] ){
+            dist[i][j-1] = wt+1 ;
+            q.push( [wt+1 , i , j-1]);
+        }
+        
+        // right
+        if(isValid(i , j+1) && wt + 1 < dist[i][j+1] ){
+            dist[i][j+1] = wt+1 ;
+            q.push( [wt+1 , i , j+1]);
+        }
+        
+        // left upper
+        if(isValid(i-1 , j-1) && wt + 1 < dist[i-1][j-1] ){
+            dist[i-1][j-1] = wt+1 ;
+            q.push( [wt+1 , i-1 , j-1]);
+        }
+        
+        // right upper
+        if(isValid(i-1 , j+1) && wt + 1 < dist[i-1][j+1] ){
+            dist[i-1][j+1] = wt+1 ;
+            q.push( [wt+1 , i-1 , j+1]);
+        }
+        
+        // left bottom
+        if(isValid(i+1 , j-1) && wt + 1 < dist[i+1][j-1] ){
+            dist[i+1][j-1] = wt+1 ;
+            q.push( [wt+1 , i+1 , j-1]);
+        }
+        
+        // right bottom
+        if(isValid(i+1 , j+1) && wt + 1 < dist[i+1][j+1] ){
+            dist[i+1][j+1] = wt+1 ;
+            q.push( [wt+1 , i+1 , j+1]);
+        }
+    }
+
+    return dist[row-1][col-1] == Infinity ? -1 : dist[row-1][col-1]  ;
+};
+
+// Same logic just remove 8 times checking index which is more prone to error
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+var shortestPathBinaryMatrix = function(grid) {
+    
+    const row = grid.length ;
+    const col = grid[0].length ;
+
+    if(grid[0][0] == 1) return -1 ;
+
+    if(row == 1) return col ;  // edges cases , if only one row , then  one way to reach
+    if(col == 1) return row ;
+
+    const isValid = (i,j)=>{
+        if(i>=0 && i<row && j>=0 && j<col && grid[i][j] == 0) return true ;
+        return false ;
+    }
+
+    let dist = Array.from({length : row} , ()=>{
+        return Array.from({length : col} , ()=>Infinity );
+    })
+
+    dist[0][0] = 0 ;
+    let q = [ [ 1 , 0 , 0 ] ]  // wt , row , col
+
+    let dirs = [-1 , 0 , 1] ;
+
+    while(q.length > 0){
+
+        const curr = q.shift() ;
+        const [wt , i , j] = curr ;
+        
+        for(const x of dirs){
+            for(const y of dirs){
+                if(x == 0 && y==0) continue ;
+
+                const newRow = i+x ;
+                const newCol = j+y ;
+
+                if(isValid( newRow , newCol ) && wt+1 < dist[newRow][newCol] ){
+                    dist[newRow][newCol] = wt + 1 ;
+                    q.push( [wt+1 , newRow , newCol] );
+                }
+            }
+        }
+    }
+    return dist[row-1][col-1] == Infinity ? -1 : dist[row-1][col-1]  ;
+};
 
 
 
