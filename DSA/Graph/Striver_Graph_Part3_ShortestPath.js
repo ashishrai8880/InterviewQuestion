@@ -489,6 +489,197 @@ var shortestPathBinaryMatrix = function(grid) {
 };
 
 
+// ======================================== 6. Path With Minimum Effort =================================================
+/**
+Leetcode : https://leetcode.com/problems/path-with-minimum-effort/
+
+You are a hiker preparing for an upcoming hike. You are given heights, a 2D array of size rows x columns, 
+where heights[row][col] represents the height of cell (row, col). You are situated in the top-left cell, (0, 0), 
+and you hope to travel to the bottom-right cell, (rows-1, columns-1) (i.e., 0-indexed). You can move up, down, left, 
+or right, and you wish to find a route that requires the minimum effort.
+
+A route's effort is the maximum absolute difference in heights between two consecutive cells of the route.
+Return the minimum effort required to travel from the top-left cell to the bottom-right cell.
+
+Input: heights = [[1,2,2],[3,8,2],[5,3,5]]
+Output: 2
+Explanation: The route of [1,3,5,3,5] has a maximum absolute difference of 2 in consecutive cells.
+This is better than the route of [1,2,2,2,5], where the maximum absolute difference is 3.
+
+LOGIC : Same as previous one . Same apply Dijkstra Algorithm . 
+ */
+var minimumEffortPath = function(heights) {
+    
+    // Get the grid size
+    const n = heights.length;
+    const m = heights[0].length;
+
+    let dist = Array.from({ length: n }, () => Array(m).fill(Infinity));
+    dist[0][0] = 0;  // Distance for the source cell (0, 0) is 0
+
+    let pq = [[0, 0, 0]];  // wt , r , c
+
+    // Define the possible directions (up, right, down, left)
+    const dr = [-1, 0, 1, 0];
+    const dc = [0, 1, 0, -1];
+
+    let flag = false ;  // optimizing ; make sorting as less as possible
+
+    // Start the Dijkstra algorithm
+    while(pq.length > 0){
+
+        if(flag){
+            pq.sort((a, b) => a[0] - b[0]);  
+            flag = false ;
+        }
+
+        const [diff , r , c] = pq.shift();
+
+        // If we reach the destination cell, return the current effort
+        if (r === n - 1 && c === m - 1) {
+            return diff;
+        }
+
+        // Check all 4 possible adjacent cells
+        for (let i = 0; i < 4; i++) {
+            const newr = r + dr[i];
+            const newc = c + dc[i];
+
+            // Check if the new cell is within bounds
+            if (newr >= 0 && newr < n && newc >= 0 && newc < m) {
+                const newEffort = Math.max(Math.abs(heights[r][c] - heights[newr][newc]), diff);
+
+                // If the calculated effort is less, update and push to the queue
+                if (newEffort < dist[newr][newc]) {
+                    flag = true ;
+                    dist[newr][newc] = newEffort;
+                    pq.push([newEffort, newr, newc]);
+                }
+            }
+        }
+    }
+
+    return 0;  // If unreachable (although it should not reach here)
+};
+
+
+// =========================================== 7. Cheapest Flight Within K Stops =========================================
+/**
+Leetcode : https://leetcode.com/problems/cheapest-flights-within-k-stops/
+
+Input: n = 4, flights = [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], src = 0, dst = 3, k = 1
+Output: 700
+
+Time Complexity: O(N), where the additional log(N) time is eliminated by using a simple queue rather than a priority
+queue, which is usually used in Dijkstra’s Algorithm. Where N = Number of flights / Number of edges.
+
+Space Complexity: O(|E| + |V|), for the adjacency list, priority queue, and the dist array. Where E = Number of
+edges (flights.size()) and V = Number of airports.
+
+LOGIC : Easy One . Just apply BFS with level order traversal . Number of stops will automatically get sorted . Cooollll!!!!! . 
+ */
+var findCheapestPrice = function(n, flights, src, dst, k) {
+    
+    let graph = Array.from({ length: n }, () => []);
+
+    for (let [u, v, w] of flights) {
+        graph[u].push([v, w]);
+    }
+
+    let dist = Array(n).fill(Infinity);
+    dist[src] = 0;
+
+    let queue = [[src, 0]];
+    let stops = 0;
+
+    while (queue.length > 0 && stops <= k) {
+        let size = queue.length;
+
+        for (let i = 0; i < size; i++) {
+            let [node, cost] = queue.shift();
+
+            for (let [nei, price] of graph[node]) {
+                if (cost + price < dist[nei]) {
+                    dist[nei] = cost + price;
+                    queue.push([nei, dist[nei]]);
+                }
+            }
+        }
+        stops++;
+    }
+    return dist[dst] === Infinity ? -1 : dist[dst];
+};
+
+
+// ====================================== 8. Network Delay Time =======================================================
+/**
+Leetcode : https://leetcode.com/problems/network-delay-time/description/
+
+Basically nodes k bich me time de rakha hai . Question me source node diya hai . Or batana hai ki waha se kam se kam 
+kitne time me info sabhi node k pass pahoch jayegi . 
+
+LOGIC : Easy , just apply BFS level order traversal with Dijsktra algo . Last me distance array me jo bhi maximum 
+time hoga , wahi minimum time hoga sabhi node tak info pahochne k liye
+ */
+var networkDelayTime = function(times, n, k) {
+    
+    let graph = Array.from({length : n} , ()=>[]);
+
+    for(let i = 0 ; i<times.length ; i++){
+        const [src , dest , time] = times[i] ;
+        graph[src-1].push( [dest-1 , time] )
+    }
+
+    let pq = [  [ k-1 , 0 ] ] ;
+
+    let dist = Array.from({length : n } , ()=>Infinity);
+    dist[k-1] = 0 ;
+
+    while(pq.length > 0){
+
+        const qLen = pq.length ;
+
+        for(let i = 0  ; i<qLen ; i++){
+
+            const curr = pq.shift() ;
+
+            const [ currNode , currTime ] = curr ;
+            for(const nei  of graph[currNode]){
+                const [neiNode , neiTime] = nei ;
+
+                if( dist[currNode] + neiTime < dist[neiNode] ){
+                    dist[neiNode] = dist[currNode] + neiTime ;
+                    pq.push( [ neiNode , dist[neiNode] ] )
+                }
+            }
+        }  
+    }
+
+    let ans = -1 ;
+
+    for(let i = 0 ; i<n ; i++){
+        if(dist[i] == Infinity) return -1 ;
+        ans = Math.max(ans , dist[i]);
+    }
+
+    return ans ;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
