@@ -275,8 +275,126 @@ var makeConnected = function(n, connections) {
 };
 
 
+// ===================================4. Most Stones removed from same column and row  ================================
 
 
+// ============================================= 5. Account Merge ===================================================
+/*
+Leetcode : https://leetcode.com/problems/accounts-merge/
+Important and Good Questions
+
+Given a list of accounts where each element accounts[i] is a list of strings, where the first element accounts[i][0] is 
+a name, and the rest of the elements are emails representing emails of the account.
+
+Now, we would like to merge these accounts. Two accounts definitely belong to the same person if there is some common 
+email to both accounts. Note that even if two accounts have the same name, they may belong to different people as people 
+could have the same name. A person can have any number of accounts initially, but all of their accounts definitely have 
+the same name.
+
+After merging the accounts, return the accounts in the following format: the first element of each account is the name, 
+and the rest of the elements are emails in sorted order. The accounts themselves can be returned in any order.
+
+Example 1:
+Input: accounts = [["John","johnsmith@mail.com","john_newyork@mail.com"],["John","johnsmith@mail.com","john00@mail.com"],["Mary","mary@mail.com"],["John","johnnybravo@mail.com"]]
+Output: [["John","john00@mail.com","john_newyork@mail.com","johnsmith@mail.com"],["Mary","mary@mail.com"],["John","johnnybravo@mail.com"]]
+Explanation:
+The first and second John's are the same person as they have the common email "johnsmith@mail.com".
+The third John and Mary are different people as none of their email addresses are used by other accounts.
+We could return these lists in any order, for example the answer [['Mary', 'mary@mail.com'], ['John', 'johnnybravo@mail.com'], 
+['John', 'john00@mail.com', 'john_newyork@mail.com', 'johnsmith@mail.com']] would still be accepted.
+
+Example 2:
+Input: accounts = [["Gabe","Gabe0@m.co","Gabe3@m.co","Gabe1@m.co"],["Kevin","Kevin3@m.co","Kevin5@m.co","Kevin0@m.co"],["Ethan","Ethan5@m.co","Ethan4@m.co","Ethan0@m.co"],["Hanzo","Hanzo3@m.co","Hanzo1@m.co","Hanzo0@m.co"],["Fern","Fern5@m.co","Fern1@m.co","Fern0@m.co"]]
+Output: [["Ethan","Ethan0@m.co","Ethan4@m.co","Ethan5@m.co"],["Gabe","Gabe0@m.co","Gabe1@m.co","Gabe3@m.co"],["Hanzo","Hanzo0@m.co","Hanzo1@m.co","Hanzo3@m.co"],["Kevin","Kevin0@m.co","Kevin3@m.co","Kevin5@m.co"],["Fern","Fern0@m.co","Fern1@m.co","Fern5@m.co"]]
+
+LOGIC : Easy hi hai , jayda kuch nahi hai . 
+Ek disjoint sets ka basic template class banane ka . 
+0 to n-1 array size ko node maanlo . And email ko ek map me store karte raho , { email : nodeIndex} . 
+Traversing k waqt agar kahi bhi email repeat ho rha hai , iska matlab us email ka jo nodeindex hai , usko union karna hai
+ho pehle aa chuka hai . 
+
+Pura karne k baad last me hume disconnected componenents mil jayega . 
+Or fir cosmetics and fancy cheeze karni hai answer nikalne k liye  .
+**/
+class DisjointSets {
+
+    constructor(n){
+        this.parent = Array.from({length : n},(_ , i)=>{
+            return i ;
+        })
+        this.rank = Array.from({length : n},()=>0)
+    }
+
+    findParent(node){
+        if(this.parent[node] == node) return node ;
+        this.parent[node] = this.findParent(this.parent[node]) ;
+        return this.parent[node] ;
+    }
+
+    unionByRank(u , v){
+        const uParent = this.findParent(u) ;
+        const vParent = this.findParent(v) ;
+
+        if(uParent == vParent) return ;
+
+        if(this.rank[uParent] > this.rank[vParent]){
+            this.parent[vParent] = uParent ;
+        }
+        else if(this.rank[uParent] < this.rank[vParent]){
+            this.parent[uParent] = vParent ;
+        }
+        else{
+            this.parent[vParent] = uParent ; 
+            this.rank[uParent]++ ;
+        }
+    }
+}
+
+var accountsMerge = function(accounts) {
+    
+    const n = accounts.length ;
+    let map = new Map() ;
+    const ds = new DisjointSets(n)
+
+    for(let i = 0 ; i<n ; i++){
+
+        const emails = accounts[i].slice(1) ;
+
+        for(const eml of emails){
+            if(map.has(eml)){
+                const initialIndex = map.get(eml) ;
+                ds.unionByRank(i , initialIndex) ;
+            }
+            else{
+                map.set(eml , i) ;
+            }
+        }
+
+    }
+
+    let merged = Array.from({length : n} , ()=>[])
+    
+    for(const [email , index] of map){
+        const parent = ds.findParent(index);
+        merged[parent].push(email);
+    }
+
+    // build result 
+    let res = [] ;
+
+    for(let i = 0 ; i<n ; i++){
+
+        if(merged[i].length == 0) continue ;
+
+        merged[i].sort();
+
+        const name = accounts[i][0] ;
+
+        res.push([name , ...merged[i]]);
+    }
+
+    return res ;
+};
 
 
 
