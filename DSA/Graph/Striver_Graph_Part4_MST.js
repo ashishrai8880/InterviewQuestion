@@ -397,9 +397,253 @@ var accountsMerge = function(accounts) {
 };
 
 
+// ============================================= 6. Number of Island 2 =================================================
+/*
+GFG : https://www.geeksforgeeks.org/problems/number-of-islands/1
+
+Basically ek matrix de rakhi hai , starting me pura 0 se fill hai , means everywhere is water only  .
+And ek operations ka array dia hua hai , jisme index hai . Un sabhi index pe ek ek karke 1 fill karna hai , means land me convert . 
+Jaise jaise fill krte rehna , waise waise batana hai , ki matrix me kitne island ban rahe hai . 
+
+Kind of running graph problem which can be solved using DSU . Please watch striver video for clarification . 
+
+LOGIC : Isme sabhi cell ko numbers assign kar diya hai . Agar m rows and and n columns hai , to total numbers honge 0 to (m*n) . 
+Sabhi number ek tarah k node hi honge . Starting me sab parent honge self . Ab jaise jaise fill ho rha hai , waise check 
+karna hai ki neighbour already land me convert to nahi hua , agar ho gya , iska matlab new land cell add krne pe , 1 island
+kam hua hai . Ek running count leke bhi chalna hai , jo ki store karega , ab tak kitne island ban chuke . 
+
+Jaise hi neighbour already visited hai to count-- kardo .
+**/
+class DisjointSets {
+    constructor(n){
+        this.parent = Array.from({length : n} , (_ , i)=>{
+            return i ;
+        })
+        this.rank = Array.from({length : n} , ()=>0)
+    }
+    
+    findParent(u){
+        if(this.parent[u] == u) return u ;
+        this.parent[u] = this.findParent(this.parent[u]);
+        return this.parent[u] ;
+    }
+    
+    unionByRank(u , v){
+        const uParent = this.findParent(u);
+        const vParent = this.findParent(v) ;
+        
+        if(uParent == vParent) return ;
+        
+        if(this.rank[uParent] > this.rank[vParent]){
+            this.parent[vParent] = uParent ;
+        }
+        else if(this.rank[uParent] < this.rank[vParent]){
+            this.parent[uParent] = vParent ;
+        }
+        else{
+            this.parent[vParent] = uParent ;
+            this.rank[uParent]++ ;
+        }
+    }
+}
+
+class Solution {
+    // Function to count the number of islands.
+    numOfIslands(rows, cols, operators) {
+        // your code here
+        
+        const isValid = (i , j)=>{
+            if(i>=0 && i<rows && j>=0 && j<cols) return true ;
+            return false ;
+        }
+        
+        let count = 0 ;
+        let res = [] ;
+        let vis = Array.from({length : rows} , ()=>{
+            return Array.from({length : cols} , ()=>false);
+        })
+        
+        let dir = [-1 , 0 , 1] ;
+        
+        const dsu = new DisjointSets(rows*cols);
+        
+        for(const [r , c] of operators){
+            
+            if(vis[r][c] == true) {
+                res.push(count);
+                continue ;
+            }
+            vis[r][c] = true ;
+            count+=1 ;
+            
+            for(const x of dir){
+                
+                for(const y of dir){
+                    
+                    if(Math.abs(x+y) !== 1){
+                        continue ;
+                    }
+                    
+                    const nr = r+x ;
+                    const nc = c+y ;
+                    
+                    if(isValid(nr , nc) && vis[nr][nc] == true ){
+                        
+                        const oldNode = (r*cols)+c ;
+                        const adjNode = (nr*cols)+nc ;
+                        
+                        if( dsu.findParent(oldNode) != dsu.findParent(adjNode)){
+                            count-- ;
+                            dsu.unionByRank(oldNode , adjNode);
+                        }     
+                    } 
+                } 
+            }
+            res.push(count);
+        }
+        return res ;
+    }
+}
 
 
+// =========================================7. Making a larger Island ====================================================
+/*
+Leetcode : https://leetcode.com/problems/making-a-large-island/description/
+**/
+class DisjointSets{
+    constructor(n){
+        this.rank = Array.from({length : n} , ()=>0)
+        this.size = Array.from({length : n} , ()=>1)
+        this.parent = Array.from({length : n} ,(_,i)=>{
+            return i ;
+        })
+    }
 
+    findParent(u){
+        if(this.parent[u] == u) return u ;
+        this.parent[u] = this.findParent(this.parent[u]);
+        return this.parent[u] ;
+    }
+
+    unionByRank(u , v){
+        const uParent = this.findParent(u);
+        const vParent = this.findParent(v);
+
+        if(uParent == vParent) return ;
+
+        if(this.rank[uParent] > this.rank[vParent]){
+            this.parent[vParent] = uParent ;
+        }
+        
+        else if(this.rank[uParent] < this.rank[vParent]){
+            this.parent[uParent] = vParent ;
+        }
+        else{
+            this.parent[vParent] = uParent ;
+            this.rank[uParent]++ ;
+        }
+    }
+
+    unionBySize(u , v){
+        const uParent = this.findParent(u);
+        const vParent = this.findParent(v) ;
+
+        if(uParent == vParent) return ;
+
+        if(this.size[uParent] < this.size[vParent]){
+            this.parent[uParent] = vParent ;
+            this.size[vParent] += this.size[uParent]
+        }
+        else{
+            this.parent[vParent] = uParent ;
+            this.size[uParent] += this.size[vParent];
+        }
+    }
+
+    getSize(u){
+        return this.size[this.findParent(u)];
+    }
+}
+
+
+var largestIsland = function(grid) {
+    
+    const row = grid.length ;
+    const col = grid[0].length ;
+
+    const isValid = (i , j)=>{
+        if(i>=0 && i<row && j>=0 && j<col) return true ;
+        return false ;
+    }
+
+    const getNodeNumber = (i , j)=>{
+        return (i*col) + j ;
+    }
+
+    const dsu = new DisjointSets(row*col);
+
+    let dir = [-1 , 0 , 1];
+
+    for(let i = 0 ; i< row ; i++ ){
+        
+        for(let j = 0 ; j<col ; j++){
+            if(grid[i][j] == 0) continue ;
+
+            const currNodeNum = getNodeNumber(i , j);
+
+            for(const r of dir){
+                for(const c of dir){
+                    if(Math.abs(r+c) !== 1) continue ;
+
+                    const newRow = i+r ; 
+                    const newCol = j+c ;
+
+                    if(isValid(newRow , newCol) && grid[newRow][newCol] == 1){
+                        const newNodeNum = getNodeNumber(newRow , newCol);
+                        dsu.unionBySize(currNodeNum , newNodeNum);
+                    }
+                }
+            }
+        }
+    }
+
+    let max = 0 ;
+
+    for(let i = 0 ; i<row ; i++){
+
+        for(let j = 0 ; j<col ; j++){
+            if(grid[i][j] == 1) continue ;
+
+            let set = new Set();
+            let tempMax = 1 ;
+
+            for(const r of dir){
+                for(const c of dir){
+                    if(Math.abs(r+c) !== 1) continue ;
+                    
+                    const newRow = i+r ; 
+                    const newCol = j+c ;
+
+                    if(isValid(newRow, newCol) && grid[newRow][newCol] == 1){
+                        const parent = dsu.findParent(getNodeNumber(newRow, newCol));
+
+                        if(!set.has(parent)){
+                            set.add(parent);
+                            tempMax += dsu.size[parent];
+                        }
+                    }
+
+                }
+            }
+
+            max = Math.max(tempMax , max);
+
+        }
+    }
+
+    return max === 0 ? row * col : max;
+
+};
 
 
 
