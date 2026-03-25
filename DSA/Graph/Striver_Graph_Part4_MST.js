@@ -509,6 +509,36 @@ class Solution {
 // =========================================7. Making a larger Island ====================================================
 /*
 Leetcode : https://leetcode.com/problems/making-a-large-island/description/
+
+Ye Question bhi aasan hi hai , bas thoda lengthy hai . Ek matrix de rakhi hai . Usme 0 and 1 hai . 0 means water and
+1 means land . To largest island to ho hi jayega . 
+Ab ek condition ye hai ki agar kisi 1 water cell ko land cell me convert karne ka mauka mil jaye , to bata do sabse badi
+island kon si hogi . 
+
+Example 1:
+Input: grid = [[1,0],[0,1]]
+Output: 3
+Explanation: Change one 0 to 1 and connect two 1s, then we get an island with area = 3.
+
+Example 2:
+Input: grid = [[1,1],[1,0]]
+Output: 4
+Explanation: Change the 0 to 1 and make the island bigger, only one island with area = 4.
+
+Example 3:
+Input: grid = [[1,1],[1,1]]
+Output: 4
+Explanation: Can't change any 0 to 1, only one island with area = 4.
+
+LOGIC : Easy hi hai , pehle jitne bhi land cell hai , unko jara DSU me daal do . Isme dsu me union by size easy rahega . 
+Ab jab dal hi gya to humare pass saare connected components hai  . Ab bas jitne water cell hai waha pe 1 - 1 karke 
+land karna hai or check karte jaana hai ki , iska koi padosi island(component) ka node to nahi . Agar hai to add ho jayega
+ek or land ka part . Bas chhota sa logic or hai , ek set leke padosi k ultimate parent store krte rehna , kyuki ho sakta 
+hai ki ek hi component ka size do baar add ho jaye . 
+
+Last me bas ek or chhota sa condition hai . Kya agar pure matrix me bas land hi ho water ho hi na . To aaise me 
+0 return ho sakta hai 
+
 **/
 class DisjointSets{
     constructor(n){
@@ -646,6 +676,78 @@ var largestIsland = function(grid) {
 };
 
 
+// ===================================== 8. Swim in Rising Water ========================================================
+/**
+Leetcode : https://leetcode.com/problems/swim-in-rising-water/description/
+
+Basically ek matrix de rakhi hai . Usme jo numbers hai , wo elevation(unchaahiii) show kar rhe hai . Ab agar ek cell se 
+dusre cell me jana hai to dono cell paani me dubi honi chahiye !!! . Or water level badhta jaa rha hai . 1 unit pe 1 , 2 
+unit pe 2 . To agar angrezii me bole to , you can swim from one cell to another only if , elevation is less than water level . 
+Thoda confuse k liye : You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares individually are at most t. 
+
+Ab cell (0,0) se start karna hai and last rightmost bottom cell tak swim karna hai , kitna bhi swim kar sakte ek unit me . 
+To batana hai , minimum kitna water level chahiye cell(0,0) se cell(n-1,n-1) tak swim k liye . 
+
+LOGIC : Easy hi to hai . Priority Queue use karna hai bas . PQ me store krte raho [elevation , row , col] or har baar 
+min heap banake first element pop krte raho . Bas ek cheez notice karni hai ki elevation humesha , us cell or uske padosi cell
+me badi wali hi queue me daalni hai . Kyuki agar bhai chhoti daal dega to game hi bigad jayega . 
+
+Us  cell tak aane me ek t elevation lag gya , or uske kisi padosi ka elevation usse kam hai , to kya hua , waha to waise hi
+pahuch jayega na . '
+
+Input: grid = [[0,2],[1,3]]
+Output: 3
+Explanation:
+At time 0, you are in grid location (0, 0).
+You cannot go anywhere else because 4-directionally adjacent neighbors have a higher elevation than t = 0.
+You cannot reach point (1, 1) until time 3.
+When the depth of water is 3, we can swim anywhere inside the grid.
+
+Input: grid = [[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]
+Output: 16
+Explanation: The final route is shown.
+We need to wait until time 16 so that (0, 0) and (4, 4) are connected.
+ */
+var swimInWater = function(grid) {
+    
+    const n = grid.length ;
+
+    const isValid = (i , j)=>{
+        if(i>=0 && i<n && j>=0 && j<n) return true ;
+        return false ;
+    }
+
+    let pq = [[ grid[0][0] , 0 , 0] ]  // elevation , row , col 
+    let dir = [-1 , 0 , 1];
+
+    let vis = Array.from({length : n } , ()=>{
+        return Array.from({length : n} , ()=>false)
+    }) ;
+
+    while(pq.length > 0){
+        pq.sort((a,b)=>a[0]-b[0]) ;
+
+        const curr = pq.shift();
+        const [elevation , r , c] = curr ;
+        vis[r][c] = true ;
+
+        if(r == n-1 && c == n-1) return elevation ;
+
+        // neighbours move
+        for(const x of dir){
+            for(const y of dir){
+                if(Math.abs(x+y) !== 1) continue ;
+                const nr = r+x ;
+                const nc = c+y ;
+                if(isValid(nr , nc) && vis[nr][nc] == false ){
+                    pq.push( [ Math.max(elevation , grid[nr][nc] ) , nr , nc ]  );
+                    vis[nr][nc] = true ;
+                }
+            }
+        }
+    }
+    return -1 ;
+};
 
 
 
