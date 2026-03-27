@@ -360,42 +360,60 @@ var longestSubarray = function(nums, limit) {
 // Optimized Way : Use two queue : increment queue and decrement queue . inc q will store minimum element from starting
 /*
 and dec q will store maximum element at starting . 
+
+Easy One , just maintain minQueue and maxQueue , minQueue will store minimum element at first element and same for 
+maxQueue . 
+Maintain left pointer also , when maxElement - minElement is greater than limit , then need to shrink window . 
+Are easy hi hai . 
 */
 
-var longestSubarray = function(nums, limit) {
+var longestSubarray = function(arr, limit) {
     
-    let ans = 0 ;
+    const n = arr.length ;
+    let res = [] ;
+    let start = 0 ;
+    let end = 0 ;
+    let maxLen = 0 ;
     let left = 0 ;
-    let right = 0 ;
-    let res = -Infinity ;
-    let inc = [];
-    let dec = [];
-    let len = nums.length ;
-
-    for( ; right < len ; right++){
-        while(inc.length > 0 && inc[inc.length-1] > nums[right] ){
-            inc.pop();
+    
+    let minHeap = [] ;
+    let maxHeap = [] ;
+    
+    for(let i = 0 ; i<n ; i++){
+        
+        while(minHeap.length > 0 && minHeap.at(-1) > arr[i]){
+            minHeap.pop() ;
         }
-
-        while(dec.length > 0 && dec[dec.length-1] < nums[right] ){
-            dec.pop();
+        
+        while(maxHeap.length > 0 && maxHeap.at(-1) < arr[i]){
+            maxHeap.pop() ;
         }
-
-        inc.push(nums[right]);
-        dec.push(nums[right]);
-
-        while(dec[0] - inc[0] > limit){
-            if(dec[0] == nums[left]){
-                dec.shift();
+        
+        minHeap.push(arr[i]) ;
+        maxHeap.push(arr[i]) ;
+        
+        while(Math.abs( maxHeap.at(0) - minHeap.at(0) ) > limit ){
+            
+            if( arr[left] == maxHeap[0] ){
+                maxHeap.shift();
             }
-            if(inc[0] == nums[left]){
-                inc.shift();
+            
+            if( arr[left] == minHeap[0] ){
+                minHeap.shift();
             }
-            left++ ;
+            
+            left+=1 ;
         }
-        res = Math.max(res , (right-left+1));
+        
+        const len = i-left+1 ;
+        if(len > maxLen){
+            maxLen = len ;
+            start = left ;
+            end = i ;
+        }
     }
-    return res ;
+    
+    return arr.slice(start , end+1) ;
 };
 
 
