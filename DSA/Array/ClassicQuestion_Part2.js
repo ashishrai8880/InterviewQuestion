@@ -250,8 +250,17 @@ Output: [1,5,1]
                  Step 2 : Then swap the rightmost element with pivot element . Here rightmost element would be the 
                             next greater number than pivot . 
                  Step 3 : Reverse the last part after pivot element . 
- 
 
+ Are easy hi hai . Agar 2 4 1 7 5 0 array hai , ya koi sa bhi array hai , to 2 part honge starting wale part me 
+ increasing order hoga , or dusre part me decreasing order me . Ab bas ye pta lagana hai ki pivot index kon sa hai 
+ jaha se change ho rha hai . 
+ Pivot index milne ka matlab , us index se maximum element ban chuka hai ab usse jayda bada nahi ban sakta . 
+ Usse jayada banane k liye pivot se just thoda sa bada element chahiye . Usi k liye second loop hai . 
+ Kyuki dusra part decreasing order me hai pehle se hi , to just ek bada element nikalne k liye piche se check krte aao
+ ki kon sa element pivot se bada hai , jaise hi mil gya break kardo . 
+
+ Ab bas pehla part to sorted hi hai , dusre part ko reverse kardo . Reverse isiliye kiya kyuki pehle se decreasing order me hai
+ reverse karne pe agala larger element mil jayega . 
  */
 var nextPermutation = function(nums) {
     
