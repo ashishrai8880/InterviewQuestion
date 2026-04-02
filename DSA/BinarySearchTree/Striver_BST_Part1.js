@@ -397,6 +397,34 @@ BSTIterator.prototype.hasNext = function() {
 };
 
 
+// ============================================ 12. Merge two BST =======================================================
+/**
+GFG : https://www.geeksforgeeks.org/problems/merge-two-bst-s/1 
+Approach : Dono ka inorder nikal k bas sort karke return karne ka . 
+Thoda or optimized kar sakte hai . Sort karne me o(nlogN) lagega , to isse badhiya 2 alag alag array me dono ka inorder 
+traversal store karke , 2 sorted array ko merge kardo . 
+
+ * @param {Node} root1
+ * @param {Node} root2
+ * @returns {number[]}
+ */
+class Solution {
+    merge(root1, root2) {
+        
+        const inorder = (ptr)=>{
+            if(ptr == null) return ;
+            inorder(ptr.left) ;
+            arr.push(ptr.data) ;
+            inorder(ptr.right) ;
+        }
+        
+        let arr = [] ;
+        inorder(root1) ;
+        inorder(root2) ;
+        
+        return arr.sort((a,b)=>a-b)
+    }
+}
 
 
 
