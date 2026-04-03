@@ -427,6 +427,69 @@ class Solution {
 }
 
 
+// ============================================ 13. Recover Binary Search Tree ============================================
+/**
+Leetcode : https://leetcode.com/problems/recover-binary-search-tree/description/
+KOI bhi BST hai , usme galti se 2 node swap ho gayi hai , jisse BST ki property chali gayi . Ab bas usi to correct karna 
+hai . Do not return any thing . 
+
+BRUTE : Inorder traversal karke array me store karlo data . Array ko sort kardo , isse ye pta chal jayega ki kis 
+order me rakhna chahiye . 
+Ab bas second time ek or inorder laga k sahi value ko sahi jagah place kardo . 
+ */
+/**
+ * @param {TreeNode} root
+ * @return {void} Do not return anything, modify root in-place instead.
+ */
+var recoverTree = function(root) {
+    
+    const inorder = (ptr)=>{
+        if(ptr == null) return ptr ;
+        inorder(ptr.left) ;
+        arr.push(ptr.val) ;
+        inorder(ptr.right) ;
+    }
+
+    let arr = [] ;
+    inorder(root)
+    arr.sort((a,b)=>a-b) ;
+
+    let idx = 0 ;
+
+    const fixInorder = (ptr)=>{
+        if(ptr == null) return null ;
+        fixInorder(ptr.left) ;
+        if(arr[idx] != ptr.val){
+            ptr.val = arr[idx];
+        }
+        idx += 1 ;
+        fixInorder(ptr.right);
+    }
+
+    fixInorder(root);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
