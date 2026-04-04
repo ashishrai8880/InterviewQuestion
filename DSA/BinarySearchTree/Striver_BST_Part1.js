@@ -470,14 +470,102 @@ var recoverTree = function(root) {
 };
 
 
+// ======================================= 14. Largest BST in a Binary Tree ==============================================
+/**
+Leetcode : https://leetcode.com/problems/maximum-sum-bst-in-binary-tree/
+There is a Binary Tree given and we have to find largest BST sum from it . 
+Brute Force : Sabhi node pe check karlo , bst valid hai ya nahi , jidhar valid hai , uska sum calculate karke 
+uska sum maximize karte raho and answer me store karte raho . 
+TC : O(N^2) . 
+SC : Recursion Space only . 
+ */
+var maxSumBST = function(root) {
+    
+    const isValidBST = (ptr , min , max) =>{
+        if(ptr == null) return true ;
+
+        if(ptr.val <= min || ptr.val >=max) return false ;
+        sum = sum + ptr.val ;
+
+        return isValidBST(ptr.left , min , ptr.val ) &&  isValidBST(ptr.right , ptr.val , max ) ;
+    }
+
+    let res = -Infinity ;
+    const pt = root ;
+
+    let q = [root] ;
+    let sum = 0 ;
+
+    while(q.length){
+        const curr = q.pop() ;
+        sum = 0 ;
+        if(isValidBST(curr , -Infinity , Infinity)){
+            res = Math.max(res , sum) ;
+        }
+        if(curr.left != null){
+            q.push(curr.left) ;
+        }
+        if(curr.right != null){
+            q.push(curr.right) ;
+        }
+    }
+    return res < 0 || res == -Infinity ? 0 : res ;
+};
 
 
+/*  Optimized Approach : Koi bhi BST jab hoga , jab left ka maximum element root se kam ho and right subtree ka 
+minimum element root se bada ho . 
+To har node k liye 2 cheeze chahiye left maximum and right minimum . 
+Ab agar aaisa hai , to return kardo us particular node se , left ka maximum and right ka minimum . jaise : 
+    Math.min( leftMinimum , root.val ) and Math.max(rightMaximum , root.val) . 
+Sum sath sath calculate karte raho bas  . Easy hi hai . 
 
+BASE CASE : Agar root null hai , iska matlab sum 0 hai , or wo valid BST hai , to return bhi aaise kiya hai ki uper pta lage
+ki valid BST hai . 
 
+RECURSIVE : Left and Right Subtree k liye check karo . 
+Agar left se maximum and right se minimum value root se chhota and bada respectively hota hai , to ise bhi include karne ka .
 
+LAST CASE : Agar BST nahi ban rahi us node se , to chhod do , ab tak jitna mila hai usi se uper jate raho . 
 
+TC : O(N) SC : O(1)
+**/
 
+var maxSumBST = function(root) {
+    
+    let maxSum = 0;
 
+    const util = (ptr) => {
+        if (ptr == null) {
+            return { min: Infinity, max: -Infinity, sum: 0 };
+        }
+
+        const left = util(ptr.left);
+        const right = util(ptr.right);
+
+        if (ptr.val > left.max && ptr.val < right.min) {
+            const currSum = ptr.val + left.sum + right.sum;
+
+            maxSum = Math.max(maxSum, currSum);
+
+            return {
+                min: Math.min(left.min, ptr.val),
+                max: Math.max(right.max, ptr.val),
+                sum: currSum
+            };
+        }
+
+        // ❗ mark as invalid BST
+        return {
+            min: -Infinity,
+            max: Infinity,
+            sum: 0
+        };
+    };
+
+    util(root);
+    return maxSum;
+};
 
 
 
