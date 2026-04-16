@@ -1,0 +1,133 @@
+What is Circular Dependency and How to resolve it ? 
+Ans : A circular dependency in NestJS happens when two (or more) parts (sevices) of your app depend on each other in a loop, 
+so Nest can’t properly resolve them during dependency injection.
+
+Think of it like this:
+
+Service A needs Service B
+Service B also needs Service A
+
+That creates a loop → A → B → A
+
+@Injectable()
+export class UserService {
+  constructor(private orderService: OrderService) {}
+}
+
+@Injectable()
+export class OrderService {
+  constructor(private userService: UserService) {}
+}
+
+Why it’s a problem
+NestJS dependency injection container can’t resolve initialization order
+
+You may get runtime errors like:
+
+Nest can't resolve dependencies of the XService
+It usually signals tight coupling / poor design
+
+---- How to fix it
+
+1. Use forwardRef() (quick fix) : Nest provides a way to break the cycle lazily:
+@Injectable()
+export class UserService {
+  constructor(
+    @Inject(forwardRef(() => OrderService))
+    private orderService: OrderService,
+  ) {}
+}
+
+And in the other service too.
+👉 This tells Nest: “resolve this later.”
+
+2. Refactor (better solution)
+
+Break the dependency loop by introducing a third service:
+
+UserService → SharedService ← OrderService
+
+Move shared logic into SharedService.
+
+3. Use events or messaging
+
+Instead of direct calls:
+UserService emits an event
+OrderService listens
+This removes direct dependency.
+
+
+================ 2. What is Dependency Injection ?
+In NestJS, Dependency Injection (DI) is a design pattern where:
+A class does NOT create its own dependencies — NestJS creates and injects them.
+“Dependency Injection in NestJS means the framework’s IoC container automatically 
+creates and provides required class instances instead of us manually instantiating them.”
+
+@Injectable()
+export class UserService {
+  getUser() {
+    return "user";
+  }
+}
+
+@Injectable()
+export class AuthService {
+  constructor(private userService: UserService) {}
+
+  login() {
+    return this.userService.getUser();
+  }
+}
+
+⚙️ How NestJS Instantiates Classes Internally (IMPORTANT)
+1. Metadata collection (via decorators)
+
+When you use:
+@Injectable()
+
+Nest uses TypeScript + reflect-metadata to store:
+What class is injectable
+What dependencies it has (constructor params)
+
+2. Module scanning
+
+Nest starts from AppModule and:
+
+Scans all modules
+Builds a dependency graph
+
+@Module({
+  providers: [AuthService, UserService]
+})
+👉 These are registered in the IoC container
+
+3. Building the Dependency Graph
+Nest internally creates something like:
+
+AuthService → UserService
+This graph helps it determine:
+    What to create first
+    What depends on what
+
+
+4. Instance creation (bottom-up)
+Nest resolves dependencies recursively:
+
+Order:
+    Create UserService (no dependencies)
+    Then create AuthService and inject UserService
+
+👉 Equivalent of:
+const userService = new UserService();
+const authService = new AuthService(userService);
+
+5. Singleton by default
+Nest creates one instance per provider
+👉 Same UserService is reused everywhere
+
+
+
+
+
+
+
