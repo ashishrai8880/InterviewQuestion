@@ -328,7 +328,52 @@ properly to avoid application crashes.”
       res.status(500).json({ message: err.message });
     });
 
+==========================================================================================================================
 
+3. Explain 'this' keyword ?
+“this in JavaScript refers to the object that is executing the current function, and its value depends on how the function is 
+called.” “The value of this is determined at runtime, not at declaration.”
+    1️⃣ Global Context
+      console.log(this);
+      👉 In Node.js: this → {} (module.exports)
+      👉 In browser: this → window
+
+    2️⃣ Inside a Regular Function
+      function show() {
+        console.log(this);
+      }
+      show();
+
+      👉 In strict mode: this → undefined
+      👉 Otherwise:this → global object
+
+      3️⃣ Inside an Object Method
+      const user = {
+        name: "Aman",
+        greet() {
+          console.log(this.name);
+        }
+      };
+      
+      user.greet();
+
+      4️⃣ Arrow Functions (VERY IMPORTANT) 👉 this → inherited from outer scope (not the object)
+      const obj = {
+        name: "Aman",
+        greet: () => {
+          console.log(this.name);
+        }
+      };
+      
+      obj.greet();
+      “Arrow functions don’t have their own this; they use lexical this from the surrounding scope.”
+
+      🧠 Bonus (Advanced — Optional)
+        call(), apply(), bind() can manually set this
+          function greet() {
+            console.log(this.name);
+          }
+          greet.call({ name: "Aman" });
 
 
 
