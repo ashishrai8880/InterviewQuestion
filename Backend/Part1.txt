@@ -289,3 +289,55 @@ Parallelism with concurrency (multi-core CPU running many tasks)
 🚀 Simple Rule to Remember
 Concurrency = managing many things
 Parallelism = doing many things at once
+
+
+========================================================================================================================
+2. How to handle error in Nodejs ?
+“Error handling in Node.js depends on whether the code is synchronous or asynchronous, and it’s important to handle both 
+properly to avoid application crashes.”
+
+🔁 1. Synchronous Error Handling
+“For synchronous code, we use try-catch blocks.”
+
+⚡ 2. Asynchronous Error Handling (VERY IMPORTANT)
+        1. For Async Await -> use try catch 
+        2. For Callback based async tast -> it has 'err' first approach , so inside callback first parameter is 'error' only . 
+                fs.readFile("file.txt", (err, data) => {
+                    if (err) {
+                      console.error(err);
+                      return;
+                    }
+                    console.log(data);
+                  });
+        3. For Promise Based Async Tast -> there is .then().catch() way to handle error . 
+
+🚨 3. Global Error Handling (PRO LEVEL)
+  “These handlers catch errors that were not handled anywhere else.”
+
+    process.on("uncaughtException", err => {
+      console.error("Unhandled Exception:", err);
+    });
+    
+    process.on("unhandledRejection", err => {
+      console.error("Unhandled Rejection:", err);
+    });
+
+🧠 4. Express.js Error Handling (VERY IMPORTANT) : “In Express, we use centralized middleware for error handling.”
+
+    app.use((err, req, res, next) => {
+      res.status(500).json({ message: err.message });
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
