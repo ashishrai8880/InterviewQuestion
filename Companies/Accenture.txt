@@ -1,0 +1,214 @@
+
+// 1. Given a function which will fetch user details from userId and it will return promise . 
+We have multiple userIds in array . Now need to find best optimal solution to fetch all user details in optimal time . 
+CASE 1 : Array k sabhi element ko iterate karne ka , or fir sabhi k liye getUserInformation(userId) function call kardo . 
+        Abhi getUserInformation ye function setTimeout chala rha uske andar resolve kar raha . To agar 1000 userids hoga to
+        1000 seconds lag jayega sabhi user details nikalne me . 
+
+CASE 2 : Use Promise.all() ye sabhi user k liye getUserInformation() function ko fire kar dega ek sath . 
+        Map me function fire kardo , or uska response ya reject Promise.all() se handle karlo . To concurrent execution hoga 
+          Max time 1-2 seconds . 
+
+const getUserInformation = userId => {
+    console.log("Request coming for userId : ",userId)
+    return new Promise((resolve, reject) => {
+        const user = { id: userId, name: `User${userId}` };
+        
+        // Simulate success or error
+        if (userId % 10 !== 0) {
+            setTimeout(() => resolve(user), 1000); // Success after 1 second
+        } else {
+            setTimeout(() => reject(`Error fetching user with ID: ${userId}`), 1000); // Simulate error
+        }
+    });
+};
+
+const userIdsArray = [1, 2, 3, 4, 5 , 6 , 7 , 8 , 9 ,11];
+
+// Basic One
+const getAllUsersInformations = async userIds => {
+    const users = [];
+        // … Fetch users logic
+        
+        for(const userId of userIds){
+            console.log("Fetching... : ",userId)
+            await getUserInformation(userId)
+            .then((data)=>{
+                console.log("Fetched for userId : ",userId)
+                users.push(data)
+            })
+            .catch((err)=>{
+                console.log("Error occured for userId: ",userId)
+            })
+        }
+};
+
+// ==> Optimized One . 
+const getAllUsersInfoPromise = async userIds =>{
+    try {
+        const promises = userIds.map(id => getUserInformation(id));
+        console.log({promises})
+        const users = await Promise.all(promises);
+
+        console.log(users);
+        return users;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
+2. What is difference between Spawn and Fork ?
+At a high level, both spawn and fork in Node.js are used to create child processes, but they’re designed for different use cases.
+
+🔑 Core difference (one-liner)
+spawn → used to run any external command/program
+fork → specialized version of spawn to run another Node.js script with IPC (communication channel)
+
+🧠 1. spawn (generic, low-level)
+
+const { spawn } = require('child_process');
+
+const child = spawn('ls', ['-l']);
+
+child.stdout.on('data', data => {
+    console.log(`Output: ${data}`);
+});
+
+
+=========================================================================================================================
+3. What is Backpressure and How to handle in Nodejs ?
+“Backpressure happens when a readable stream produces data faster than a writable stream can consume it. If not handled, 
+it can lead to memory bloat or crashes.”
+
+🧠 Why it happens
+
+Example:
+Reading a huge file → fast 📖
+Writing to network/db → slow 🐢
+
+👉 Data piles up in memory → pressure builds
+
+✅ How Node.js handles it (core idea)
+
+Node streams already have a built-in mechanism:
+
+.write() returns true/false
+false means: “stop writing, I’m overwhelmed”
+
+🔥 1. Manual backpressure handling (important)
+const fs = require('fs');
+
+const readable = fs.createReadStream('input.txt');
+const writable = fs.createWriteStream('output.txt');
+
+readable.on('data', (chunk) => {
+    const canContinue = writable.write(chunk);
+
+    if (!canContinue) {
+        readable.pause(); // ⛔ stop reading
+    }
+});
+
+writable.on('drain', () => {
+    readable.resume(); // ▶ resume when ready
+});
+
+💡 Explain this in interview:
+.write() returns false → buffer is full
+pause() → stop incoming data
+drain event → buffer cleared
+resume() → continue flow
+
+👉 This is manual backpressure control
+
+🚀 2. Best practice: use pipe() (automatic handling)
+
+readable.pipe(writable);
+
+Why this is best:
+Automatically handles:
+    pause/resume
+    buffering
+    flow control
+
+👉 In interview say:“pipe() is the recommended way because it internally manages backpressure.”
+
+⚡ 3. Modern approach: pipeline() (production-grade)
+const { pipeline } = require('stream');
+const fs = require('fs');
+
+pipeline(
+    fs.createReadStream('input.txt'),
+    fs.createWriteStream('output.txt'),
+    (err) => {
+        if (err) console.error('Pipeline failed', err);
+        else console.log('Pipeline succeeded');
+    }
+);
+
+Why better than pipe():
+Handles errors properly ✅
+Cleans up streams ✅
+Safer for production ✅
+
+🧪 Extra depth (to impress interviewer)
+
+highWaterMark
+    Controls buffer size
+    Default: ~16KB (streams) ~64KB (file streams)
+
+fs.createReadStream('file.txt', { highWaterMark: 1024 });
+
+👉 Smaller buffer → less memory, more pauses
+👉 Larger buffer → more throughput, more memory
+
+🧠 Where exactly is this buffer?
+Each stream has an internal buffer
+This buffer lives in Node.js process memory
+That memory is part of:
+V8 heap (for JS objects)
+some native memory (C++ side) for stream internals
+
+👉 So practically:
+
+Buffer growth = memory usage growth
+Buffer = temporary memory storage inside RAM
+
+
+=======================================================================================================
+4. What is Heap and Buffer in Nodejs ?
+The heap is the part of memory where JavaScript objects are stored and managed by V8 (Node.js engine).
+
+📦 What goes into the heap?
+Objects → { name: "user" } , Arrays → [1,2,3] , Functions , Closures
+👉 Whenever you create variables like this, they go into the heap memory.
+
+⚙️ Key characteristics
+Managed by V8 Garbage Collector
+Automatically allocates & frees memory
+Has size limits (~1.5–2GB by default in Node)
+
+🔵 What is Buffer in Node.js?
+🔑 Definition - A Buffer is a way to handle raw binary data directly in memory, outside normal JavaScript objects.
+
+📦 Why Buffer exists
+JavaScript normally works with: strings , objects
+But systems deal with: files , network packets , streams
+👉 Buffers bridge that gap.
+
+Example:
+const buf = Buffer.from("Hello");
+
+👉 This stores:
+48 65 6c 6c 6f  (binary/hex data)
+
+
+
+
+
+
+
+
+
+
