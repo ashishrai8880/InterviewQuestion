@@ -1,0 +1,176 @@
+============================== Complete Flow of Video Uploading to Transcoding to Streaming =====================================
+
+CMS → Upload Service → Storage (raw video)
+                    ↓
+              Message Queue
+                    ↓
+         Transcoding Workers (parallel)
+                    ↓
+        Storage (processed videos + manifests)
+                    ↓
+            CDN / Streaming Layer
+                    ↓
+                 End User
+
+1. FE Hits BE for signed URL  and on that Signed URL FE can directly send to S3 in chunks . Browser internally handle this 
+  chunk upload streaming . 
+
+2. FE will get s3 video URL and now it will send to the API server . 
+3. API server will store this url to database and then it will push into the Queue (SQS , RabbitMQ , BullMQ) . 
+4. There will be seperate Transcoding server , which will pull out that S3 url from Queue . 
+5. Now Transcoding server will download that complete file from S3 and stores it . 
+
+6. Ab game start hoga . From here there is FFmpeg industry standard c/c++ Command line tool for transcoding . It is not NPM package . 
+  Just install it on your server by sudo apt install ffmpeg . 
+
+7. Then it will transcode video into multiple format and store it on S3 (in HLS streaming way format )will be discuss later. 
+8. There will be DevOps side configuration of S3 with Cloudfront . 
+9. Now when user request for any video , BE will send cloudfront url to FE and Now FE will be directly streaming video from 
+  Cloudfront . So cloudfront send video chunks in test.ts 1-2 second video chunk format . 
+
+🧠 What FFmpeg actually is
+
+FFmpeg is not a Node.js package.
+It is a separate system-level command-line tool (a binary program) that you install on your machine or server.
+
+Step 1: Download file from S3
+
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import fs from "fs";
+
+const s3 = new S3Client({ region: "ap-south-1" });
+
+async function downloadFile(bucket, key, path) {
+  const data = await s3.send(
+    new GetObjectCommand({ Bucket: bucket, Key: key })
+  );
+
+  const stream = data.Body;
+  const writeStream = fs.createWriteStream(path);
+
+  stream.pipe(writeStream);
+}
+
+Now file is local:
+/tmp/input.mp4
+
+Step 2: Run FFmpeg
+Example: create multiple resolutions
+
+ffmpeg -i input.mp4 \
+  -vf scale=1920:1080 -b:v 5000k output_1080p.mp4 \
+  -vf scale=1280:720  -b:v 2800k output_720p.mp4 \
+  -vf scale=854:480   -b:v 1400k output_480p.mp4
+
+Step 3: Node.js wrapper
+
+import { spawn } from "child_process";
+
+function transcode() {
+  return new Promise((resolve, reject) => {
+    const ffmpeg = spawn("ffmpeg", [
+      "-i", "input.mp4",
+      "-vf", "scale=1280:720",
+      "-c:v", "libx264",
+      "-preset", "fast",
+      "-crf", "23",
+      "output_720p.mp4",
+    ]);
+
+    ffmpeg.stderr.on("data", (data) => {
+      console.log(data.toString());
+    });
+
+    ffmpeg.on("close", (code) => {
+      if (code === 0) resolve();
+      else reject(new Error("FFmpeg failed"));
+    });
+  });
+}
+
+Step 4: Upload outputs back to S3
+Each output file:
+
+await s3.send(
+  new PutObjectCommand({
+    Bucket: "output-bucket",
+    Key: "videos/720p.mp4",
+    Body: fs.createReadStream("output_720p.mp4"),
+    ContentType: "video/mp4",
+  })
+);
+
+⚡ Option B (advanced): Stream directly from S3 → FFmpeg → S3
+
+📦 HLS (most common streaming format)
+.m3u8 playlist
+.ts segments
+
+🌐 Step 4: Delivery via CloudFront
+After transcoding:
+
+Upload HLS files to S3
+Serve via Amazon CloudFront
+
+User playback:
+CloudFront → adaptive streaming → best quality automatically
+
+
+🎬 What FFmpeg actually is internally
+It is:
+A compiled C/C++ program
+With libraries for:
+decoding video/audio
+encoding (H.264, H.265, AAC, etc.)
+filtering (resize, crop, watermark)
+packaging (MP4, HLS, DASH)
+
+🎬 What is HLS?
+HTTP Live Streaming (HLS) is a streaming protocol created by Apple for delivering video over the internet in small chunks.
+
+👉 It is NOT a single file like .mp4
+👉 It is a playlist + many small video segment files
+
+🧩 HLS = 3 main parts
+When you convert a video to HLS, you get:
+
+1. 📜 Playlist file (.m3u8) : This is the “brain” of HLS.
+
+  Example: index.m3u8
+
+It contains:
+    order of video chunks
+    URLs of segments
+    available qualities (720p, 480p, etc.)
+
+2. 🎞️ Video segments (.ts or .m4s)
+
+Instead of one big MP4:
+You get many small files:
+
+segment0.ts
+segment1.ts
+segment2.ts
+...
+
+Each segment is usually 2–10 seconds of video
+
+3. 🎚️ Multiple quality versions (adaptive streaming)
+
+You may have:
+
+1080p/
+720p/
+480p/
+
+Each with its own playlist.
+
+
+
+
+
+
+
+
+
+
