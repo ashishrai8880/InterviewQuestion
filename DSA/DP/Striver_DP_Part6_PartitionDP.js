@@ -289,6 +289,334 @@ var parseBoolExpr = function(exp) {
 };
 
 
+// =========================================== 5. Evaluate Boolean Expression to True =========================================
+// GFG : https://www.geeksforgeeks.org/problems/boolean-parenthesization5610/1
+/**
+Ek Expression de rakha hai , bas ye batana hai ki kitne ways hai , jisse expression ka result 'True' aa jaye . 
+
+You are given a boolean expression s containing
+    'T' ---> true
+    'F' ---> false 
+and following operators between symbols
+   &   ---> boolean AND
+    |   ---> boolean OR
+   ^   ---> boolean XOR
+Count the number of ways we can parenthesize the expression so that the value of expression evaluates to true.
+
+Note: The answer is guaranteed to fit within a 32-bit integer.
+
+Examples:
+Input: s = "T|T&F^T"
+Output: 4
+Explaination: The expression evaluates to true in 4 ways: ((T|T)&(F^T)), (T|(T&(F^T))), (((T|T)&F)^T) and (T|((T&F)^T)).
+
+Input: s = "T^F|F"
+Output: 2
+Explaination: The expression evaluates to true in 2 ways: ((T^F)|F) and (T^(F|F)).
+Constraints:
+1 ≤ |s| ≤ 100 
+
+Logic : Easy hi hai . Base case hoega , agar i < j ho gya to return 0 . 
+Problem ko break down karna hai , jaha jaha operator aa rha hai . And dono side solve k liye bhej do . 
+Agar i and j equal ho jaye , matlab sabse chhoti expression yahi hai , isko solve karne ka . 
+
+Ab kuch cases hai , video ek baar dekhne ka . Agar operator & hai , to dono side se true aayega jabhi wo aage bhi true bhej payega . 
+To leftTrue X rightTrue will give total possibilities . 
+Same OR and XOR k condition hai . Easy hi hai bas lengthy hai . 
+
+With Memoization
+Time Complexity: O(N × N × 2 × N) = O(N3), There are a total of 2 × N2 states (for each i, j, and boolean isTrue). For each state, we iterate through the partition points, which takes O(N) time.
+Space Complexity: O(2 × N2) + O(N) auxiliary stack space, The DP array takes O(2 × N2) space, and the recursion stack (in worst case) adds O(N) more.
+
+ * @param {string} s
+ * @returns {number}
+ */
+
+class Solution {
+    countWays(s) {
+        // code here
+        
+        const util = ( i , j , isTrue) =>{
+            if(i > j) return 0 ;
+            
+            if(i == j){
+                if(isTrue == 1){
+                    return s[i] == 'T' ? 1 : 0 ;
+                }
+                if(isTrue == 0){
+                    return s[i] == 'F' ? 1 : 0 ;
+                }
+            }
+            
+            if(dp[i][j][isTrue] != -1){
+                return dp[i][j][isTrue] ;
+            }
+            
+            let cnt = 0 ;
+            
+            for(let k = i+1 ; k<j ; k+=2){
+                
+                const lf = util(i , k-1 , 0) ;
+                const lt = util(i , k-1 , 1) ;
+                const rf = util(k+1 , j , 0) ;
+                const rt = util(k+1 , j , 1) ;
+                
+                // console.log({lf , lt , rf , rt})
+                
+                if(s[k] == '&'){
+                    if(isTrue == 1){
+                        cnt = cnt + (lt * rt) ;
+                    }
+                    else{
+                        cnt = cnt + (lf * rf) + (lt * rf) + (lf * rt) ;
+                    }
+                }
+                
+                else if(s[k] == '|'){
+                    if(isTrue == 1){
+                        cnt = cnt + (lt * rt) + (lt * rf) + (rt * lf) ;
+                    }
+                    else {
+                        cnt = cnt + (lf * rf) ;
+                    }
+                }
+                
+                else if(s[k] == '^'){
+                    if(isTrue == 1){
+                        cnt = cnt + (lt * rf) + (rt * lf)  ;
+                    }
+                    else {
+                        cnt = cnt + (lt * rt) + (lf * rf) ;
+                    }
+                }
+                
+            }
+            
+            return dp[i][j][isTrue] = cnt ;
+        }
+        
+        const n = s.length ;
+        
+        let dp = Array.from({length : n} , ()=>{
+            return Array.from({length : n} , ()=> [-1,-1]) ;
+        })
+        
+        return util(0 , n-1 , 1) ;
+        
+    }
+    
+}
+
+
+// ============================================== 6. Palindrome Partitioning 1 ==============================================
+// Leetcode : https://leetcode.com/problems/palindrome-partitioning/description/
+/**
+Isme ek string de rakha hai like "aab" , abhi isko aaise partition karne hai ki substring palindrome hi ho . 
+
+Given a string s, partition s such that every substring of the partition is a palindrome. Return all possible palindrome
+partitioning of s.
+
+Basically har jagah cut laga k check karna hai , agar do me se koi ek part bhi palindrome hai to aage next part k liye check 
+k liye bhej do . Bahot Easy Problem hai . 
+
+Example 1:
+Input: s = "aab"
+Output: [["a","a","b"],["aa","b"]]
+
+Example 2:
+Input: s = "a"
+Output: [["a"]]
+ 
+Constraints:
+
+1 <= s.length <= 16
+s contains only lowercase English letters.
+
+Time Complexity : Sabhi string k pass 2 option hai , take it or not take it . And agar n size ka string hai to 
+n-1 cuts laga sakte hai . To 2 X 2 X 2 ..... (N-1) cuts . So 2^(N-1) ~ 2 ^N . Ab worst case me sabhi part k liye 
+check karna hai ki palindrome hai ya nahi to uski alag time complexity O(N) hogi . 
+Total Time Complexity : O(N X 2 ^ (N)) . 
+Space Complexity : O(N) Recusion call stack . 
+
+ */
+var partition = function(s) {
+    
+    const isPalindrome = ( fst )=>{
+        let l = 0 ;
+        let r = fst.length - 1 ;
+
+        while(l <= r){
+            if(fst[l] != fst[r]) return false ;
+            l++ ;
+            r-- ;
+        }
+
+        return true ;
+    }
+
+    const util = ( i , arr)=>{
+        if(i >= n){
+            res.push([...arr]) ;
+            return ;
+        }
+
+        for(let ind = i ; ind<n ; ind++){
+            const firstPart = s.slice(i , ind+1) ;
+            if(isPalindrome(firstPart) == true){
+                arr.push(firstPart) ;
+                util(ind+1 , arr) ;
+                arr.pop() ;
+            }
+        }
+    }
+    
+    const n = s.length ;
+    let res = [] ;
+    util(0 , [])
+    return res ;
+};
+
+
+// ========================================= 7. Palindrome Partitioning 2 ====================================================
+/**
+GFG : https://www.geeksforgeeks.org/problems/palindromic-patitioning4845/1
+Leetcode : https://leetcode.com/problems/palindrome-partitioning-ii/
+
+Same uper wale jaisa hi hai , bas isme minimum cuts k sath batana hai ki kon sa way hoga . 
+
+Given a string s, partition s such that every substring of the partition is a palindrome.
+Return the minimum cuts needed for a palindrome partitioning of s.
+
+Example 1:
+Input: s = "aab"
+Output: 1
+Explanation: The palindrome partitioning ["aa","b"] could be produced using 1 cut.
+
+Example 2:
+Input: s = "a"
+Output: 0
+
+Example 3:
+Input: s = "ab"
+Output: 1
+
+Time Complexity: O(N^2), there are total N states, where N is the length of array and for every state we check whether substring is a palindrome or not.
+Space Complexity: O(N) + O(N), we use a DP array to avoid recomputation. Extra auxiliary stack space is used for recursion.
+
+ * @param {string} s
+ * @returns {number}
+ */
+
+class Solution {
+
+    palPartition(s) {
+        const isPalindrome = (i , j)=>{
+            
+            let l = i ;
+            let r = j ;
+            while(l<=r){
+                if(s[l] != s[r]) return false ;
+                l++ ; r-- ;
+            }
+            return true ;
+        }
+    
+        const util = (i )=>{
+    
+            if(i>=n) return 0 ;
+    
+            if(dp[i] !== -1) return dp[i] ;
+    
+            let min = Infinity ;
+            for(let k = i ; k<n ; k++){
+                
+                if(isPalindrome(i , k) == true){
+                    const cut = 1 + util(k+1 ) ;
+                    min = Math.min(min , cut) ;
+                }
+            }
+    
+            return dp[i] = min ;
+        }
+    
+        const n = s.length ;
+        let dp = Array.from({length : n} , ()=>-1)
+    
+        return util(0) - 1 ;
+    }
+}
+
+
+// ========================================== 8. Partition Array for Maximum Sum ===============================================
+/**
+Leetcode : https://leetcode.com/problems/partition-array-for-maximum-sum/
+Isme ek array k rakha hai or ek variable k , ab is arrayy ko partition karna hai , or subarray ki length atmost k tak ho sakti hai 
+Ab jab partition / divide kar diya to us subarray me jo bhi maximum element hoga , sabhi element utna hi ho jayega . 
+To ye batana hai ki kis tarike se partition kare ki sabhi subarray ka sum maximum aaye . 
+
+Given an integer array arr, partition the array into (contiguous) subarrays of length at most k. After partitioning, 
+each subarray has their values changed to become the maximum value of that subarray.
+Return the largest sum of the given array after partitioning. Test cases are generated so that the answer fits in a 32-bit integer.
+
+Example 1:
+Input: arr = [1,15,7,9,2,5,10], k = 3
+Output: 84
+Explanation: arr becomes [15,15,15,9,10,10,10]
+
+Example 2:
+Input: arr = [1,4,1,5,7,3,6,1,9,9,3], k = 4
+Output: 83
+
+Example 3:
+Input: arr = [1], k = 1
+Output: 1
+ 
+Constraints:
+
+1 <= arr.length <= 500
+0 <= arr[i] <= 109
+1 <= k <= arr.length
+
+Logic : Easy hi hai ye bhi , same partitionDP ki tarah hai , bas isme complete loop ki jagah (i+k) tak loop chalenge taaki 
+subarray size k se badi na ho jaye . Maximum element track karte raho . Or sum of single subarray hoga maxEle X len of subarray . 
+
+Time Complexity: O(N*K), there are total N states, where N is the length of array and for every state we check all subarrays of length K.
+Space Complexity: O(N) + O(N), we use a DP array to avoid recomputation. Extra auxiliary stack space is used for recursion.
+ */
+var maxSumAfterPartitioning = function(arr, k) {
+    
+    const util = (i)=>{
+        if(i >= n) return 0 ;
+
+        if(dp[i]  != -1) return dp[i] ;
+
+        let max = -Infinity ;
+        let maxEle = -Infinity ;
+
+        for(let j = i ; j < Math.min(n , i+k) ; j++){
+            maxEle = Math.max(maxEle , arr[j] ) ;
+            const len = j-i+1 ;
+            let sum = (maxEle * len) + util(j+1) ;
+            max = Math.max(sum , max) ;
+        }
+
+        return dp[i] = max ;
+    }
+
+    const n = arr.length ;
+
+    const dp = Array.from({length : n} , ()=>-1)
+
+    return util(0) ;
+};
+
+
+
+
+
+
+
+
 
 
 
