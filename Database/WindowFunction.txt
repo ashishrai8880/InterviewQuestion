@@ -1,0 +1,526 @@
+========================= 4 Types of Window Function Broadly ===============================
+
+1. Ranking Window Functions : Used for ranking rows.
+
+(a) ROW_NUMBER() : Gives unique sequential numbers.
+    SELECT name, salary,
+       ROW_NUMBER() OVER (ORDER BY salary DESC) AS rn
+FROM Employee;
+
+Example : 
+5000 → 1
+4000 → 2
+4000 → 3
+3000 → 4
+
+(b) RANK() : Skips numbers after ties.
+
+  5000 → 1
+  4000 → 2
+  4000 → 2
+  3000 → 4
+
+(c) DENSE_RANK() : No skipped numbers.
+5000 → 1
+4000 → 2
+4000 → 2
+3000 → 3
+
+(d) NTILE(n) : Divides rows into groups/buckets. The NTILE() window function in SQL is used to divide rows into a 
+specified number of groups (called tiles or buckets).
+
+SELECT name, salary,
+       NTILE(4) OVER (ORDER BY salary DESC) AS bucket
+FROM Employee;
+
+| Employee | Salary |
+| -------- | ------ |
+| A        | 10000  |
+| B        | 9000   |
+| C        | 8000   |
+| D        | 7000   |
+| E        | 6000   |
+| F        | 5000   |
+| G        | 4000   |
+| H        | 3000   |
+
+SELECT
+    employee,
+    salary,
+    NTILE(4) OVER (ORDER BY salary DESC) AS salary_group
+FROM employees;
+
+| Employee | Salary | salary_group |
+| -------- | ------ | ------------ |
+| A        | 10000  | 1            |
+| B        | 9000   | 1            |
+| C        | 8000   | 2            |
+| D        | 7000   | 2            |
+| E        | 6000   | 3            |
+| F        | 5000   | 3            |
+| G        | 4000   | 4            |
+| H        | 3000   | 4            |
+
+
+2. Aggregate Window Functions
+These are normal aggregate functions used with OVER().
+Unlike GROUP BY, rows are NOT collapsed.
+
+(a) SUM() OVER() : Running totals. Keeps all rows AND adds a running or grouped total next to each row.
+
+🔥 Example Table
+| Employee | Salary |
+| -------- | ------ |
+| A        | 1000   |
+| B        | 2000   |
+| C        | 3000   |
+| D        | 4000   |
+
+📊 1. Running Total (Most Important Use)
+
+SELECT
+    employee,
+    salary,
+    SUM(salary) OVER (ORDER BY salary) AS running_total
+FROM employees;
+
+🧾 Output:
+| Employee | Salary | Running Total |
+| -------- | ------ | ------------- |
+| A        | 1000   | 1000          |
+| B        | 2000   | 3000          |
+| C        | 3000   | 6000          |
+| D        | 4000   | 10000         |
+
+🧩 2. SUM OVER with PARTITION BY : Now let’s say employees belong to departments:
+
+| Dept | Employee | Salary |
+| ---- | -------- | ------ |
+| IT   | A        | 1000   |
+| IT   | B        | 2000   |
+| HR   | C        | 3000   |
+| HR   | D        | 4000   |
+
+SELECT
+    dept,
+    employee,
+    salary,
+    SUM(salary) OVER (PARTITION BY dept) AS dept_total
+FROM employees;
+
+Ouput : 
+| Dept | Employee | Salary | Dept Total |
+| ---- | -------- | ------ | ---------- |
+| IT   | A        | 1000   | 3000       |
+| IT   | B        | 2000   | 3000       |
+| HR   | C        | 3000   | 7000       |
+| HR   | D        | 4000   | 7000       |
+
+🔥 3. Combined Example (Very Common)
+SUM(salary) OVER (
+    PARTITION BY dept
+    ORDER BY salary
+)
+
+| Dept | Salary | Running Dept Total |
+| ---- | ------ | ------------------ |
+| IT   | 1000   | 1000               |
+| IT   | 2000   | 3000               |
+| HR   | 3000   | 3000               |
+| HR   | 4000   | 7000               |
+
+
+(b) AVG() OVER() - Same hi hai uper wale jaise ,  iske bhi 3 hai , running nikalega , department wise grouping and both . 
+(c) COUNT() OVER() - same hi hai thoda difference hai . 
+      Normally, COUNT() is an aggregate function that reduces rows into one result.
+
+🔥 Example Table
+| Employee | Dept |
+| -------- | ---- |
+| A        | IT   |
+| B        | IT   |
+| C        | HR   |
+| D        | HR   |
+| E        | HR   |
+
+📊 1. Total Row Count (Global Count)
+SELECT
+    employee,
+    COUNT(*) OVER () AS total_employees
+FROM employees;
+
+🧾 Output:
+| Employee | Total Employees |
+| -------- | --------------- |
+| A        | 5               |
+| B        | 5               |
+| C        | 5               |
+| D        | 5               |
+| E        | 5               |
+
+🧩 2. COUNT with PARTITION BY (Very Important) : Now we count employees per department:
+SELECT
+    employee,
+    dept,
+    COUNT(*) OVER (PARTITION BY dept) AS dept_count
+FROM employees;
+
+OUTPUT:
+| Employee | Dept | Dept Count |
+| -------- | ---- | ---------- |
+| A        | IT   | 2          |
+| B        | IT   | 2          |
+| C        | HR   | 3          |
+| D        | HR   | 3          |
+| E        | HR   | 3          |
+
+📊 3. COUNT with ORDER BY (Running Count) : This is called a cumulative count.
+
+SELECT
+    employee,
+    COUNT(*) OVER (ORDER BY employee) AS running_count
+FROM employees;
+
+OUTPUT:
+| Employee | Running Count |
+| -------- | ------------- |
+| A        | 1             |
+| B        | 2             |
+| C        | 3             |
+| D        | 4             |
+| E        | 5             |
+
+(d) MIN() OVER() : Same hi hai 
+(e) MAX() OVER() : Same hi hai 
+
+
+3. Value / Navigation Functions : Look at values from other rows (previous or next rows) without joining tables.
+They are called “navigation” functions because you can move:
+
+⬅️ backward (previous row)
+➡️ forward (next row)
+
+(a) LAG() : Gets previous row value.
+SELECT month, sales,
+       LAG(sales) OVER (ORDER BY month) AS prev_sales
+FROM Sales;
+
+🔥 Example Table
+
+| Day | Sales |
+| --- | ----- |
+| Mon | 100   |
+| Tue | 120   |
+| Wed | 90    |
+| Thu | 150   |
+
+📊 1. Basic LAG Example (Previous Day Sales)
+SELECT
+    day,
+    sales,
+    LAG(sales) OVER (ORDER BY day) AS prev_day_sales
+FROM sales_data;
+
+🧾 Output:
+| Day | Sales | Prev Day Sales |
+| --- | ----- | -------------- |
+| Mon | 100   | NULL           |
+| Tue | 120   | 100            |
+| Wed | 90    | 120            |
+| Thu | 150   | 90             |
+
+📉 2. Finding Growth or Difference : This is the MOST common real use.
+
+SELECT
+    day,
+    sales,
+    sales - LAG(sales) OVER (ORDER BY day) AS sales_change
+FROM sales_data;
+
+| Day | Sales | Sales Change |
+| --- | ----- | ------------ |
+| Mon | 100   | NULL         |
+| Tue | 120   | 20           |
+| Wed | 90    | -30          |
+| Thu | 150   | 60           |
+
+Same can be done with Partition by Grouping
+
+🧩 3. LAG with PARTITION BY
+| Dept | Employee | Salary |
+| ---- | -------- | ------ |
+| IT   | A        | 1000   |
+| IT   | B        | 2000   |
+| HR   | C        | 3000   |
+| HR   | D        | 4000   |
+
+SELECT
+    dept,
+    employee,
+    salary,
+    LAG(salary) OVER (
+        PARTITION BY dept
+        ORDER BY salary
+    ) AS prev_salary
+FROM employees;
+
+| Dept | Employee | Salary | Prev Salary |
+| ---- | -------- | ------ | ----------- |
+| IT   | A        | 1000   | NULL        |
+| IT   | B        | 2000   | 1000        |
+| HR   | C        | 3000   | NULL        |
+| HR   | D        | 4000   | 3000        |
+
+
+(b) LEAD() : Same as LAG() but for next value rather previous value . 
+
+(c) FIRST_VALUE() : “The first value in a sorted window of rows.”
+
+🔥 Example Table
+| Employee | Salary |
+| -------- | ------ |
+| A        | 1000   |
+| B        | 2000   |
+| C        | 3000   |
+| D        | 4000   |
+
+📊 1. Basic FIRST_VALUE Example
+SELECT
+    employee,
+    salary,
+    FIRST_VALUE(salary) OVER (ORDER BY salary) AS first_salary
+FROM employees;
+
+| Employee | Salary | First Salary |
+| -------- | ------ | ------------ |
+| A        | 1000   | 1000         |
+| B        | 2000   | 1000         |
+| C        | 3000   | 1000         |
+| D        | 4000   | 1000         |
+
+🧩 2. FIRST_VALUE with DESC (Very Important)
+SELECT
+    employee,
+    salary,
+    FIRST_VALUE(salary) OVER (ORDER BY salary DESC) AS highest_salary
+FROM employees;
+
+| Employee | Salary | Highest Salary |
+| -------- | ------ | -------------- |
+| D        | 4000   | 4000           |
+| C        | 3000   | 4000           |
+| B        | 2000   | 4000           |
+| A        | 1000   | 4000           |
+
+🧩 3. FIRST_VALUE with PARTITION BY
+
+| Dept | Employee | Salary |
+| ---- | -------- | ------ |
+| IT   | A        | 1000   |
+| IT   | B        | 2000   |
+| HR   | C        | 3000   |
+| HR   | D        | 4000   |
+
+SELECT
+    dept,
+    employee,
+    salary,
+    FIRST_VALUE(salary) OVER (
+        PARTITION BY dept
+        ORDER BY salary
+    ) AS lowest_salary_in_dept
+FROM employees;
+
+| Dept | Employee | Salary | Lowest Salary |
+| ---- | -------- | ------ | ------------- |
+| IT   | A        | 1000   | 1000          |
+| IT   | B        | 2000   | 1000          |
+| HR   | C        | 3000   | 3000          |
+| HR   | D        | 4000   | 3000          |
+
+
+(d) LAST_VALUE() : Same as above one . 
+(e) NTH_VALUE() : “The value at the Nth position in a sorted window of rows.”
+
+🔥 Example Table:
+| Employee | Salary |
+| -------- | ------ |
+| A        | 1000   |
+| B        | 2000   |
+| C        | 3000   |
+| D        | 4000   |
+| E        | 5000   |
+
+📊 1. Basic NTH_VALUE Example (2nd Salary)
+SELECT
+    employee,
+    salary,
+    NTH_VALUE(salary, 2) OVER (ORDER BY salary) AS second_salary
+FROM employees;
+
+OUTPUT
+| Employee | Salary | Second Salary |
+| -------- | ------ | ------------- |
+| A        | 1000   | 2000          |
+| B        | 2000   | 2000          |
+| C        | 3000   | 2000          |
+| D        | 4000   | 2000          |
+| E        | 5000   | 2000          |
+
+🧩 4. NTH_VALUE with PARTITION BY
+
+| Dept | Employee | Salary |
+| ---- | -------- | ------ |
+| IT   | A        | 1000   |
+| IT   | B        | 2000   |
+| IT   | C        | 3000   |
+| HR   | D        | 4000   |
+| HR   | E        | 5000   |
+
+SELECT
+    dept,
+    employee,
+    salary,
+    NTH_VALUE(salary, 2) OVER (
+        PARTITION BY dept
+        ORDER BY salary
+    ) AS second_salary_in_dept
+FROM employees;
+
+| Dept | Employee | Salary | Second Salary |
+| ---- | -------- | ------ | ------------- |
+| IT   | A        | 1000   | 2000          |
+| IT   | B        | 2000   | 2000          |
+| IT   | C        | 3000   | 2000          |
+| HR   | D        | 4000   | 5000          |
+| HR   | E        | 5000   | 5000          |
+
+
+================4. Distribution Function  : 
+
+(a) PERCENT_RANK() : PERCENT_RANK() tells you: “Where does this row stand compared to others, as a percentage?”
+ basically rank ki jagah percent rank show karta hai . formula (rank-1)/(totalrow-1) . 
+🔥 Example Table
+| Employee | Salary |
+| -------- | ------ |
+| A        | 1000   |
+| B        | 2000   |
+| C        | 3000   |
+| D        | 4000   |
+| E        | 5000   |
+
+SELECT
+    employee,
+    salary,
+    PERCENT_RANK() OVER (ORDER BY salary) AS pr
+FROM employees;
+
+OUTPUT:
+| Employee | Salary | PERCENT_RANK |
+| -------- | ------ | ------------ |
+| A        | 1000   | 0.0          |
+| B        | 2000   | 0.25         |
+| C        | 3000   | 0.50         |
+| D        | 4000   | 0.75         |
+| E        | 5000   | 1.0          |
+
+🧠 What does this mean?
+A = lowest → 0% rank
+E = highest → 100% rank
+others are evenly distributed
+
+🧩 3. With duplicates (important)
+| Employee | Salary |
+| -------- | ------ |
+| A        | 1000   |
+| B        | 1000   |
+| C        | 2000   |
+| D        | 3000   |
+
+So output becomes:
+| Employee | PERCENT_RANK |
+| -------- | ------------ |
+| A        | 0.0          |
+| B        | 0.0          |
+| C        | 0.5          |
+| D        | 1.0          |
+
+🧩 4. PERCENT_RANK with PARTITION BY
+
+| Dept | Employee | Salary |
+| ---- | -------- | ------ |
+| IT   | A        | 1000   |
+| IT   | B        | 2000   |
+| IT   | C        | 3000   |
+| HR   | D        | 4000   |
+| HR   | E        | 5000   |
+
+SELECT
+    dept,
+    employee,
+    salary,
+    PERCENT_RANK() OVER (
+        PARTITION BY dept
+        ORDER BY salary
+    ) AS pr
+FROM employees;
+
+🧾 Output idea
+
+Each department is ranked separately:
+
+IT:
+A → 0
+B → 0.5
+C → 1
+HR:
+D → 0
+E → 1
+
+(b) CUME_DIST() : Same hi hai uper wale ki tarah bas isme formulae different hai , jaise (row number)/(totalRow) .
+“What percentage of rows are less than or equal to this row?”
+
+🔥 Example Table
+| Employee | Salary |
+| -------- | ------ |
+| A        | 1000   |
+| B        | 2000   |
+| C        | 3000   |
+| D        | 4000   |
+| E        | 5000   |
+
+SELECT
+    employee,
+    salary,
+    CUME_DIST() OVER (ORDER BY salary) AS cd
+FROM employees;
+
+🧾 Output
+
+| Employee | Salary | CUME_DIST |
+| -------- | ------ | --------- |
+| A        | 1000   | 0.2       |
+| B        | 2000   | 0.4       |
+| C        | 3000   | 0.6       |
+| D        | 4000   | 0.8       |
+| E        | 5000   | 1.0       |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
