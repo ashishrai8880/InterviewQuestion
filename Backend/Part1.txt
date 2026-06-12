@@ -1,3 +1,42 @@
+Question 1 : What happens internally when you run a Node.js application?
+Ans : "When a Node.js application starts, the V8 engine compiles and executes the JavaScript code. Node.js initializes the
+Event Loop, creates the Call Stack, and registers asynchronous operations through Libuv. Synchronous code executes on the 
+Call Stack, while asynchronous tasks such as file operations, database calls, timers, and network requests are delegated to
+the operating system or Libuv's thread pool. Once these operations complete, their callbacks are placed in appropriate 
+queues and processed by the Event Loop, which pushes them back onto the Call Stack for execution."
+
+node app.js
+      ↓
+Load JS File
+      ↓
+V8 Engine
+(Parse + Compile)
+      ↓
+Call Stack
+      ↓
+Sync Code Executes
+      ↓
+Async Tasks Sent to Libuv
+      ↓
+OS / Thread Pool
+      ↓
+Task Completes
+      ↓
+Callback Queue
+      ↓
+Event Loop
+      ↓
+Call Stack
+      ↓
+Callback Executes
+
+"When a Node.js application starts, Node loads the JavaScript file and the V8 engine compiles it into machine code. 
+Synchronous code executes on the Call Stack. For asynchronous operations like file I/O, timers, database calls, or network
+requests, Node delegates the work to Libuv, which uses OS APIs or a thread pool. Once the operation completes, its callback
+is placed into a queue. The Event Loop continuously checks whether the Call Stack is empty and then moves pending callbacks
+to the stack for execution. This architecture allows Node.js to handle many concurrent requests efficiently using a single
+main thread."
+
 ---------------------------------> What is libuv? (Interview Definition)
 
 libuv is a C library used by Node.js that provides the event loop and handles asynchronous, non-blocking operations such as file I/O, networking, timers, and background 
