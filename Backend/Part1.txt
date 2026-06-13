@@ -37,6 +37,70 @@ is placed into a queue. The Event Loop continuously checks whether the Call Stac
 to the stack for execution. This architecture allows Node.js to handle many concurrent requests efficiently using a single
 main thread."
 
+Question 2 : What is Non Blocking I/O ?
+Answer : Non-blocking I/O is a mechanism where a program can initiate an Input/Output operation (such as reading a file, 
+making a database call, or sending a network request) without waiting for that operation to complete. Instead, Node.js 
+continues executing other code and processes the result later through callbacks, promises, or async/await.
+
+const fs = require("fs");
+fs.readFile("data.txt", "utf8", (err, data) => {
+  console.log(data);
+});
+console.log("Done");
+
+- How Node.js Achieves Non-Blocking I/O
+      Request arrives.
+      Node.js encounters an I/O operation.
+      The operation is delegated to Libuv or the operating system.
+      The main thread continues executing other tasks.
+      When the I/O operation completes, its callback is placed in a queue.
+      The Event Loop moves the callback to the Call Stack for execution.
+
+Question 3 : Can Node.js handle multiple requests simultaneously?
+Answer : Yes, Node.js can handle multiple requests simultaneously, even though JavaScript runs on a single thread. It 
+achieves this using its event-driven, non-blocking I/O architecture, where asynchronous operations are delegated to the 
+operating system or Libuv, allowing the main thread to continue processing other requests.
+
+Example
+
+app.get("/", (req, res) => {
+  setTimeout(() => {
+    res.send("Response");
+  }, 5000);
+});
+
+If 100 users hit this endpoint:
+      Node.js registers 100 timers.
+      It does not create 100 JavaScript threads.
+      The Event Loop manages all pending operations efficiently.
+
+Question 4 : Difference between application-level and router-level middleware?
+The main difference is where the middleware is attached and where it executes.
+
+1. Application-Level Middleware
+const express = require("express");
+const app = express();
+
+app.use((req, res, next) => {
+  console.log("Request received");
+  next();
+});
+
+2. Router-Level Middleware
+const express = require("express");
+const router = express.Router();
+
+router.use((req, res, next) => {
+  console.log("Users Router Middleware");
+  next();
+});
+
+router.get("/", (req, res) => {
+  res.send("Users");
+});
+
+module.exports = router;
+
 ---------------------------------> What is libuv? (Interview Definition)
 
 libuv is a C library used by Node.js that provides the event loop and handles asynchronous, non-blocking operations such as file I/O, networking, timers, and background 
