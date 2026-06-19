@@ -474,10 +474,27 @@ app.use((req, res, next) => {
   next();
 });
 
+------------------------------------------------------------------------------------------------------------
 
+Question 6 : What is Serialization/deserialization implementation ?
+Serialization is the process of converting an object into a format (such as JSON) that can be stored or transmitted. 
+Deserialization is the reverse process of converting that stored/transmitted format back into an object
 
+            Example : const user = {
+              id: 1,
+              name: "John",
+              email: "john@example.com"
+            };
+            const serialized = JSON.stringify(user);
+            console.log(serialized);
 
+Deserialization
+Converts the serialized string back into a JavaScript object.
 
+            const serialized =
+            '{"id":1,"name":"John","email":"john@example.com"}';
+            const user = JSON.parse(serialized);
+            console.log(user.name);
 
 
 
