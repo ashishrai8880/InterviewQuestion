@@ -884,5 +884,61 @@ class Solution {
 }
 
 
+// ================================== Submatrix Maximum Sum =========================================================
+/**
+GFG : https://www.geeksforgeeks.org/problems/maximum-sum-rectangle2948/1
 
+Problem : Ek matrix de rakhi hai jisme positive and negative dono element hai  . Ab batana hai maximum sum of any submatrix .
+Bahot se chhote bade submatrix banenge isme , to bas ye batana hai ki maximum sum kon se wale submatrix ka hoga . 
+
+Approach : Easy hi hai . Kadanes Algorithm lagega . Har ek row ka har ek row k sath karte jana hai .
+Example : Take row 1 , ab iska maximum subarray sum nikalo , ab row 2 lo or isko row 1 k sath add kardo , fir inka maximum 
+subarray sum nikalo . Fir row 3 lo or pehle wala jo merge array hai uske saath merge kardo , fir same karo . 
+To aaise next iteration me row 2 ko sabhi k sath karna hai . Easy hi hai .
+ */
+
+class Solution {
+    maxRectSum(mat) {
+        // code here
+        const kadanesAlgo = (arr)=>{
+            
+            let maxEndingHere = arr[0];
+            let maxSoFar = arr[0];
+        
+            for (let i = 1; i < arr.length; i++) {
+                maxEndingHere = Math.max(arr[i], maxEndingHere + arr[i]);
+                maxSoFar = Math.max(maxSoFar, maxEndingHere);
+            }
+        
+            return maxSoFar;
+        }
+        
+        const mergeTwoRow = (r1 , r2)=>{
+            let merge = [];
+            for(let i=0 ; i<r1.length ; i++){
+                merge[i] = r1[i] + r2[i];
+            }
+            return merge ;
+        }
+        
+        let temp = [];
+        let row = mat.length ;
+        let col = mat[0].length ;
+        let res = -Infinity ;
+        
+        for(let i = 0 ; i<row ; i++){
+            temp = [...mat[i]];
+            for(let j =i ; j<row ; j++){
+                
+                if(i!=j){
+                    temp = mergeTwoRow(temp , mat[j]);
+                }
+                const sum = kadanesAlgo(temp);
+                res = Math.max(res , sum);
+            }
+        }
+        
+        return res ;
+    }
+}
 
