@@ -1,3 +1,11 @@
+Question 0 : Why nodejs is single threaded ?
+Node.js is single-threaded because it uses a single event loop thread to execute JavaScript, which simplifies concurrency 
+and avoids locking issues, while delegating I/O operations to background threads for non-blocking performance.
+
+Question 0 : What is event loop ?
+The event loop is a continuously running process in Node.js that monitors the call stack and callback queue, and executes 
+asynchronous callbacks when the main thread becomes free.
+
 Question 1 : What happens internally when you run a Node.js application?
 Ans : "When a Node.js application starts, the V8 engine compiles and executes the JavaScript code. Node.js initializes the
 Event Loop, creates the Call Stack, and registers asynchronous operations through Libuv. Synchronous code executes on the 
