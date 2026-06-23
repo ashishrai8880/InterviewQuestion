@@ -1,28 +1,56 @@
 1. Tell me something about yourself ?
-Ans . I am Ashish . I have 2.5 year of experience working across backend and frontend technologies as well . I am proficient in javascript
-and framework built around javascript environment . My expertise include Nodejs , NestJs , SQL and NOSQL databases  . I am also good at DSA .
-I have solved more than 250 question of dsa on gfg and 140+ question on leetcode and secured 5 star and gold level badge on hackerrank . 
+Ans . Hi, I'm a Software Engineer with around 3.7 years of experience primarily in backend development using Node.js and 
+NestJS, along with some frontend experience in Vue.js.
 
-In my current role , I have been focusing more on backend development for a project in tour and travel industry . 
-My strength is , I am good in logics and problem solving skills . I like to solve DSA . My weakeness is , I feels uncomfortable until I complete my task . 
-Also , ocassionaly take on multiple tasks simultaneously , which makes me stressed . To address this , I have been improving my
-priritization and timing management skills to ensure I focus on the most important tasks . 
+Over the years, I've worked across startups and large-scale products, designing and building scalable backend systems,
+Currently, at Antino, I'm working on the backend of a collaborative layout design platform similar to AutoCAD, where I've implemented real-time collaboration features, role-based approval workflows, version management, and integrated AI capabilities through a RAG-based assistant
+using vector embeddings.
 
-I worked on a platform for a tour and travel industry . It provides tour package to customer and connects it with third party travel
-companies offering tour package . We basically have 3 platform , customer facing , admin crm and agent portal . My primary focus is on backend
-developement using Nodejs . I have worked in invoice module and implemented OAuth 2.0 .
+Before that, at TripXL Holidays, I developed CRM and booking systems using NestJS and RabbitMQ, where I focused on event-
+driven architecture, payment reliability, fault tolerance, and search optimization. Earlier at Digivive, I contributed to
+NexgTV, an OTT platform serving more than 10 million users, where I worked on video transcoding pipelines using FFmpeg, 
+Redis-based performance optimization, Elasticsearch search systems, and observability solutions using Prometheus.
+
+My core strengths lie in designing scalable backend architectures, REST APIs, distributed systems, caching strategies, 
+search technologies, messaging systems, and cloud-based solutions. I've also solved over 500 DSA problems across LeetCode
+and GeeksforGeeks, which has strengthened my problem-solving and system design thinking.
+
+Currently, I'm looking for opportunities where I can contribute to building high-scale products, take ownership of system
+design decisions, and continue growing as a backend engineer while expanding my expertise in distributed systems and AI-
+powered applications.
 
 2. Describe project which you have worked on ?
 
-Ans ==>  I have worked on 4 project till now . Starting from 1st project . First project was Node Bridge System . 
+Ans ==> One of the most challenging issues I worked on was in a collaborative layout design application where multiple users
+could access the same design file, but only one user was allowed to edit it at a time.
 
-First Project is Node Bridge System => Initially API is built is PHP YII framework . In this for a particular movie/asset detail , the data came from different table and then we structured it's response and then send response to client . Because of this , one API required a lot of db hits . That's why we created Node API bridge . In this , we have already stored the response of assets/movie in seperate database . This project runs every 10 minutes as a CRON services . 
+To enforce this, whenever a user opened a file and clicked "Edit", the backend would acquire a lock by storing the file 
+information in Redis with a TTL. If another user attempted to edit the same file, the system would prevent it and show that
+the file was already locked.
 
-Second Project Node API 2.0 => Second project is all about API services and related to first project . Now whenever a request comes for any movies/assets , the response comes directly from previos saved response in database . We have also used redis caching , where we stored response of first time request in redis . and second time if request comes for same assets we directly serve response from redis . which makes response time even more faster . 
+The challenge was that we started receiving occasional reports from users saying that they were unable to edit a file even 
+though nobody else was working on it. The issue was very difficult to reproduce because it happened only once or twice a 
+week in production.
 
-Third Project Digivive CMS => Content Management System where we provide facility for client to upload their content to their own OTT platform . In this project , I have worked mostly on frontend side . Where I have implemented permission system in entire application using CASL library . There are basically 4 level of user . Second I have created dynamic form which provide flexibility to client to add/remove field in content .
+I began investigating by adding detailed logging on both the backend and frontend. I analyzed WebSocket connection events, 
+lock creation requests, and Redis entries. After several days of monitoring, I discovered that the root cause was 
+intermittent network disruptions.
 
-Fourth Project ONRG => In this project , we provide researcher to upload whitepaper , and then Get insights from that whitepaper using some AI tools . We have made CRON jobs which runs in every minute to process whitepaper from AI tools , and then get insights like its relevancy from challenge , author detail , author other work area , author area of interest from whitepaper . 
+What was happening was that a user would successfully acquire a lock, but due to a temporary network interruption, the 
+WebSocket connection would disconnect unexpectedly. When the client automatically reconnected, it would send another lock 
+request. However, the original lock entry was still present in Redis because its TTL had not expired yet. As a result, the 
+server treated the request as if another user had already locked the file and rejected it, even though it was actually the 
+same user trying to regain access.
+
+To solve this, I modified the locking logic on the backend. Instead of only checking whether a lock existed, I also 
+validated the ownership of the lock. If the same user attempted to reacquire the lock after reconnection, the system would 
+allow it and refresh the lock instead of rejecting the request.
+
+After deploying the fix, the issue was completely resolved, and users no longer experienced random lock failures. What made 
+this problem particularly challenging was that it was an intermittent production issue that couldn't be reproduced 
+consistently, so it required systematic logging, careful analysis of WebSocket behavior, and understanding of distributed 
+state management using Redis.
+
 
 3. Do you have any question to ask ?
 Ans . Which technology are company using in backend of this project . 
