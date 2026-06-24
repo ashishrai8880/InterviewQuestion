@@ -1,0 +1,137 @@
+
+1. What is MultiTenancy ?
+
+ Problem Statement - Suppose we are providing ready to use RAG chatbot . NOw we have multiple clients like Netflix , Amazon .
+Now each client will have their own documents which needs to be fed to vector DB . Now Each client have millions of user . 
+And if suppose Amazon uploaded their Leave Policy and Netflix uploaded their Office Address And Rules . Now when user of these clients
+query something , how we can make sure data should not get leaked of one client to another client . 
+
+Ans - A single application serves multiple customers (tenants), while keeping their data logically isolated.
+How RAG Creates the Risk
+Document
+   ↓
+Chunking
+   ↓
+Embeddings
+   ↓
+Vector DB
+   ↓
+Retriever
+   ↓
+LLM
+
+--------------------- Solution 1: Metadata Filtering (Most Common) - Store tenant information with every chunk.
+Example:
+{
+  "chunk": "Employee leave policy...",
+  "tenant_id": "client_a"
+}
+
+Another chunk:
+{
+  "chunk": "Quarterly revenue report...",
+  "tenant_id": "client_b"
+}
+
+During retrieval:
+vector_db.search(
+    query_embedding,
+    filter={
+        "tenant_id": "client_a"
+    }
+)
+
+Only Client A chunks are searched.
+Architecture:
+
+User
+ ↓
+JWT
+ ↓
+tenant_id = client_a
+ ↓
+Retriever
+ ↓
+Vector Search + Filter
+ ↓
+Only Client A Data
+ ↓
+LLM
+
+This is how many production systems work.
+
+------------- Solution 2: Separate Collection per Tenant
+Instead of one giant collection:
+
+vector_db
+├── client_a_collection
+├── client_b_collection
+└── client_c_collection
+
+When Client A queries:
+
+collection = "client_a_collection"
+
+Search happens only there.
+Benefits:
+Stronger isolation
+Easier compliance
+
+Drawback:
+Thousands of tenants → thousands of collections
+Operational complexity
+
+Solution 3: Separate Database per Tenant
+For enterprise customers:
+Client A
+   └── Dedicated Vector DB
+
+Client B
+   └── Dedicated Vector DB
+
+Client C
+   └── Dedicated Vector DB
+
+Isolation becomes very strong.
+
+Often used for:
+Banking
+Healthcare
+Government
+
+Drawback:
+Expensive
+Harder to manage
+
+What About Users Inside One Client?
+The interviewer may ask a follow-up:
+
+Client A has 1000 users.
+Can User1 see User2's private data?
+Then you need another level of isolation.
+
+Store:
+{
+  "tenant_id": "client_a",
+  "user_id": "user_123"
+}
+
+Filter:
+{
+  "tenant_id": "client_a",
+  "user_id": "user_123"
+}
+
+---------------------------------------------------------------------------------------------------------------------
+2. What is Cold Start in AWS Lambda ?
+Ans : When lambda function starts after longer period of time , then it takes some time in restart . AFter then next restart
+it works faster . 
+
+----------------------------------------------------------------------------------------------------------------------
+3. What is GIN Index in PostgreSQL ?
+Ans : 
+
+
+
+
+
