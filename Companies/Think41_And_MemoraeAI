@@ -129,9 +129,73 @@ it works faster .
 
 ----------------------------------------------------------------------------------------------------------------------
 3. What is GIN Index in PostgreSQL ?
-Ans : 
+Problem Statement : How would you index JSONB column ?
 
+Ans : When a column is of type JSONB, PostgreSQL cannot use a normal B-Tree index efficiently for arbitrary JSON lookups
+because JSONB is a nested document structure, not a single scalar value.
 
+Option 1: GIN Index (Most Common) - For JSONB, PostgreSQL provides GIN (Generalized Inverted Index).
+
+CREATE INDEX idx_metadata
+ON users
+USING GIN(metadata);
+
+How it works
+Think of JSONB as:
+{
+  "city": "Delhi",
+  "age": 25
+}
+
+GIN internally stores something like:
+
+city -> rows [1,5,10]
+Delhi -> rows [1,5]
+age -> rows [1,3,8]
+25 -> rows [1]
+
+Instead of indexing the whole document, it indexes the keys and values.
+Query
+SELECT *
+FROM users
+WHERE metadata @> '{"city":"Delhi"}';
+
+Without index:
+Seq Scan
+
+Postgres checks every row.
+With GIN:
+
+Bitmap Index Scan
+It immediately jumps to rows containing:
+city = Delhi
+Much faster.
+
+Option 2: Index Specific JSON Field .
+
+Suppose most queries are:
+SELECT *
+FROM users
+WHERE metadata->>'city' = 'Delhi';
+
+Then create an expression index:
+CREATE INDEX idx_city
+ON users ((metadata->>'city'));
+
+Now PostgreSQL creates a normal B-tree index on the extracted value.
+
+Internally:
+Delhi -> row1,row5,row10
+Mumbai -> row2,row6
+
+Query:
+SELECT *
+FROM users
+WHERE metadata->>'city'='Delhi';
+
+uses:
+Index Scan
+which is usually faster than a generic GIN index for equality searches.
 
 
 
